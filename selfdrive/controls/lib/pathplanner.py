@@ -73,6 +73,7 @@ class PathPlanner():
     self.trPATH = trace1.Loger("path")
     self.trLearner = trace1.Loger("Learner")
 
+    self.atom_timer_cnt = 0
     self.atom_steer_ratio = None
     self.atom_sr_boost_bp = [0., 0.]
     self.atom_sr_boost_range = [0., 0.]
@@ -104,7 +105,10 @@ class PathPlanner():
 
   def update(self, sm, pm, CP, VM):
     global ATOMC
-  
+    self.atom_timer_cnt += 1
+    if self.atom_timer_cnt > 1000:
+      self.atom_timer_cnt = 0
+
     v_ego = sm['carState'].vEgo
     angle_steers = sm['carState'].steeringAngle
     active = sm['controlsState'].active
@@ -115,8 +119,10 @@ class PathPlanner():
     angleOffsetAverage = sm['liveParameters'].angleOffsetAverage
     stiffnessFactor = sm['liveParameters'].stiffnessFactor
 
-    str_log3 = 'angleOffset={:.3f} angleOffsetAverage={:.3f} steerRatio={:.3f} stiffnessFactor={:.5f} '.format( angle_offset, angleOffsetAverage, self.atom_steer_ratio, stiffnessFactor )
-    self.trLearner.add( 'LearnerParam {}'.format( str_log3 ) )       
+    if (self.atom_timer_cnt % 100) == 0:
+      str_log3 = 'angleOffset={:.1f} angleOffsetAverage={:.3f} steerRatio={:.2f} stiffnessFactor={:.3f} '.format( angle_offset, angleOffsetAverage, self.atom_steer_ratio, stiffnessFactor )
+      self.trLearner.add( 'LearnerParam {}'.format( str_log3 ) )       
+
     if ATOMC.LearnerParams:
       pass
     else:
@@ -130,8 +136,8 @@ class PathPlanner():
       self.atom_steer_ratio = ATOMC.steerRatio + boost_rate
       self.steer_rate_cost = ATOMC.steerRateCost
 
-      str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format(  CP.steerRatio, ATOMC.steerRatio,  self.atom_sr_boost_bp, self.atom_sr_boost_range )
-      str_log2 = 'angle_steers={:.0f} steerRatio={:.3f} steerRateCost={:.2f}'.format( angle_steers, self.atom_steer_ratio, self.steer_rate_cost )
+      str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format( CP.steerRatio, ATOMC.steerRatio, self.atom_sr_boost_bp, self.atom_sr_boost_range )
+      str_log2 = 'steerRateCost={:.2f}'.format( self.steer_rate_cost )
       self.trPATH.add( '{} {}'.format( str_log1, str_log2 ) )
       
 
