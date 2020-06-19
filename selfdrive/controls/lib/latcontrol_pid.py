@@ -51,7 +51,7 @@ class LatControlPID():
     self.sr_boost_bp = ATOMC.sr_boost_bp
 
 
-    str1 = 'kp={},{} ki={},{} kf={},{}'.format( self.steer_Kp1, self.steer_Kp2, self.steer_Ki1, self.steer_Ki2, self.steer_Kf1, self.steer_Kf2 )
+    str1 = 'bp={}  kp={},{} ki={},{} kf={},{}'.format( self.sr_boost_bp, self.steer_Kp1, self.steer_Kp2, self.steer_Ki1, self.steer_Ki2, self.steer_Kf1, self.steer_Kf2 )
  
     self.trPID.add( str1 )    
 
