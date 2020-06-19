@@ -109,7 +109,7 @@ class PathPlanner():
     angle_steers = sm['carState'].steeringAngle
     active = sm['controlsState'].active
     v_ego_kph = v_ego * CV.MS_TO_KPH
-    
+
     self.atom_steer_ratio = sm['liveParameters'].steerRatio
     angle_offset = sm['liveParameters'].angleOffset
     angleOffsetAverage = sm['liveParameters'].angleOffsetAverage
@@ -137,7 +137,7 @@ class PathPlanner():
 
     # Run MPC
     self.angle_steers_des_prev = self.angle_steers_des_mpc
-    VM.update_params(sm['liveParameters'].stiffnessFactor, self.atom_steer_ratio ) # sm['liveParameters'].steerRatio)
+    VM.update_params(stiffnessFactor, self.atom_steer_ratio ) # sm['liveParameters'].steerRatio)
     curvature_factor = VM.curvature_factor(v_ego)
 
 
@@ -264,7 +264,7 @@ class PathPlanner():
 
     plan_send.pathPlan.angleSteers = float(self.angle_steers_des_mpc)
     plan_send.pathPlan.rateSteers = float(rate_desired)
-    plan_send.pathPlan.angleOffset = float(sm['liveParameters'].angleOffsetAverage)
+    plan_send.pathPlan.angleOffset = float(angleOffsetAverage)
     plan_send.pathPlan.mpcSolutionValid = bool(plan_solution_valid)
     plan_send.pathPlan.paramsValid = bool(sm['liveParameters'].valid)
 
