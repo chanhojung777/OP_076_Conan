@@ -6,9 +6,6 @@ from selfdrive.config import Conversions as CV
 from selfdrive.atom_conf import AtomConf
 from selfdrive.car.hyundai.values import Buttons
 
-#from selfdrive.controls.lib.latcontrol_pid import LatControlPID
-#from selfdrive.controls.lib.pathplanner import PathPlanner
-#from selfdrive.car.hyundai.interface import Interface
 
 GearShifter = car.CarState.GearShifter
 
@@ -42,6 +39,7 @@ class CarState(CarStateBase):
 
 
   def update(self, cp, cp_cam):
+    global ATOMC
 
     self.prev_cruise_main_button = self.cruise_main_button
     self.prev_cruise_buttons  = self.cruise_buttons
