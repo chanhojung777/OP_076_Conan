@@ -6,10 +6,16 @@ from selfdrive.controls.lib.lateral_mpc import libmpc_py
 from selfdrive.controls.lib.drive_helpers import MPC_COST_LAT
 from selfdrive.controls.lib.lane_planner import LanePlanner
 from selfdrive.config import Conversions as CV
+from selfdrive.car.hyundai.carstate import ATOMC
 from common.params import Params
 from common.numpy_fast import interp
 import cereal.messaging as messaging
 from cereal import log
+
+import common.log as trace1
+
+
+
 
 LaneChangeState = log.PathPlan.LaneChangeState
 LaneChangeDirection = log.PathPlan.LaneChangeDirection
@@ -64,6 +70,7 @@ class PathPlanner():
     self.prev_one_blinker = False
 
     # atom
+    self.trPATH = trace1.Loger("path")   
     self.atom_steer_ratio = 0
     self.atom_sr_boost_bp = [4., 30.]
     self.atom_sr_boost_range = [0., 1.5]
@@ -106,8 +113,13 @@ class PathPlanner():
     curvature_factor = VM.curvature_factor(v_ego)
 
     # atom
+    self.atom_sr_boost_bp = ATOMC.sr_boost_bp
+    self.atom_sr_boost_range = ATOMC.sr_boost_range
     boost_rate = interp(abs(angle_steers), self.atom_sr_boost_bp, self.atom_sr_boost_range)
     self.atom_steer_ratio = VM.sR + boost_rate
+    str_log = 'ratio ={:.1f} bp={} range={}'.format( self.atom_steer_ratio, self.atom_sr_boost_bp, self.atom_sr_boost_range )
+    self.trPATH.add( str_log )
+
 
     self.LP.parse_model(sm['model'])
 
@@ -207,7 +219,7 @@ class PathPlanner():
     mpc_nans = any(math.isnan(x) for x in self.mpc_solution[0].delta)
     t = sec_since_boot()
     if mpc_nans:
-      self.libmpc.init(MPC_COST_LAT.PATH, MPC_COST_LAT.LANE, MPC_COST_LAT.HEADING, CP.steerRateCost)
+      self.libmpc.init(MPC_COST_LAT.PATH, MPC_COST_LAT.LANE, MPC_COST_LAT.HEADING, self.steer_rate_cost)
       self.cur_state[0].delta = math.radians(angle_steers - angle_offset) / self.atom_steer_ratio
 
       if t > self.last_cloudlog_t + 5.0:
