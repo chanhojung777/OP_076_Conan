@@ -36,7 +36,8 @@ class CarState(CarStateBase):
     self.right_blinker_flash = 0  
     self.steerWarning = 0  
 
-
+    self.TSigLHSw = 0
+    self.TSigRHSw = 0
 
   def update(self, cp, cp_cam):
     global ATOMC
@@ -63,8 +64,8 @@ class CarState(CarStateBase):
     ret.steeringAngle = cp.vl["SAS11"]['SAS_Angle']  - ATOMC.steerOffset
     ret.steeringRate = cp.vl["SAS11"]['SAS_Speed']
     ret.yawRate = cp.vl["ESP12"]['YAW_RATE']
-    #ret.leftBlinker = cp.vl["CGW1"]['CF_Gway_TSigLHSw'] != 0
-    #ret.rightBlinker = cp.vl["CGW1"]['CF_Gway_TSigRHSw'] != 0
+    self.TSigLHSw = cp.vl["CGW1"]['CF_Gway_TSigLHSw']
+    self.TSigRHSw = cp.vl["CGW1"]['CF_Gway_TSigRHSw']
     leftBlinker = cp.vl["CGW1"]['CF_Gway_TurnSigLh'] != 0
     rightBlinker = cp.vl["CGW1"]['CF_Gway_TurnSigRh'] != 0
     ret.steeringTorque = cp.vl["MDPS12"]['CR_Mdps_StrColTq']
@@ -72,12 +73,12 @@ class CarState(CarStateBase):
     ret.steeringPressed = abs(ret.steeringTorque) > STEER_THRESHOLD
 
     if leftBlinker:
-      self.left_blinker_flash = 600
+      self.left_blinker_flash = 60
     elif  self.left_blinker_flash:
       self.left_blinker_flash -= 1
 
     if rightBlinker:
-      self.right_blinker_flash = 600
+      self.right_blinker_flash = 60
     elif  self.right_blinker_flash:
       self.right_blinker_flash -= 1
 

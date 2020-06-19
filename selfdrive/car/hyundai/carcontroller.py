@@ -105,6 +105,12 @@ class CarController():
     else:
       self.steer_torque_over_timer = 0
 
+    bBlinker = False
+    if CS.TSigLHSw or CS.TSigRHSw:
+      bBlinker = False
+    elif  CS.out.leftBlinker or CS.out.rightBlinker:
+      bBlinker = True
+
     # 차선이 없고 앞차량이 없으면.
     steer_angle_lower = self.dRel > 30 and (not CC.hudControl.leftLaneVisible  and not CC.hudControl.rightLaneVisible)
     lane_change_torque_lower = 0
@@ -114,11 +120,11 @@ class CarController():
     elif path_plan.laneChangeState != LaneChangeState.off:
       self.steer_torque_ratio_dir = 1
       self.steer_torque_over_timer = 0
-    elif CS.out.leftBlinker or CS.out.rightBlinker:
+    elif bBlinker:
       lane_change_torque_lower = int(CS.out.leftBlinker) + int(CS.out.rightBlinker) * 2
       self.steer_torque_ratio_dir = 1
       if CS.out.steeringPressed:
-        self.steer_torque_ratio = 0.1
+        self.steer_torque_ratio = 0.05
     elif self.steer_torque_over_timer:  #or CS.out.steerWarning:
       self.steer_torque_ratio_dir = -1
     elif steer_angle_lower:  
