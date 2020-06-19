@@ -14,7 +14,7 @@ from cereal import log
 
 import common.log as trace1
 
-
+global ATOMC
 
 
 LaneChangeState = log.PathPlan.LaneChangeState
@@ -109,7 +109,7 @@ class PathPlanner():
     v_ego_kph = v_ego * CV.MS_TO_KPH
     # Run MPC
     self.angle_steers_des_prev = self.angle_steers_des_mpc
-    VM.update_params(sm['liveParameters'].stiffnessFactor, sm['liveParameters'].steerRatio)
+    VM.update_params(sm['liveParameters'].stiffnessFactor, ATOMC.steerRatio ) # sm['liveParameters'].steerRatio)
     curvature_factor = VM.curvature_factor(v_ego)
 
     # atom

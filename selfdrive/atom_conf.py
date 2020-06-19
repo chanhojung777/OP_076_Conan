@@ -18,6 +18,7 @@ class AtomConf():
 
     self.deadzone = 0.1
     self.steerOffset = 0.0
+    self.steerRatio = 10.5
 
 
   def read_tune(self):
@@ -34,5 +35,6 @@ class AtomConf():
 
     self.deadzone = float(conf['deadzone'])
     self.steerOffset = float(conf['steerOffset'])
+    self.steerRatio = float(conf['steerRatio'])
 
 
