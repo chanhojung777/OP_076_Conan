@@ -19,7 +19,7 @@ class AtomConf():
     self.deadzone = 0.1
     self.steerOffset = 0.0
     self.steerRatio = 10.5
-    self.steerRateCost = 4.0
+    self.steerRateCost = 0.4
 
 
   def read_tune(self):
