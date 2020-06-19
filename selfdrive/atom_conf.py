@@ -20,7 +20,7 @@ class AtomConf():
     self.steerOffset = 0.0
     self.steerRatio = 10.5
     self.steerRateCost = 0.4
-
+    self.read_tune()
 
   def read_tune(self):
     conf = self.kegman.read_config()
