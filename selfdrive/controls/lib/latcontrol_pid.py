@@ -4,8 +4,10 @@ from cereal import car
 from cereal import log
 
 from common.numpy_fast import interp
-
+from selfdrive.car.hyundai.carstate import ATOMC
 import common.log as trace1
+
+global ATOMC
 
 class LatControlPID():
   def __init__(self, CP):
@@ -13,19 +15,17 @@ class LatControlPID():
     self.angle_steers_des = 0.
 
 
-    self.steer_Kp1 = [0.11,0.12]
-    self.steer_Ki1 = [0.008,0.01]
-    self.steer_Kf1 = [0.000001,0.00001]
+    self.steer_Kp1 = ATOMC.steer_Kp1  #[0.11,0.12]
+    self.steer_Ki1 = ATOMC.steer_Ki1  #[0.008,0.01]
+    self.steer_Kf1 = ATOMC.steer_Kf1 #[0.000001,0.00001]
 
-    self.steer_Kp2 = [0.13,0.15]
-    self.steer_Ki2 = [0.015,0.02]
-    self.steer_Kf2 = [0.00003,0.00003]
+    self.steer_Kp2 = ATOMC.steer_Kp2 #[0.13,0.15]
+    self.steer_Ki2 = ATOMC.steer_Ki2 #[0.015,0.02]
+    self.steer_Kf2 = ATOMC.steer_Kf2  #[0.00003,0.00003]
+
+    self.sr_boost_bp = ATOMC.sr_boost_bp
 
 
-    str1 = 'kp={},{} ki={},{} kf={},{}'.format( self.steer_Kp1, self.steer_Kp2, self.steer_Ki1, self.steer_Ki2, self.steer_Kf1, self.steer_Kf2 )
-    str2 = 'steerRatio={:.3f} steerRateCost={:.5f}'.format( CP.steerRatio, CP.steerRateCost )
-    self.trPID = trace1.Loger("pid")    
-    self.trPID.add( '{} {}'.format( str1, str2 ) )
 
     CP.lateralTuning.pid.kf  = self.steer_Kf1[0]
     CP.lateralTuning.pid.kiV = self.steer_Ki1
@@ -38,9 +38,26 @@ class LatControlPID():
     self.pid.reset()
 
 
+
   def linear2_tune( self, CP, v_ego ):  # angle(조향각에 의한 변화)
+    self.steer_Kp1 = ATOMC.steer_Kp1  #[0.11,0.12]
+    self.steer_Ki1 = ATOMC.steer_Ki1  #[0.008,0.01]
+    self.steer_Kf1 = ATOMC.steer_Kf1 #[0.000001,0.00001]
+
+    self.steer_Kp2 = ATOMC.steer_Kp2 #[0.13,0.15]
+    self.steer_Ki2 = ATOMC.steer_Ki2 #[0.015,0.02]
+    self.steer_Kf2 = ATOMC.steer_Kf2  #[0.00003,0.00003]
+
+    self.sr_boost_bp = ATOMC.sr_boost_bp
+
+
+    str1 = 'kp={},{} ki={},{} kf={},{}'.format( self.steer_Kp1, self.steer_Kp2, self.steer_Ki1, self.steer_Ki2, self.steer_Kf1, self.steer_Kf2 )
+    str2 = 'steerRatio={:.3f} steerRateCost={:.5f}'.format( ATOMC.steerRatio, ATOMC.steerRateCost )
+    self.trPID = trace1.Loger("pid")    
+    self.trPID.add( '{} {}'.format( str1, str2 ) )    
+
     cv_angle = abs(self.angle_steers_des)
-    cv = [ 4, 30 ]  # angle
+    cv = self.sr_boost_bp  #[ 4, 30 ]  # angle
     # Kp
     fKp1 = [float(self.steer_Kp1[ 0 ]), float(self.steer_Kp1[ 1 ]) ]
     fKp2 = [float(self.steer_Kp2[ 0 ]), float(self.steer_Kp2[ 1 ]) ]
@@ -82,7 +99,7 @@ class LatControlPID():
     if CS.vEgo < 0.3 or not active:
       output_steer = 0.0
       pid_log.active = False
-      self.pid.reset()
+      self.reset()
     else:
       steers_max = get_steer_max(CP, CS.vEgo)
       self.pid.pos_limit = steers_max

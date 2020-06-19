@@ -9,6 +9,8 @@ GearShifter = car.CarState.GearShifter
 
 ATOMC = AtomConf()
 
+global ATOMC
+
 class CarState(CarStateBase):
   def __init__(self, CP):
     super().__init__(CP)

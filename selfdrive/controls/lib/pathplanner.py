@@ -71,9 +71,9 @@ class PathPlanner():
 
     # atom
     self.trPATH = trace1.Loger("path")   
-    self.atom_steer_ratio = 0
-    self.atom_sr_boost_bp = [4., 30.]
-    self.atom_sr_boost_range = [0., 1.5]
+    self.atom_steer_ratio = None
+    self.atom_sr_boost_bp = [0., 0.]
+    self.atom_sr_boost_range = [0., 0.]
 
   def limit_ctrl(self, value, limit, offset ):
       p_limit = offset + limit
@@ -107,18 +107,26 @@ class PathPlanner():
 
     angle_offset = sm['liveParameters'].angleOffset
     v_ego_kph = v_ego * CV.MS_TO_KPH
-    # Run MPC
-    self.angle_steers_des_prev = self.angle_steers_des_mpc
-    VM.update_params(sm['liveParameters'].stiffnessFactor, ATOMC.steerRatio ) # sm['liveParameters'].steerRatio)
-    curvature_factor = VM.curvature_factor(v_ego)
+
 
     # atom
     self.atom_sr_boost_bp = ATOMC.sr_boost_bp
     self.atom_sr_boost_range = ATOMC.sr_boost_range
     boost_rate = interp(abs(angle_steers), self.atom_sr_boost_bp, self.atom_sr_boost_range)
-    self.atom_steer_ratio = VM.sR + boost_rate
-    str_log = 'ratio{:.1f}/{:.1f}/{:.1f} ={:.1f}={:.1f}+{:.1f} bp={} range={}'.format( sm['liveParameters'].steerRatio, CP.steerRatio, ATOMC.steerRatio,  self.atom_steer_ratio, VM.sR, boost_rate, self.atom_sr_boost_bp, self.atom_sr_boost_range )
-    self.trPATH.add( str_log )
+    self.atom_steer_ratio = ATOMC.steerRatio + boost_rate
+    self.steer_rate_cost = ATOMC.steerRateCost
+
+    str_log = ' steerRatio={:.1f}/{:.1f}/{:.1f} bp={} range={}'.format( sm['liveParameters'].steerRatio, CP.steerRatio, ATOMC.steerRatio,  self.atom_sr_boost_bp, self.atom_sr_boost_range )
+    str_log2 = 'steerRateCost={:.2f}'.format( self.steer_rate_cost )
+    
+    self.trPATH.add( '{} {}'.format( str_log, str_log2 ) )
+
+    # Run MPC
+    self.angle_steers_des_prev = self.angle_steers_des_mpc
+    VM.update_params(sm['liveParameters'].stiffnessFactor, self.atom_steer_ratio ) # sm['liveParameters'].steerRatio)
+    curvature_factor = VM.curvature_factor(v_ego)
+
+
 
     self.LP.parse_model(sm['model'])
 
@@ -187,7 +195,7 @@ class PathPlanner():
     self.LP.update_d_poly(v_ego)
 
     # account for actuation delay
-    self.cur_state = calc_states_after_delay(self.cur_state, v_ego, angle_steers - angle_offset, curvature_factor, self.atom_steer_ratio, CP.steerActuatorDelay)
+    self.cur_state = calc_states_after_delay(self.cur_state, v_ego, angle_steers - angle_offset, curvature_factor, VM.sR, CP.steerActuatorDelay)
 
     v_ego_mpc = max(v_ego, 5.0)  # avoid mpc roughness due to low speed
     self.libmpc.run_mpc(self.cur_state, self.mpc_solution,
@@ -197,14 +205,14 @@ class PathPlanner():
     # reset to current steer angle if not active or overriding
     if active:
       delta_desired = self.mpc_solution[0].delta[1]
-      rate_desired = math.degrees(self.mpc_solution[0].rate[0] * self.atom_steer_ratio)
+      rate_desired = math.degrees(self.mpc_solution[0].rate[0] * VM.sR)
     else:
-      delta_desired = math.radians(angle_steers - angle_offset) / self.atom_steer_ratio
+      delta_desired = math.radians(angle_steers - angle_offset) / VM.sR
       rate_desired = 0.0
 
     self.cur_state[0].delta = delta_desired
 
-    self.angle_steers_des_mpc = float(math.degrees(delta_desired * self.atom_steer_ratio) + angle_offset)
+    self.angle_steers_des_mpc = float(math.degrees(delta_desired * VM.sR) + angle_offset)
     org_angle_steers_des = self.angle_steers_des_mpc
 
     # atom
@@ -219,7 +227,7 @@ class PathPlanner():
     t = sec_since_boot()
     if mpc_nans:
       self.libmpc.init(MPC_COST_LAT.PATH, MPC_COST_LAT.LANE, MPC_COST_LAT.HEADING, self.steer_rate_cost)
-      self.cur_state[0].delta = math.radians(angle_steers - angle_offset) / self.atom_steer_ratio
+      self.cur_state[0].delta = math.radians(angle_steers - angle_offset) / VM.sR
 
       if t > self.last_cloudlog_t + 5.0:
         self.last_cloudlog_t = t
