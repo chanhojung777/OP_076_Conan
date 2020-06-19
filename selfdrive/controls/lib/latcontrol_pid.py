@@ -11,7 +11,7 @@ global ATOMC
 
 class LatControlPID():
   def __init__(self, CP):
-
+    self.trPID = trace1.Loger("pid")   
     self.angle_steers_des = 0.
 
 
@@ -52,7 +52,7 @@ class LatControlPID():
 
 
     str1 = 'kp={},{} ki={},{} kf={},{}'.format( self.steer_Kp1, self.steer_Kp2, self.steer_Ki1, self.steer_Ki2, self.steer_Kf1, self.steer_Kf2 )
-    self.trPID = trace1.Loger("pid")    
+ 
     self.trPID.add( str1 )    
 
     cv_angle = abs(self.angle_steers_des)
