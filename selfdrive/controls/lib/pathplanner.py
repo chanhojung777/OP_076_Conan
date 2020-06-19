@@ -120,7 +120,6 @@ class PathPlanner():
     str_log = 'ratio{:.1f}/{:.1f} ={:.1f}={:.1f}+{:.1f} bp={} range={}'.format( sm['liveParameters'].steerRatio, CP.steerRatio,  self.atom_steer_ratio, VM.sR, boost_rate, self.atom_sr_boost_bp, self.atom_sr_boost_range )
     self.trPATH.add( str_log )
 
-
     self.LP.parse_model(sm['model'])
 
     # Lane change logic
