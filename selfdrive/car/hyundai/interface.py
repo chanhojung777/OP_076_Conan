@@ -1,11 +1,58 @@
 #!/usr/bin/env python3
 from cereal import car
 from selfdrive.config import Conversions as CV
-from selfdrive.car.hyundai.values import Ecu, ECU_FINGERPRINT, CAR, FINGERPRINTS
+from selfdrive.car.hyundai.values import Ecu, ECU_FINGERPRINT, CAR, FINGERPRINTS, Buttons
 from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, is_ecu_disconnected, gen_empty_fingerprint
-from selfdrive.car.interfaces import CarInterfaceBase
+from selfdrive.car.interfaces import CarInterfaceBase, MAX_CTRL_SPEED
 
+#from selfdrive.kegman_conf import kegman_conf
+
+EventName = car.CarEvent.EventName
+ButtonType = car.CarState.ButtonEvent.Type
 class CarInterface(CarInterfaceBase):
+  def __init__(self, CP, CarController, CarState):
+    super().__init__(CP, CarController, CarState )
+
+
+    self.meg_timer = 0
+    self.meg_name = 0
+
+  """
+    self.steer_Kf1 = [0.00001,0.000015]    
+    self.steer_Ki1 = [0.01,0.01]
+    self.steer_Kp1 = [0.11,0.12]
+
+    self.steer_Kf2 = [0.00005,0.00005]
+    self.steer_Ki2 = [0.04,0.05]
+    self.steer_Kp2 = [0.20,0.25]
+    self.deadzone = 0.0
+    self.steerAngleOffset = 1
+    self.load_tune( CP )
+
+
+  #@staticmethod
+  def load_tune(self, CP):
+    # live tuning through /data/openpilot/tune.py overrides interface.py settings
+    self.kegman = kegman_conf(CP)
+
+
+    self.steer_Kp1 = [ float(self.kegman.conf['Kp']), float(self.kegman.conf['sR_Kp']) ]
+    self.steer_Ki1 = [ float(self.kegman.conf['Ki']), float(self.kegman.conf['sR_Ki']) ]
+    self.steer_Kf1 = [ float(self.kegman.conf['Kf']), float(self.kegman.conf['sR_Kf']) ]
+
+    self.steer_Kp2 = [ float(self.kegman.conf['Kp2']), float(self.kegman.conf['sR_Kp2']) ]
+    self.steer_Ki2 = [ float(self.kegman.conf['Ki2']), float(self.kegman.conf['sR_Ki2']) ]
+    self.steer_Kf2 = [ float(self.kegman.conf['Kf2']), float(self.kegman.conf['sR_Kf2']) ]        
+
+    self.deadzone = float(self.kegman.conf['deadzone'])
+
+    try:
+      self.steerAngleOffset = float(self.kegman.conf['steerAngleOffset'])
+    except:
+      self.steerAngleOffset = 0
+    finally:  # try end 
+      pass   
+  """
 
   @staticmethod
   def compute_gb(accel, speed):
@@ -17,17 +64,72 @@ class CarInterface(CarInterfaceBase):
 
     ret.carName = "hyundai"
     ret.safetyModel = car.CarParams.SafetyModel.hyundai
-    ret.radarOffCan = True
+    ret.radarOffCan = True  #False(선행차우선)  #True(차선우선)    #선행차량 인식 마크 유무.
 
     # Hyundai port is a community feature for now
-    ret.communityFeature = True
+    ret.communityFeature = False  #True
+
+    """
+      0.7.5
+      ret.steerActuatorDelay = 0.1  # Default delay   0.1
+      ret.steerRateCost = 0.5
+      ret.steerLimitTimer = 0.4
+      tire_stiffness_factor = 1
+    """
+
+    """
+      0.7.3
+      ret.steerActuatorDelay = 0.10  # Default delay   0.15
+      ret.steerRateCost = 0.45
+      ret.steerLimitTimer = 0.8
+      tire_stiffness_factor = 0.7
+    """
 
     ret.steerActuatorDelay = 0.1  # Default delay
     ret.steerRateCost = 0.5
     ret.steerLimitTimer = 0.4
     tire_stiffness_factor = 1.
 
-    if candidate == CAR.SANTA_FE:
+
+    if candidate == CAR.GRANDEUR_HYBRID:
+      ret.mass = 1675. + STD_CARGO_KG
+      ret.wheelbase = 2.845
+
+      # 1번 튜닝.
+      #ret.steerRatio = 12.37  #12.5
+      #ret.steerRateCost = 0.5 #0.4
+      #ret.lateralTuning.pid.kf = 0.00003 
+      #ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[9., 22.], [9., 22.]]
+      #ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.15, 0.20], [0.03, 0.04]]
+
+      # 2번 튜닝.
+      ret.steerRatio = 10.5  #12.5
+      ret.steerRateCost = 0.4 #0.4
+      ret.lateralTuning.pid.kf = 0.00001
+      ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[9., 22.], [9., 22.]]
+      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.12, 0.15], [0.02, 0.02]]
+
+      #ret.lateralTuning_sR.kf = 0.00005
+      #ret.lateralTuning_sR.sRBP = [4, 30.]
+      #ret.lateralTuning_sR.kpV = [0.12, 0.15]
+      #ret.lateralTuning_sR.kiV = [0.02, 0.02]
+
+
+      # indi
+      #ret.lateralTuning.init('indi')
+      #ret.lateralTuning.indi.innerLoopGain = 3.0
+      #ret.lateralTuning.indi.outerLoopGain = 2.0
+      #ret.lateralTuning.indi.timeConstant = 1.0
+      #ret.lateralTuning.indi.actuatorEffectiveness = 1.5
+      #ret.steerRatio = 9.0 
+
+
+      #ret.steerActuatorDelay = 0.1 # Stinger GT Limited AWD 3.3T stock value (Tunder's 2020) 
+      #ret.steerLimitTimer = 0.4 # stock is 0.01 but 0.04 seems to work well
+      #tire_stiffness_factor = 1.125 # LiveParameters (Tunder's 2020)
+
+ 
+    elif candidate == CAR.SANTA_FE:
       ret.lateralTuning.pid.kf = 0.00005
       ret.mass = 3982. * CV.LB_TO_KG + STD_CARGO_KG
       ret.wheelbase = 2.766
@@ -103,12 +205,25 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
     elif candidate == CAR.KIA_STINGER:
-      ret.lateralTuning.pid.kf = 0.00005
-      ret.mass = 1825. + STD_CARGO_KG
-      ret.wheelbase = 2.78
-      ret.steerRatio = 14.4 * 1.15   # 15% higher at the center seems reasonable
-      ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
-      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
+      #ret.lateralTuning.pid.kf = 0.00005
+      #ret.mass = 1825. + STD_CARGO_KG
+      #ret.wheelbase = 2.78
+      #ret.steerRatio = 14.4 * 1.15   # 15% higher at the center seems reasonable
+      #ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
+      #ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
+
+      ret.lateralTuning.init('indi')
+      ret.lateralTuning.indi.innerLoopGain = 3.0
+      ret.lateralTuning.indi.outerLoopGain = 2.0
+      ret.lateralTuning.indi.timeConstant = 1.0
+      ret.lateralTuning.indi.actuatorEffectiveness = 1.5
+      ret.steerActuatorDelay = 0.08 # Stinger GT Limited AWD 3.3T stock value (Tunder's 2020) 
+      ret.steerLimitTimer = 0.4 # stock is 0.01 but 0.04 seems to work well
+      tire_stiffness_factor = 1.125 # LiveParameters (Tunder's 2020)
+      ret.steerRateCost = 1.0
+      ret.mass = 1825.0 + STD_CARGO_KG
+      ret.wheelbase = 2.906 # https://www.kia.com/us/en/stinger/specs
+      ret.steerRatio = 13.56   # 10.28 measured by wheel alignment machine/reported steering angle by OP. 2020 GT Limited AWD has a variable steering ratio ultimately ending in 10.28.  13.56 after 1200km in LiveParamaters (Tunder)
     elif candidate == CAR.KONA:
       ret.lateralTuning.pid.kf = 0.00006
       ret.mass = 1275. + STD_CARGO_KG
@@ -156,10 +271,72 @@ class CarInterface(CarInterfaceBase):
     ret = self.CS.update(self.cp, self.cp_cam)
     ret.canValid = self.cp.can_valid and self.cp_cam.can_valid
 
+
     # TODO: button presses
-    ret.buttonEvents = []
+    buttonEvents = []
+    if self.CS.cruise_buttons != self.CS.prev_cruise_buttons:
+      be = car.CarState.ButtonEvent.new_message()
+      be.type = ButtonType.unknown
+      if self.CS.cruise_buttons != 0:
+        be.pressed = True
+        but = self.CS.cruise_buttons
+      else:
+        be.pressed = False
+        but = self.CS.prev_cruise_buttons
+      if but == Buttons.RES_ACCEL:
+        be.type = ButtonType.accelCruise
+      elif but == Buttons.SET_DECEL:
+        be.type = ButtonType.decelCruise
+      elif but == Buttons.CANCEL:
+        be.type = ButtonType.cancel
+      buttonEvents.append(be)
+    if self.CS.cruise_main_button != self.CS.prev_cruise_main_button:
+      be = car.CarState.ButtonEvent.new_message()
+      be.type = ButtonType.altButton3
+      be.pressed = bool(self.CS.cruise_main_button)
+      buttonEvents.append(be)
+    ret.buttonEvents = buttonEvents
+    #ret.buttonEvents = []    
 
     events = self.create_common_events(ret)
+
+
+    
+    if not self.cruise_enabled_prev:
+      self.meg_timer = 0
+      self.meg_name =  None
+    else:
+      meg_timer = 100
+      if self.meg_timer:
+        self.meg_timer -= 1
+        meg_timer = 0
+      elif not self.CS.lkas_button_on:
+        self.meg_name = EventName.invalidLkasSetting
+      elif ret.cruiseState.standstill:
+        self.meg_name = EventName.resumeRequired       
+      elif self.CC.lane_change_torque_lower:
+        self.meg_name = EventName.laneChangeManual
+      elif self.CC.steer_torque_over_timer and self.CC.steer_torque_ratio < 0.7:
+        self.meg_name = EventName.steerTorqueOver
+      elif self.CC.steer_torque_ratio < 0.5 and self.CS.clu_Vanz > 5:
+        self.meg_name = EventName.steerTorqueLow
+      elif ret.vEgo > MAX_CTRL_SPEED:
+        self.meg_name = EventName.speedTooHigh
+      elif ret.steerError:
+        self.meg_name = EventName.steerUnavailable
+      elif ret.steerWarning:
+        self.meg_name = EventName.steerTempUnavailable
+      else:
+        meg_timer = 0
+        self.meg_name =  None
+
+      if meg_timer != 0:
+        self.meg_timer = 100
+
+      if self.meg_timer and  self.meg_name != None:
+        events.add( self.meg_name )
+    
+
     #TODO: addd abs(self.CS.angle_steers) > 90 to 'steerTempUnavailable' event
 
     # low speed steer alert hysteresis logic (only for cars with steer cut off above 10 m/s)
@@ -175,9 +352,8 @@ class CarInterface(CarInterfaceBase):
     self.CS.out = ret.as_reader()
     return self.CS.out
 
-  def apply(self, c):
-    can_sends = self.CC.update(c.enabled, self.CS, self.frame, c.actuators,
-                               c.cruiseControl.cancel, c.hudControl.visualAlert, c.hudControl.leftLaneVisible,
-                               c.hudControl.rightLaneVisible, c.hudControl.leftLaneDepart, c.hudControl.rightLaneDepart)
+  def apply(self, c, sm ):
+    can_sends = self.CC.update(c, self.CS, self.frame, sm )
+
     self.frame += 1
     return can_sends

@@ -27,6 +27,11 @@ class PIController():
 
     self.reset()
 
+  def gain(self, k_p, k_i, k_f ):
+    self._k_p = k_p # proportional gain
+    self._k_i = k_i # integral gain
+    self.k_f = k_f  # feedforward gain    
+
   @property
   def k_p(self):
     return interp(self.speed, self._k_p[0], self._k_p[1])

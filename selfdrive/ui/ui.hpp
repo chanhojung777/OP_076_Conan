@@ -56,6 +56,7 @@ const int nav_w = 640;
 const int nav_ww= 760;
 const int sbr_w = 300;
 const int bdr_s = 30;
+const int bdr_is = 30;
 const int box_x = sbr_w+bdr_s;
 const int box_y = bdr_s;
 const int box_w = vwp_w-sbr_w-(bdr_s*2);
@@ -114,6 +115,7 @@ typedef struct UIScene {
   bool speedlimit_valid;
   bool map_valid;
 
+  
   float curvature;
   int engaged;
   bool engageable;
@@ -147,6 +149,8 @@ typedef struct UIScene {
 
   float awareness_status;
 
+  bool recording;
+
   // Used to show gps planner status
   bool gps_planner_active;
 
@@ -160,6 +164,31 @@ typedef struct UIScene {
   cereal::HealthData::HwType hwType;
   int satelliteCount;
   uint8_t athenaStatus;
+
+
+  // pathcoloring
+  float output_scale;
+  bool steerOverride;
+
+  // dev ui
+  uint16_t maxCpuTemp;
+  uint32_t maxBatTemp;
+  float angleSteers;  
+  float angleSteersDes;
+
+  bool brakePress;
+  bool  brakeLights;
+  bool leftBlinker;
+  bool rightBlinker;
+
+  cereal::CarState::GearShifter  getGearShifter;  
+
+  struct _STATUS_
+  {
+      char text1[512];
+      char text2[512];
+  } alert;  
+
 } UIScene;
 
 typedef struct {

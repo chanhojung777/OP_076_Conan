@@ -8,7 +8,33 @@ GearShifter = car.CarState.GearShifter
 
 
 class CarState(CarStateBase):
+  def __init__(self, CP):
+    super().__init__(CP)
+
+    self.cruise_main_button = False
+    self.cruise_buttons = False
+
+    self.lkas_button_on = False
+    self.lkas_error = False
+
+    self.prev_cruise_main_button = False
+    self.prev_cruise_buttons = False
+
+    self.main_on = False
+    self.acc_active = False
+    self.cruise_engaged_on = False
+
+    self.Mdps_ToiUnavail = 0
+
+    self.left_blinker_flash = 0
+    self.right_blinker_flash = 0  
+    self.steerWarning = 0  
+
+
   def update(self, cp, cp_cam):
+
+    self.prev_cruise_main_button = self.cruise_main_button
+
     ret = car.CarState.new_message()
 
     ret.doorOpen = any([cp.vl["CGW1"]['CF_Gway_DrvDrSw'], cp.vl["CGW1"]['CF_Gway_AstDrSw'],
@@ -21,29 +47,77 @@ class CarState(CarStateBase):
     ret.wheelSpeeds.rl = cp.vl["WHL_SPD11"]['WHL_SPD_RL'] * CV.KPH_TO_MS
     ret.wheelSpeeds.rr = cp.vl["WHL_SPD11"]['WHL_SPD_RR'] * CV.KPH_TO_MS
     ret.vEgoRaw = (ret.wheelSpeeds.fl + ret.wheelSpeeds.fr + ret.wheelSpeeds.rl + ret.wheelSpeeds.rr) / 4.
-    ret.vEgo, ret.aEgo = self.update_speed_kf(ret.vEgoRaw)
+    vEgo, ret.aEgo = self.update_speed_kf(ret.vEgoRaw)
 
     ret.standstill = ret.vEgoRaw < 0.1
 
-    ret.steeringAngle = cp.vl["SAS11"]['SAS_Angle']
+    ret.steeringAngle = cp.vl["SAS11"]['SAS_Angle']  - 1
     ret.steeringRate = cp.vl["SAS11"]['SAS_Speed']
     ret.yawRate = cp.vl["ESP12"]['YAW_RATE']
-    ret.leftBlinker = cp.vl["CGW1"]['CF_Gway_TSigLHSw'] != 0
-    ret.rightBlinker = cp.vl["CGW1"]['CF_Gway_TSigRHSw'] != 0
+    #ret.leftBlinker = cp.vl["CGW1"]['CF_Gway_TSigLHSw'] != 0
+    #ret.rightBlinker = cp.vl["CGW1"]['CF_Gway_TSigRHSw'] != 0
+    leftBlinker = cp.vl["CGW1"]['CF_Gway_TurnSigLh'] != 0
+    rightBlinker = cp.vl["CGW1"]['CF_Gway_TurnSigRh'] != 0
     ret.steeringTorque = cp.vl["MDPS12"]['CR_Mdps_StrColTq']
     ret.steeringTorqueEps = cp.vl["MDPS12"]['CR_Mdps_OutTq']
     ret.steeringPressed = abs(ret.steeringTorque) > STEER_THRESHOLD
-    ret.steerWarning = cp.vl["MDPS12"]['CF_Mdps_ToiUnavail'] != 0
+
+    if leftBlinker:
+      self.left_blinker_flash = 600
+    elif  self.left_blinker_flash:
+      self.left_blinker_flash -= 1
+
+    if rightBlinker:
+      self.right_blinker_flash = 600
+    elif  self.right_blinker_flash:
+      self.right_blinker_flash -= 1
+
+    ret.leftBlinker = self.left_blinker_flash != 0
+    ret.rightBlinker = self.right_blinker_flash != 0
+    
+    self.lead_distance = cp.vl["SCC11"]['ACC_ObjDist']
+    lead_objspd = cp.vl["SCC11"]['ACC_ObjRelSpd']
+    self.lead_objspd = lead_objspd * CV.MS_TO_KPH
+
+    self.VSetDis = cp.vl["SCC11"]['VSetDis']
+    self.clu_Vanz = cp.vl["CLU11"]["CF_Clu_Vanz"]
+
+    self.Mdps_ToiUnavail = cp.vl["MDPS12"]['CF_Mdps_ToiUnavail']
+    ret.vEgo = self.clu_Vanz * CV.KPH_TO_MS
+
+
+    
+    steerWarning = False
+    if ret.vEgo < 5 or not self.Mdps_ToiUnavail:
+      self.steerWarning = 0
+    elif self.steerWarning >= 2:
+      steerWarning = True
+    else:
+      self.steerWarning += 1
+
+    ret.steerWarning = steerWarning
+    
 
     # cruise state
-    ret.cruiseState.available = True
-    ret.cruiseState.enabled = cp.vl["SCC12"]['ACCMode'] != 0
+
+
+
+    #ret.cruiseState.available = True
+    #ret.cruiseState.enabled = cp.vl["SCC12"]['ACCMode'] != 0
+    self.main_on = (cp.vl["SCC11"]["MainMode_ACC"] != 0)
+    self.acc_active = (cp.vl["SCC12"]['ACCMode'] != 0)
+
+    ret.cruiseState.available = self.main_on
+    ret.cruiseState.enabled =  ret.cruiseState.available  #if not self.CC.longcontrol else ret.cruiseState.enabled
     ret.cruiseState.standstill = cp.vl["SCC11"]['SCCInfoDisplay'] == 4.
 
-    if ret.cruiseState.enabled:
+    # most HKG cars has no long control, it is safer and easier to engage by main on
+
+    #if ret.cruiseState.enabled:
+    if self.acc_active:
       is_set_speed_in_mph = int(cp.vl["CLU11"]["CF_Clu_SPEED_UNIT"])
       speed_conv = CV.MPH_TO_MS if is_set_speed_in_mph else CV.KPH_TO_MS
-      ret.cruiseState.speed = cp.vl["SCC11"]['VSetDis'] * speed_conv
+      ret.cruiseState.speed = self.VSetDis * speed_conv
     else:
       ret.cruiseState.speed = 0
 
@@ -109,9 +183,23 @@ class CarState(CarStateBase):
       else:
         ret.gearShifter = GearShifter.unknown
 
+
+    # atom append
+    self.pcm_acc_status = int(self.acc_active)
+    self.driverOverride = cp.vl["TCS13"]["DriverOverride"]     # 1 Acc,  2 bracking, 0 Normal
+    self.cruise_main_button = cp.vl["CLU11"]["CF_Clu_CruiseSwMain"]
+    self.cruise_buttons = cp.vl["CLU11"]["CF_Clu_CruiseSwState"]         # clu_CruiseSwState
+    self.Lkas_LdwsSysState = cp_cam.vl["LKAS11"]["CF_Lkas_LdwsSysState"]
+    self.lkas_error = self.Lkas_LdwsSysState  == 7
+    if not self.lkas_error:
+      self.lkas_button_on = self.Lkas_LdwsSysState 
+
+
     # save the entire LKAS11 and CLU11
     self.lkas11 = cp_cam.vl["LKAS11"]
     self.clu11 = cp.vl["CLU11"]
+    self.mdps12 = cp.vl["MDPS12"]
+    
     self.park_brake = cp.vl["CGW1"]['CF_Gway_ParkBrakeSw']
     self.steer_state = cp.vl["MDPS12"]['CF_Mdps_ToiActive'] # 0 NOT ACTIVE, 1 ACTIVE
     self.lead_distance = cp.vl["SCC11"]['ACC_ObjDist']
@@ -160,14 +248,21 @@ class CarState(CarStateBase):
       ("ACCEnable", "TCS13", 0),
       ("BrakeLight", "TCS13", 0),
       ("DriverBraking", "TCS13", 0),
+      ("DriverOverride", "TCS13", 0),
 
       ("ESC_Off_Step", "TCS15", 0),
 
       ("CF_Lvr_GearInf", "LVR11", 0),        # Transmission Gear (0 = N or P, 1-8 = Fwd, 14 = Rev)
 
       ("CR_Mdps_StrColTq", "MDPS12", 0),
+      ("CF_Mdps_Def", "MDPS12", 0),    #
       ("CF_Mdps_ToiActive", "MDPS12", 0),
       ("CF_Mdps_ToiUnavail", "MDPS12", 0),
+      ("CF_Mdps_MsgCount2", "MDPS12", 0),  #
+      ("CF_Mdps_Chksum2", "MDPS12", 0),    #
+      ("CF_Mdps_ToiFlt", "MDPS12", 0),     #
+      ("CF_Mdps_SErr", "MDPS12", 0),       #
+      ("CR_Mdps_StrTq", "MDPS12", 0),      #
       ("CF_Mdps_FailStat", "MDPS12", 0),
       ("CR_Mdps_OutTq", "MDPS12", 0),
 
@@ -178,6 +273,7 @@ class CarState(CarStateBase):
       ("VSetDis", "SCC11", 0),
       ("SCCInfoDisplay", "SCC11", 0),
       ("ACC_ObjDist", "SCC11", 0),
+      ("ACC_ObjRelSpd", "SCC11", 0),
       ("ACCMode", "SCC12", 1),
 
       ("PV_AV_CAN", "EMS12", 0),
@@ -187,7 +283,7 @@ class CarState(CarStateBase):
     checks = [
       # address, frequency
       ("MDPS12", 50),
-      ("TCS13", 50),
+      #("TCS13", 50),
       ("TCS15", 10),
       ("CLU11", 50),
       ("ESP12", 100),
@@ -197,8 +293,8 @@ class CarState(CarStateBase):
       ("SAS11", 100),
       ("SCC11", 50),
       ("SCC12", 50),
-      ("EMS12", 100),
-      ("EMS16", 100),
+      #("EMS12", 100),
+      #("EMS16", 100),
     ]
     if CP.carFingerprint in FEATURES["use_cluster_gears"]:
       signals += [
@@ -242,11 +338,13 @@ class CarState(CarStateBase):
       ("CF_Lkas_LdwsRHWarning", "LKAS11", 0),
       ("CF_Lkas_HbaLamp", "LKAS11", 0),
       ("CF_Lkas_FcwBasReq", "LKAS11", 0),
+      ("CF_Lkas_ToiFlt", "LKAS11", 0),  #  append
       ("CF_Lkas_HbaSysState", "LKAS11", 0),
       ("CF_Lkas_FcwOpt", "LKAS11", 0),
       ("CF_Lkas_HbaOpt", "LKAS11", 0),
       ("CF_Lkas_FcwSysState", "LKAS11", 0),
       ("CF_Lkas_FcwCollisionWarning", "LKAS11", 0),
+      ("CF_Lkas_MsgCount", "LKAS11", 0),  #  append
       ("CF_Lkas_FusionState", "LKAS11", 0),
       ("CF_Lkas_FcwOpt_USM", "LKAS11", 0),
       ("CF_Lkas_LdwsOpt_USM", "LKAS11", 0)

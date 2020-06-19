@@ -13,6 +13,7 @@
 #include "common/visionimg.h"
 #include "common/params.h"
 #include "ui.hpp"
+#include "dashcam.h"
 
 static int last_brightness = -1;
 static void set_brightness(UIState *s, int brightness) {
@@ -210,7 +211,7 @@ static void update_offroad_layout_timeout(UIState *s, int* timeout) {
 static void ui_init(UIState *s) {
 
   pthread_mutex_init(&s->lock, NULL);
-  s->sm = new SubMaster({"model", "controlsState", "uiLayoutState", "liveCalibration", "radarState", "thermal",
+  s->sm = new SubMaster({"model", "controlsState", "carState", "uiLayoutState", "liveCalibration", "radarState", "thermal",
                          "health", "ubloxGnss", "driverState", "dMonitoringState", "offroadLayout"
 #ifdef SHOW_SPEEDLIMIT
                                     , "liveMapData"
@@ -336,6 +337,8 @@ void handle_message(UIState *s, SubMaster &sm) {
     }
     scene.v_cruise = data.getVCruise();
     scene.v_ego = data.getVEgo();
+    scene.angleSteers = data.getAngleSteers();
+    scene.angleSteersDes = data.getAngleSteersDes();
     scene.curvature = data.getCurvature();
     scene.engaged = data.getEnabled();
     scene.engageable = data.getEngageable();
@@ -384,6 +387,31 @@ void handle_message(UIState *s, SubMaster &sm) {
         }
       }
     }
+
+
+// debug Message
+    std::string user_text1 = data.getAlertTextMsg1();
+    std::string user_text2 = data.getAlertTextMsg2();
+    const char* va_text1 = user_text1.c_str();
+    const char* va_text2 = user_text2.c_str();    
+    if (va_text1) 
+      snprintf(scene.alert.text1, sizeof(scene.alert.text1), "[%s", va_text1);
+    else 
+      scene.alert.text1[0] = '\0';
+
+    if (va_text2) 
+      snprintf(scene.alert.text2, sizeof(scene.alert.text2), "[%s", va_text2);
+    else 
+      scene.alert.text2[0] = '\0';
+
+
+    scene.steerOverride = data.getSteerOverride();
+
+    auto pdata = data.getLateralControlState();
+    auto piddata = pdata.getPidState();
+
+    scene.output_scale = piddata.getOutput();
+
   }
   if (sm.updated("radarState")) {
     auto data = sm["radarState"].getRadarState();
@@ -444,6 +472,9 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.thermalStatus = data.getThermalStatus();
     scene.paTemp = data.getPa0();
 
+    scene.maxBatTemp = data.getBat();
+    scene.maxCpuTemp = data.getCpu0(); 
+
     s->thermal_started = data.getStarted();
   }
   if (sm.updated("ubloxGnss")) {
@@ -469,6 +500,16 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.awareness_status = data.getAwarenessStatus();
     s->preview_started = data.getIsPreview();
   }
+
+  if (sm.updated("carState")) {
+    auto data = sm["carState"].getCarState();
+    scene.brakePress = data.getBrakePressed();
+    scene.brakeLights = data.getBrakeLights();
+
+    scene.leftBlinker = data.getLeftBlinker();
+    scene.rightBlinker = data.getRightBlinker();
+    scene.getGearShifter = data.getGearShifter();
+  }  
 
   s->started = s->thermal_started || s->preview_started ;
   // Handle onroad/offroad transition
@@ -880,9 +921,14 @@ int main(int argc, char* argv[]) {
     int touched = touch_poll(&touch, &touch_x, &touch_y, 0);
     if (touched == 1) {
       set_awake(s, true);
-      handle_sidebar_touch(s, touch_x, touch_y);
-      handle_vision_touch(s, touch_x, touch_y);
+
+      if( touch_x  < 1660 && touch_y < 885 )
+      {
+        handle_sidebar_touch(s, touch_x, touch_y);
+        handle_vision_touch(s, touch_x, touch_y);
+      }
     }
+
 
     if (!s->started) {
       // always process events offroad
@@ -921,8 +967,11 @@ int main(int argc, char* argv[]) {
     }
 
     // Don't waste resources on drawing in case screen is off
-    if (s->awake) {
+    if (s->awake) 
+    {
       ui_draw(s);
+
+      dashcam(s, touch_x, touch_y);      
       glFinish();
       should_swap = true;
     }

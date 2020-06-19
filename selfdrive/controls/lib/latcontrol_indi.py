@@ -72,10 +72,12 @@ class LatControlINDI():
     indi_log.steerRate = math.degrees(self.x[1])
     indi_log.steerAccel = math.degrees(self.x[2])
 
+
     if CS.vEgo < 0.3 or not active:
       indi_log.active = False
       self.output_steer = 0.0
       self.delayed_output = 0.0
+      self.angle_steers_des = path_plan.angleSteers
     else:
       self.angle_steers_des = path_plan.angleSteers
       self.rate_steers_des = path_plan.rateSteers

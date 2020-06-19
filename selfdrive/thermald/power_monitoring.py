@@ -63,6 +63,7 @@ class PowerMonitoring:
     self.power_used_uWh = 0                     # Integrated power usage in uWh since going into offroad
     self.next_pulsed_measurement_time = None
     self.integration_lock = threading.Lock()
+    self.ts_last_charging_ctrl = None
 
   # Calculation tick
   def calculate(self, health):
@@ -163,3 +164,14 @@ class PowerMonitoring:
   # Get the power usage
   def get_power_used(self):
     return int(self.power_used_uWh)
+
+
+
+  def charging_ctrl(self, msg, ts, to_discharge, to_charge ):
+    if self.ts_last_charging_ctrl is None or (ts - self.ts_last_charging_ctrl) >= 60.:
+      battery_changing = get_battery_charging()
+      if msg.thermal.batteryPercent >= to_discharge and battery_changing:
+        set_battery_charging(False)
+      elif msg.thermal.batteryPercent <= to_charge and not battery_changing:
+        set_battery_charging(True)
+      self.ts_last_charging_ctrl = ts

@@ -4,6 +4,9 @@
 #include <map>
 #include "ui.hpp"
 
+extern float  fFontSize;
+
+
 static void ui_draw_sidebar_background(UIState *s) {
   int sbr_x = !s->scene.uilayout_sidebarcollapsed ? 0 : -(sbr_w) + bdr_s * 2;
   ui_draw_rect(s->vg, sbr_x, 0, sbr_w, vwp_h, COLOR_BLACK_ALPHA(85));
@@ -44,12 +47,21 @@ static void ui_draw_sidebar_battery_icon(UIState *s) {
   const int battery_img_x = !s->scene.uilayout_sidebarcollapsed ? 160 : -(sbr_w);
   const int battery_img_y = 255;
 
-  int battery_img = s->scene.batteryCharging ? s->img_battery_charging : s->img_battery;
+  
+  int batteryPercent = s->scene.batteryPercent;
+  int batteryCharging = s->scene.batteryCharging;
+  int battery_img = batteryCharging ? s->img_battery_charging : s->img_battery;
+
 
   ui_draw_rect(s->vg, battery_img_x + 6, battery_img_y + 5,
-               ((battery_img_w - 19) * (s->scene.batteryPercent * 0.01)), battery_img_h - 11, COLOR_WHITE);
+               ((battery_img_w - 19) * (batteryPercent * 0.01)), battery_img_h - 11, COLOR_WHITE);
 
   ui_draw_image(s->vg, battery_img_x, battery_img_y, battery_img_w, battery_img_h, battery_img, 1.0f);
+
+  char temp_value_str1[32];
+
+  snprintf(temp_value_str1, sizeof(temp_value_str1), "%d", batteryPercent );
+  nvgTextBox(s->vg, battery_img_x, battery_img_y - 2, battery_img_w, temp_value_str1, NULL);
 }
 
 static void ui_draw_sidebar_network_type(UIState *s) {
@@ -66,7 +78,7 @@ static void ui_draw_sidebar_network_type(UIState *s) {
   const int network_h = 100;
   const char *network_type = network_type_map[s->scene.networkType];
   nvgFillColor(s->vg, COLOR_WHITE);
-  nvgFontSize(s->vg, 48);
+  nvgFontSize(s->vg, 48*fFontSize);
   nvgFontFaceId(s->vg, s->font_sans_regular);
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
   nvgTextBox(s->vg, network_x, network_y, network_w, network_type ? network_type : "--", NULL);
@@ -98,19 +110,19 @@ static void ui_draw_sidebar_metric(UIState *s, const char* label_str, const char
 
   if (!message_str) {
     nvgFillColor(s->vg, COLOR_WHITE);
-    nvgFontSize(s->vg, 78);
+    nvgFontSize(s->vg, 78*fFontSize);
     nvgFontFaceId(s->vg, s->font_sans_bold);
     nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgTextBox(s->vg, metric_x + 50, metric_y + 50, metric_w - 60, value_str, NULL);
 
     nvgFillColor(s->vg, COLOR_WHITE);
-    nvgFontSize(s->vg, 48);
+    nvgFontSize(s->vg, 48*fFontSize);
     nvgFontFaceId(s->vg, s->font_sans_regular);
     nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     nvgTextBox(s->vg, metric_x + 50, metric_y + 50 + 66, metric_w - 60, label_str, NULL);
   } else {
     nvgFillColor(s->vg, COLOR_WHITE);
-    nvgFontSize(s->vg, 48);
+    nvgFontSize(s->vg, 48*fFontSize);
     nvgFontFaceId(s->vg, s->font_sans_bold);
     nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
     nvgTextBox(s->vg, metric_x + 35, metric_y + (strchr(message_str, '\n') ? 40 : 50), metric_w - 50, message_str, NULL);

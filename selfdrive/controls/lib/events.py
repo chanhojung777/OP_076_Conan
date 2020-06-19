@@ -195,7 +195,7 @@ EVENTS = {
       "Be ready to take over at any time",
       "Always keep hands on wheel and eyes on road",
       AlertStatus.normal, AlertSize.mid,
-      Priority.LOWER, VisualAlert.none, AudibleAlert.none, 0., 0., 15.),
+      Priority.LOWER, VisualAlert.none, AudibleAlert.none, 0., 0., 5.),
   },
 
   EventName.startupWhitePanda: {
@@ -209,7 +209,7 @@ EVENTS = {
   EventName.startupMaster: {
     ET.PERMANENT: Alert(
       "WARNING: This branch is not tested",
-      "Always keep hands on wheel and eyes on road",
+      "안전운전을 위해 항상 핸들을 잡고 도로교통 상황을 주시하세요",
       AlertStatus.userPrompt, AlertSize.mid,
       Priority.LOWER, VisualAlert.none, AudibleAlert.none, 0., 0., 15.),
   },
@@ -217,7 +217,7 @@ EVENTS = {
   EventName.startupNoControl: {
     ET.PERMANENT: Alert(
       "Dashcam mode",
-      "Always keep hands on wheel and eyes on road",
+      "안전운전을 위해 항상 핸들을 잡고 도로교통 상황을 주시하세요",
       AlertStatus.normal, AlertSize.mid,
       Priority.LOWER, VisualAlert.none, AudibleAlert.none, 0., 0., 15.),
   },
@@ -225,7 +225,7 @@ EVENTS = {
   EventName.startupNoCar: {
     ET.PERMANENT: Alert(
       "Dashcam mode for unsupported car",
-      "Always keep hands on wheel and eyes on road",
+      "안전운전을 위해 항상 핸들을 잡고 도로교통 상황을 주시하세요",
       AlertStatus.normal, AlertSize.mid,
       Priority.LOWER, VisualAlert.none, AudibleAlert.none, 0., 0., 15.),
   },
@@ -431,6 +431,14 @@ EVENTS = {
       Priority.LOW, VisualAlert.steerRequired, AudibleAlert.none, .0, .1, .1),
   },
 
+  EventName.laneChangeManual: {
+    ET.WARNING: Alert(
+      "Steer Manual Lane Change",
+      "Monitor Other Vehicles",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.steerRequired, AudibleAlert.none, .0, .1, .1, alert_rate=0.75),
+  },
+
   EventName.steerSaturated: {
     ET.WARNING: Alert(
       "TAKE CONTROL",
@@ -439,6 +447,22 @@ EVENTS = {
       Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimePrompt, 1., 2., 3.),
   },
 
+
+  EventName.steerTorqueOver: {
+    ET.WARNING: Alert(
+      "운전자 핸들 조향",
+      "자동 조향 일시 중지",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimePrompt, 0., 0., .1),
+  },
+  
+  EventName.steerTorqueLow: {
+    ET.WARNING: Alert(
+      "TAKE CONTROL",
+      "자동 조향 일시 저하",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimePrompt, 0., 0., .1),
+  },  
   # ********** events that affect controls state transitions **********
 
   EventName.pcmEnable: {
@@ -507,6 +531,7 @@ EVENTS = {
     ET.NO_ENTRY: NoEntryAlert("Speed Too Low"),
   },
 
+
   EventName.neosUpdateRequired: {
     ET.PERMANENT: Alert(
       "NEOS Update Required",
@@ -515,7 +540,6 @@ EVENTS = {
       Priority.HIGHEST, VisualAlert.none, AudibleAlert.none, 0., 0., .2),
     ET.NO_ENTRY: NoEntryAlert("NEOS Update Required"),
   },
-
 
   EventName.sensorDataInvalid: {
     ET.PERMANENT: Alert(
@@ -545,7 +569,7 @@ EVENTS = {
   },
 
   EventName.wrongGear: {
-    ET.SOFT_DISABLE: SoftDisableAlert("Gear not D"),
+    ET.USER_DISABLE: EngagementAlert(AudibleAlert.chimeDisengage),  #ET.SOFT_DISABLE: SoftDisableAlert("Gear not D"),
     ET.NO_ENTRY: NoEntryAlert("Gear not D"),
   },
 
@@ -561,12 +585,12 @@ EVENTS = {
   },
 
   EventName.doorOpen: {
-    ET.SOFT_DISABLE: SoftDisableAlert("Door Open"),
+    ET.USER_DISABLE: EngagementAlert(AudibleAlert.chimeDisengage), #ET.SOFT_DISABLE: SoftDisableAlert("Door Open"),
     ET.NO_ENTRY: NoEntryAlert("Door open"),
   },
 
   EventName.seatbeltNotLatched: {
-    ET.SOFT_DISABLE: SoftDisableAlert("Seatbelt Unlatched"),
+    ET.USER_DISABLE: EngagementAlert(AudibleAlert.chimeDisengage), #ET.SOFT_DISABLE: SoftDisableAlert("Seatbelt Unlatched"),
     ET.NO_ENTRY: NoEntryAlert("Seatbelt unlatched"),
   },
 
@@ -652,8 +676,9 @@ EVENTS = {
     ET.NO_ENTRY: NoEntryAlert("Gas Error: Restart the Car"),
   },
 
+
   EventName.reverseGear: {
-    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Reverse Gear"),
+    ET.USER_DISABLE: EngagementAlert(AudibleAlert.chimeDisengage),
     ET.NO_ENTRY: NoEntryAlert("Reverse Gear"),
   },
 
