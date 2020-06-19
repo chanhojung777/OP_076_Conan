@@ -4,6 +4,7 @@ from selfdrive.config import Conversions as CV
 from selfdrive.car.hyundai.values import Ecu, ECU_FINGERPRINT, CAR, FINGERPRINTS, Buttons
 from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, is_ecu_disconnected, gen_empty_fingerprint
 from selfdrive.car.interfaces import CarInterfaceBase, MAX_CTRL_SPEED
+from selfdrive.car.hyundai.carstate import ATOMC
 
 #from selfdrive.kegman_conf import kegman_conf
 
@@ -60,6 +61,7 @@ class CarInterface(CarInterfaceBase):
 
   @staticmethod
   def get_params(candidate, fingerprint=gen_empty_fingerprint(), has_relay=False, car_fw=[]):
+    global ATOMC    
     ret = CarInterfaceBase.get_std_params(candidate, fingerprint, has_relay)
 
     ret.carName = "hyundai"
@@ -85,11 +87,11 @@ class CarInterface(CarInterfaceBase):
       tire_stiffness_factor = 0.7
     """
 
+    tire_stiffness_factor = 1.
     ret.steerActuatorDelay = 0.1  # Default delay
     ret.steerRateCost = 0.5
     ret.steerLimitTimer = 0.4
-    tire_stiffness_factor = 1.
-
+    ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[9., 22.], [9., 22.]]
 
     if candidate == CAR.GRANDEUR_HYBRID:
       ret.mass = 1675. + STD_CARGO_KG
@@ -102,12 +104,16 @@ class CarInterface(CarInterfaceBase):
       #ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[9., 22.], [9., 22.]]
       #ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.15, 0.20], [0.03, 0.04]]
 
+
+
       # 2번 튜닝.
-      ret.steerRatio = 10.5  #12.5
-      ret.steerRateCost = 0.4 #0.4
-      ret.lateralTuning.pid.kf = 0.00001
-      ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[9., 22.], [9., 22.]]
-      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.12, 0.15], [0.02, 0.02]]
+      ret.steerRatio = ATOMC.steerRatio  #10.5  #12.5
+      ret.steerRateCost = ATOMC.steerRateCost #0.4 #0.4
+      ret.lateralTuning.pid.kf = ATOMC.steer_Kp1[0] #0.00001
+      ret.lateralTuning.pid.kpV = ATOMC.steer_Kp1  #[0.12, 0.15]
+      ret.lateralTuning.pid.kiV = ATOMC.steer_Ki1  #[0.02, 0.02]
+
+
 
       #ret.lateralTuning_sR.kf = 0.00005
       #ret.lateralTuning_sR.sRBP = [4, 30.]
