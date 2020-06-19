@@ -116,10 +116,10 @@ class PathPlanner():
     self.atom_steer_ratio = ATOMC.steerRatio + boost_rate
     self.steer_rate_cost = ATOMC.steerRateCost
 
-    str_log = ' steerRatio={:.1f}/{:.1f}/{:.1f} bp={} range={}'.format( sm['liveParameters'].steerRatio, CP.steerRatio, ATOMC.steerRatio,  self.atom_sr_boost_bp, self.atom_sr_boost_range )
+    str_log1 = ' steerRatio={:.1f}/{:.1f}/{:.1f} bp={} range={}'.format( sm['liveParameters'].steerRatio, CP.steerRatio, ATOMC.steerRatio,  self.atom_sr_boost_bp, self.atom_sr_boost_range )
     str_log2 = 'steerRateCost={:.2f}'.format( self.steer_rate_cost )
     
-    self.trPATH.add( '{} {}'.format( str_log, str_log2 ) )
+    self.trPATH.add( '{} {}'.format( str_log1, str_log2 ) )
 
     # Run MPC
     self.angle_steers_des_prev = self.angle_steers_des_mpc

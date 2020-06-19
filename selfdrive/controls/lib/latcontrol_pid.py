@@ -52,9 +52,8 @@ class LatControlPID():
 
 
     str1 = 'kp={},{} ki={},{} kf={},{}'.format( self.steer_Kp1, self.steer_Kp2, self.steer_Ki1, self.steer_Ki2, self.steer_Kf1, self.steer_Kf2 )
-    str2 = 'steerRatio={:.3f} steerRateCost={:.5f}'.format( ATOMC.steerRatio, ATOMC.steerRateCost )
     self.trPID = trace1.Loger("pid")    
-    self.trPID.add( '{} {}'.format( str1, str2 ) )    
+    self.trPID.add( '{} {}'.format( str1 ) )    
 
     cv_angle = abs(self.angle_steers_des)
     cv = self.sr_boost_bp  #[ 4, 30 ]  # angle
