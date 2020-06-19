@@ -20,6 +20,10 @@ class AtomConf():
     self.steerOffset = 0.0
     self.steerRatio = 10.5
     self.steerRateCost = 0.4
+
+    self.LearnerParams = 0
+    self.tire_stiffness_factor = 1.0
+
     self.read_tune()
 
   def read_tune(self):
@@ -38,4 +42,7 @@ class AtomConf():
     self.steerOffset = float(conf['steerOffset'])
     self.steerRatio = float(conf['steerRatio'])
     self.steerRateCost = float(conf['steerRateCost'])
+
+    self.LearnerParams = float(conf['LearnerParams'])
+    self.tire_stiffness_factor = float(conf['tire_stiffness_factor'])
 

@@ -70,7 +70,8 @@ class kegman_conf():
                     "sR_Kp2":"0.15", "sR_Ki2":"0.02", "sR_Kf2":"0.00003", \
                     "sR_BP0":"3", "sR_BP1":"30", \
                     "sR_boost":"1.5", "deadzone":"0.0", "steerOffset":"0.0", \
-                    "steerRatio":"10.5", "steerRateCost":"0.4"}
+                    "steerRatio":"10.5", "steerRateCost":"0.4", \
+                    "LearnerParams":"0" }
       self.write_config(self.config)
     return self.config
 

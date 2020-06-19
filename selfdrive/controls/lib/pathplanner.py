@@ -70,7 +70,9 @@ class PathPlanner():
     self.prev_one_blinker = False
 
     # atom
-    self.trPATH = trace1.Loger("path")   
+    self.trPATH = trace1.Loger("path")
+    self.trLearner = trace1.Loger("Learner")
+
     self.atom_steer_ratio = None
     self.atom_sr_boost_bp = [0., 0.]
     self.atom_sr_boost_range = [0., 0.]
@@ -102,25 +104,36 @@ class PathPlanner():
 
   def update(self, sm, pm, CP, VM):
     global ATOMC
+  
     v_ego = sm['carState'].vEgo
     angle_steers = sm['carState'].steeringAngle
     active = sm['controlsState'].active
-
-    angle_offset = sm['liveParameters'].angleOffset
     v_ego_kph = v_ego * CV.MS_TO_KPH
+    
+    self.atom_steer_ratio = sm['liveParameters'].steerRatio
+    angle_offset = sm['liveParameters'].angleOffset
+    angleOffsetAverage = sm['liveParameters'].angleOffsetAverage
+    stiffnessFactor = sm['liveParameters'].stiffnessFactor
 
+    str_log3 = 'angleOffset={:.3f} angleOffsetAverage={:.3f} steerRatio={:.3f} stiffnessFactor={:.5f} '.format( angle_offset, angleOffsetAverage, self.atom_steer_ratio, stiffnessFactor )
+    self.trLearner.add( 'LearnerParam {}'.format( str_log3 ) )       
+    if ATOMC.LearnerParams:
+      pass
+    else:
+      angle_offset = 0
+      angleOffsetAverage = 0
+      stiffnessFactor = ATOMC.tire_stiffness_factor
+      # atom
+      self.atom_sr_boost_bp = ATOMC.sr_boost_bp
+      self.atom_sr_boost_range = ATOMC.sr_boost_range
+      boost_rate = interp(abs(angle_steers), self.atom_sr_boost_bp, self.atom_sr_boost_range)
+      self.atom_steer_ratio = ATOMC.steerRatio + boost_rate
+      self.steer_rate_cost = ATOMC.steerRateCost
 
-    # atom
-    self.atom_sr_boost_bp = ATOMC.sr_boost_bp
-    self.atom_sr_boost_range = ATOMC.sr_boost_range
-    boost_rate = interp(abs(angle_steers), self.atom_sr_boost_bp, self.atom_sr_boost_range)
-    self.atom_steer_ratio = ATOMC.steerRatio + boost_rate
-    self.steer_rate_cost = ATOMC.steerRateCost
-
-    str_log1 = ' steerRatio={:.1f}/{:.1f} bp={} range={}'.format(  CP.steerRatio, ATOMC.steerRatio,  self.atom_sr_boost_bp, self.atom_sr_boost_range )
-    str_log2 = 'steerRateCost={:.2f}'.format( self.steer_rate_cost )
-    str_log3 = 'liveParameters=off={} sr={} sf={} off_avg={}'.format( sm['liveParameters'].angleOffset, sm['liveParameters'].steerRatio, sm['liveParameters'].stiffnessFactor, sm['liveParameters'].angleOffsetAverage )
-    self.trPATH.add( '{} {} {}'.format( str_log1, str_log2, str_log3 ) )
+      str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format(  CP.steerRatio, ATOMC.steerRatio,  self.atom_sr_boost_bp, self.atom_sr_boost_range )
+      str_log2 = 'angle_steers={:.0f} steerRatio={:.3f} steerRateCost={:.2f}'.format( angle_steers, self.atom_steer_ratio, self.steer_rate_cost )
+      self.trPATH.add( '{} {}'.format( str_log1, str_log2 ) )
+      
 
     # Run MPC
     self.angle_steers_des_prev = self.angle_steers_des_mpc
