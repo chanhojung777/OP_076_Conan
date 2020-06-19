@@ -6,9 +6,9 @@ from selfdrive.config import Conversions as CV
 from selfdrive.atom_conf import AtomConf
 from selfdrive.car.hyundai.values import Buttons
 
-from selfdrive.controls.lib.latcontrol_pid import LatControlPID
-from selfdrive.controls.lib.pathplanner import PathPlanner
-from selfdrive.car.hyundai.interface import Interface
+#from selfdrive.controls.lib.latcontrol_pid import LatControlPID
+#from selfdrive.controls.lib.pathplanner import PathPlanner
+#from selfdrive.car.hyundai.interface import Interface
 
 GearShifter = car.CarState.GearShifter
 
@@ -216,9 +216,9 @@ class CarState(CarStateBase):
     if self.lkas_button_on and self.prev_cruise_buttons  != self.cruise_buttons:
       if self.prev_cruise_buttons == Buttons.CANCEL:
         ATOMC.read_tune()
-        LatControlPID.ATOMC = ATOMC
-        PathPlanner.ATOMC = ATOMC
-        Interface.ATOMC = ATOMC
+        #LatControlPID.ATOMC = ATOMC
+        #PathPlanner.ATOMC = ATOMC
+        #Interface.ATOMC = ATOMC
 
     return ret
 
