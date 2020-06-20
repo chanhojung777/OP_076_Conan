@@ -129,7 +129,7 @@ class CarController():
       self.steer_torque_ratio_dir = -1
     elif steer_angle_lower:  
       param.STEER_DELTA_UP  = 1
-      param.STEER_DELTA_DOWN = 2
+      param.STEER_DELTA_DOWN = 1
       self.steer_torque_ratio_dir = 1
     else:
       self.steer_torque_ratio_dir = 1
