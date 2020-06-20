@@ -98,6 +98,10 @@ class CarController():
     if abs_angle_steers < 1 or v_ego_kph < 5:
         param.STEER_DELTA_UP  = 2
         param.STEER_DELTA_DOWN = 3
+    else:
+        param.STEER_DELTA_UP = 3
+        param.STEER_DELTA_DOWN = 4
+
 
     # streer over check
     if v_ego_kph > 5 and abs( CS.out.steeringTorque ) > 180:  #사용자 핸들 토크
