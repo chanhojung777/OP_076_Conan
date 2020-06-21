@@ -29,10 +29,12 @@ class LatControlPID():
 
     self.steer_Kp1 = ATOMC.steer_Kp1  #[0.11,0.12]
     self.steer_Ki1 = ATOMC.steer_Ki1  #[0.008,0.01]
+    self.steer_Kd1 = ATOMC.steer_Kd1
     self.steer_Kf1 = ATOMC.steer_Kf1 #[0.000001,0.00001]
 
     self.steer_Kp2 = ATOMC.steer_Kp2 #[0.13,0.15]
     self.steer_Ki2 = ATOMC.steer_Ki2 #[0.015,0.02]
+    self.steer_Kd2 = ATOMC.steer_Kd2 #[0.015,0.02]
     self.steer_Kf2 = ATOMC.steer_Kf2  #[0.00003,0.00003]
 
     self.sr_boost_bp = ATOMC.sr_boost_bp
@@ -58,6 +60,13 @@ class LatControlPID():
     self.steerKi2 = interp( cv_angle, cv, fKi2 )
     self.steerKiV = [ float(self.steerKi1), float(self.steerKi2) ]
 
+    # Kd
+    fKd1 = [float(self.steer_Kd1[ 0 ]), float(self.steer_Kd1[ 1 ]) ]
+    fKd2 = [float(self.steer_Kd2[ 0 ]), float(self.steer_Kd2[ 1 ]) ]
+    self.steerKd1 = interp( cv_angle, cv, fKd1 )
+    self.steerKd2 = interp( cv_angle, cv, fKd2 )    
+    self.steerKdV = [ float(self.steerKd1), float(self.steerKd2) ]
+
     # kf
     fKf1 = [float(self.steer_Kf1[ 0 ]), float(self.steer_Kf1[ 1 ]) ]
     fKf2 = [float(self.steer_Kf2[ 0 ]), float(self.steer_Kf2[ 1 ]) ]
@@ -69,7 +78,11 @@ class LatControlPID():
     fp = [float(self.steerKf1), float(self.steerKf2) ]
     self.steerKfV = interp( v_ego,  xp, fp )
 
-    self.pid.gain( (CP.lateralTuning.pid.kpBP, self.steerKpV), (CP.lateralTuning.pid.kiBP, self.steerKiV), k_f=self.steerKfV  )
+
+
+
+    kBP = CP.lateralTuning.pid.kpBP
+    self.pid.gain( (kBP, self.steerKpV), (kBP, self.steerKiV), k_f=self.steerKfV, k_d=(kBP, self.steerKdV) )
 
 
 

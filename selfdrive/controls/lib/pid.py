@@ -15,6 +15,9 @@ class PIController():
     self._k_p = k_p # proportional gain
     self._k_i = k_i # integral gain
     self.k_f = k_f  # feedforward gain
+    self._k_d = None
+
+    self.ErrPrev = 0	# History: Previous error
 
     self.pos_limit = pos_limit
     self.neg_limit = neg_limit
@@ -27,9 +30,10 @@ class PIController():
 
     self.reset()
 
-  def gain(self, k_p, k_i, k_f ):
+  def gain(self, k_p, k_i, k_f, k_d = None ):
     self._k_p = k_p # proportional gain
     self._k_i = k_i # integral gain
+    self._k_d = k_d #  Derivative gain
     self.k_f = k_f  # feedforward gain    
 
   @property
@@ -39,6 +43,10 @@ class PIController():
   @property
   def k_i(self):
     return interp(self.speed, self._k_i[0], self._k_i[1])
+
+  @property
+  def k_d(self):
+    return interp(self.speed, self._k_d[0], self._k_d[1])    
 
   def _check_saturation(self, control, check_saturation, error):
     saturated = (control < self.neg_limit) or (control > self.pos_limit)
@@ -56,6 +64,7 @@ class PIController():
     self.p = 0.0
     self.i = 0.0
     self.f = 0.0
+    self.d = 0.0
     self.sat_count = 0.0
     self.saturated = False
     self.control = 0
@@ -83,11 +92,18 @@ class PIController():
          not freeze_integrator:
         self.i = i
 
-    control = self.p + self.f + self.i
+
+		# Compute the derivative output
+    if self._k_d is not None:
+		  self.d = self.k_d * (error - self.ErrPrev)        
+
+    control = self.p + self.f + self.i + self.d
     if self.convert is not None:
       control = self.convert(control, speed=self.speed)
 
     self.saturated = self._check_saturation(control, check_saturation, error)
 
     self.control = clip(control, self.neg_limit, self.pos_limit)
+
+    self.ErrPrev = error
     return self.control
