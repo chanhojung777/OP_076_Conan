@@ -7,7 +7,7 @@ from common.numpy_fast import interp
 from selfdrive.car.hyundai.carstate import ATOMC
 import common.log as trace1
 
-
+ButtonType = car.CarState.ButtonEvent.Type
 
 class LatControlPID():
   def __init__(self, CP):
@@ -87,6 +87,8 @@ class LatControlPID():
 
 
   def update(self, active, CS, CP, path_plan):
+    if CS.buttonEvents.type == ButtonType.cancel:
+      ATOMC.read_tune()
 
     self.linear2_tune( CP, CS.vEgo )
 

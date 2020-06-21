@@ -212,12 +212,10 @@ class CarState(CarStateBase):
     self.lead_distance = cp.vl["SCC11"]['ACC_ObjDist']
 
 
-    if self.lkas_button_on and self.prev_cruise_buttons  != self.cruise_buttons:
-      if self.prev_cruise_buttons == Buttons.CANCEL:
-        ATOMC.read_tune()
-        #LatControlPID.ATOMC = ATOMC
-        #PathPlanner.ATOMC = ATOMC
-        #Interface.ATOMC = ATOMC
+    #if self.lkas_button_on and self.prev_cruise_buttons  != self.cruise_buttons:
+    #  if self.prev_cruise_buttons == Buttons.CANCEL:
+    #    ATOMC.read_tune()
+
 
     return ret
 
