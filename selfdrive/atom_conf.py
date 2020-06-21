@@ -5,7 +5,7 @@ class AtomConf():
   def __init__(self, CP=None):
     self.kegman = kegman_conf()
 
-    self.sr_boost_bp = [4.,30.]
+    self.sr_boost_bp = [4.,15.]
     self.sr_boost_range = [0.,1.5]
 
     self.steer_Kp1 = [0.11,0.12]

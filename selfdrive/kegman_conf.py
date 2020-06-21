@@ -72,7 +72,7 @@ class kegman_conf():
                     "Kp2":"0.12", "Ki2":"0.01", "Kd2":"0.0", "Kf2":"0.000001",  \
                     "sR_Kp":"0.13", "sR_Ki":"0.015", "sR_Kd":"0.0", "sR_Kf":"0.00003", \
                     "sR_Kp2":"0.15", "sR_Ki2":"0.02", "sR_Kd2":"0.0", "sR_Kf2":"0.00003", \
-                    "sR_BP0":"3", "sR_BP1":"30", \
+                    "sR_BP0":"3", "sR_BP1":"15", \
                     "sR_boost":"1.5", "deadzone":"0.0", "steerOffset":"0.0", \
                     "steerRatio":"10.5", "steerRateCost":"0.4", \
                     "LearnerParams":"0" }

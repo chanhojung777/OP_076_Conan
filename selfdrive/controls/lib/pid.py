@@ -1,6 +1,9 @@
 import numpy as np
 from common.numpy_fast import clip, interp
 
+import common.log as trace1
+
+
 def apply_deadzone(error, deadzone):
   if error > deadzone:
     error -= deadzone
@@ -17,7 +20,7 @@ class PIController():
     self.k_f = k_f  # feedforward gain
     self._k_d = None
 
-    self.ErrPrev = 0	# History: Previous error
+    self.errorPrev = 0	# History: Previous error
 
     self.pos_limit = pos_limit
     self.neg_limit = neg_limit
@@ -29,6 +32,8 @@ class PIController():
     self.convert = convert
 
     self.reset()
+
+    self.trPID = trace1.Loger("pid_ctrl")   
 
   def gain(self, k_p, k_i, k_f, k_d = None ):
     self._k_p = k_p # proportional gain
@@ -95,7 +100,7 @@ class PIController():
 
 		# Compute the derivative output
     if self._k_d is not None:
-		  self.d = self.k_d * (error - self.ErrPrev)        
+		  self.d = self.k_d * (error - self.errorPrev)        
 
     control = self.p + self.f + self.i + self.d
     if self.convert is not None:
@@ -105,5 +110,8 @@ class PIController():
 
     self.control = clip(control, self.neg_limit, self.pos_limit)
 
-    self.ErrPrev = error
+    self.errorPrev = error
+
+    str1 = 'control={:.5f} p={:.5f} f={:.5f} i={:.5f} d={:.5f} limit={:.5f}/{:.5f}'.format( self.control, self.p, self.f, self.i, self.d, self.neg_limit, self.pos_limit )
+    self.trPID.add( str1 )      
     return self.control
