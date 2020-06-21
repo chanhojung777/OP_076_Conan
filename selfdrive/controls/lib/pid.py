@@ -114,9 +114,9 @@ class PIController():
 
     self.errorPrev = error
 
-    self.time_cnt += 1
-    if self.time_cnt > 10:
-      self.time_cnt = 0
-      str1 = 'control={:.5f} p={:.5f} f={:.5f} i={:.5f} d={:.5f}'.format( self.control, self.p, self.f, self.i, self.d )
-      self.trPID.add( str1 )      
+    #elf.time_cnt += 1
+    #if self.time_cnt > 10:
+    #  self.time_cnt = 0
+    str1 = 'control={:.5f} a={:.1f}/{:.1f}/{:.0f} p={:.5f} f={:.5f} i={:.5f} d={:.5f}'.format( self.control, setpoint, measurement, override, self.p, self.f, self.i, self.d )
+    self.trPID.add( str1 )      
     return self.control
