@@ -127,7 +127,8 @@ class CarController():
       self.steer_torque_over_timer = 0
     elif self.steer_torque_over_timer:  #or CS.out.steerWarning:
       self.steer_torque_ratio_dir = -1
-    elif steer_angle_lower:  
+    elif steer_angle_lower:
+      param.STEER_MAX *= 0.5
       param.STEER_DELTA_UP  = 1
       param.STEER_DELTA_DOWN = 1
       self.steer_torque_ratio_dir = 1      
