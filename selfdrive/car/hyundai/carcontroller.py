@@ -118,26 +118,28 @@ class CarController():
 
     # 차선이 없고 앞차량이 없으면.
     steer_angle_lower = self.dRel > 30 and (not CC.hudControl.leftLaneVisible  and not CC.hudControl.rightLaneVisible)
-    lane_change_torque_lower = 0
+
     if v_ego_kph < 1:
       self.steer_torque_over_timer = 0
       self.steer_torque_ratio_dir = 1
     elif path_plan.laneChangeState != LaneChangeState.off:
       self.steer_torque_ratio_dir = 1
       self.steer_torque_over_timer = 0
-    elif self.nBlinker > 10:
-      lane_change_torque_lower = int(CS.out.leftBlinker) + int(CS.out.rightBlinker) * 2
-      self.steer_torque_ratio_dir = 1
-      if CS.out.steeringPressed:
-        self.steer_torque_ratio = 0.05
     elif self.steer_torque_over_timer:  #or CS.out.steerWarning:
       self.steer_torque_ratio_dir = -1
     elif steer_angle_lower:  
       param.STEER_DELTA_UP  = 1
       param.STEER_DELTA_DOWN = 1
-      self.steer_torque_ratio_dir = 1
+      self.steer_torque_ratio_dir = 1      
     else:
       self.steer_torque_ratio_dir = 1
+
+    lane_change_torque_lower = 0
+    if self.nBlinker > 10:
+      lane_change_torque_lower = int(CS.out.leftBlinker) + int(CS.out.rightBlinker) * 2
+      #self.steer_torque_ratio_dir = 1
+      if CS.out.steeringPressed:
+        self.steer_torque_ratio = 0.05      
 
     self.lane_change_torque_lower =  lane_change_torque_lower
     # smoth torque enable or disable
@@ -145,7 +147,7 @@ class CarController():
       if self.steer_torque_ratio < 1:
         self.steer_torque_ratio += 0.002
     elif self.steer_torque_ratio_dir <= -1:
-      if self.steer_torque_ratio > 0.1:
+      if self.steer_torque_ratio > 0:
         self.steer_torque_ratio -= 0.002
 
     if self.steer_torque_ratio < 0:
