@@ -87,13 +87,14 @@ class LatControlPID():
 
 
   def update(self, active, CS, CP, path_plan):
+    self.angle_steers_des = path_plan.angleSteers    
     self.linear2_tune( CP, CS.vEgo )
 
     pid_log = log.ControlsState.LateralPIDState.new_message()
     pid_log.steerAngle = float(CS.steeringAngle)
     pid_log.steerRate = float(CS.steeringRate)
 
-    self.angle_steers_des = path_plan.angleSteers
+
     if CS.vEgo < 0.3 or not active:
       output_steer = 0.0
       pid_log.active = False

@@ -164,18 +164,18 @@ ThermalStatus = cereal.log.ThermalData.ThermalStatus
 # comment out anything you don't want to run
 managed_processes = {
   "thermald": "selfdrive.thermald.thermald",
-  #"uploader": "selfdrive.loggerd.uploader",  # delete able
-  #"deleter": "selfdrive.loggerd.deleter",   # delete able
+  "uploader": "selfdrive.loggerd.uploader",  # delete able
+  "deleter": "selfdrive.loggerd.deleter",   # delete able
   "controlsd": "selfdrive.controls.controlsd",
   "plannerd": "selfdrive.controls.plannerd",
   "radard": "selfdrive.controls.radard",
   "dmonitoringd": "selfdrive.controls.dmonitoringd",
   "ubloxd": ("selfdrive/locationd", ["./ubloxd"]),
-  #"loggerd": ("selfdrive/loggerd", ["./loggerd"]),  # delete able
-  #"logmessaged": "selfdrive.logmessaged",   # delete able
+  "loggerd": ("selfdrive/loggerd", ["./loggerd"]),  # delete able
+  "logmessaged": "selfdrive.logmessaged",   # delete able
   "locationd": "selfdrive.locationd.locationd",
   "tombstoned": "selfdrive.tombstoned",
-  #"logcatd": ("selfdrive/logcatd", ["./logcatd"]),  # delete able
+  "logcatd": ("selfdrive/logcatd", ["./logcatd"]),  # delete able
   "proclogd": ("selfdrive/proclogd", ["./proclogd"]),
   "boardd": ("selfdrive/boardd", ["./boardd"]),   # not used directly
   "pandad": "selfdrive.pandad",
@@ -186,7 +186,7 @@ managed_processes = {
   "sensord": ("selfdrive/sensord", ["./sensord"]),
   "clocksd": ("selfdrive/clocksd", ["./clocksd"]),
   "gpsd": ("selfdrive/sensord", ["./gpsd"]),
-  #"updated": "selfdrive.updated",   # delete able
+  "updated": "selfdrive.updated",   # delete able
   "dmonitoringmodeld": ("selfdrive/modeld", ["./dmonitoringmodeld"]),
   "modeld": ("selfdrive/modeld", ["./modeld"]),
   "driverview": "selfdrive.controls.lib.driverview",

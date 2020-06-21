@@ -207,6 +207,7 @@ class Controls:
       self.consecutive_can_error_count += 1
     else:
       self.consecutive_can_error_count = 0
+      
     if self.consecutive_can_error_count > 2 / DT_CTRL:
       self.events.add(EventName.canErrorPersistent)
     if self.mismatch_counter >= 200:
