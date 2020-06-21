@@ -17,8 +17,9 @@ class PIController():
   def __init__(self, k_p, k_i, k_f=1., pos_limit=None, neg_limit=None, rate=100, sat_limit=0.8, convert=None):
     self._k_p = k_p # proportional gain
     self._k_i = k_i # integral gain
+    self._k_d = None    
     self.k_f = k_f  # feedforward gain
-    self._k_d = None
+
 
     self.errorPrev = 0	# History: Previous error
 
@@ -100,7 +101,8 @@ class PIController():
 
 		# Compute the derivative output
     if self._k_d is not None:
-		  self.d = self.k_d * (error - self.errorPrev)
+      delta = error - self.errorPrev
+      self.d = delta * self.k_d
 
     control = self.p + self.f + self.i + self.d
     if self.convert is not None:
