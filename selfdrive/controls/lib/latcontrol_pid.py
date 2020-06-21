@@ -90,6 +90,7 @@ class LatControlPID():
     if CS.buttonEvents.type == ButtonType.cancel:
       ATOMC.read_tune()
 
+
     self.linear2_tune( CP, CS.vEgo )
 
     pid_log = log.ControlsState.LateralPIDState.new_message()
