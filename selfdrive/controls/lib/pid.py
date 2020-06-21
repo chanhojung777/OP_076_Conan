@@ -117,6 +117,6 @@ class PIController():
     self.time_cnt += 1
     if self.time_cnt > 10:
       self.time_cnt = 0
-      str1 = 'control={:.5f} p={:.5f} f={:.5f} i={:.5f} d={:.5f} limit={:.5f}/{:.5f}'.format( self.control, self.p, self.f, self.i, self.d, self.neg_limit, self.pos_limit )
+      str1 = 'control={:.5f} p={:.5f} f={:.5f} i={:.5f} d={:.5f}'.format( self.control, self.p, self.f, self.i, self.d )
       self.trPID.add( str1 )      
     return self.control
