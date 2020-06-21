@@ -100,7 +100,7 @@ class PIController():
 
 		# Compute the derivative output
     if self._k_d is not None:
-		  self.d = self.k_d * (error - self.errorPrev)        
+		  self.d = self.k_d * (error - self.errorPrev)
 
     control = self.p + self.f + self.i + self.d
     if self.convert is not None:
