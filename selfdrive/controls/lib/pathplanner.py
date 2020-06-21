@@ -72,6 +72,7 @@ class PathPlanner():
     # atom
     self.trPATH = trace1.Loger("path")
     self.trLearner = trace1.Loger("Learner")
+    self.trpathPlan = trace1.Loger("pathPlan")
 
     self.atom_timer_cnt = 0
     self.atom_steer_ratio = None
@@ -279,6 +280,10 @@ class PathPlanner():
     plan_send.pathPlan.laneChangeDirection = self.lane_change_direction
 
     pm.send('pathPlan', plan_send)
+
+    str_log3 = 'angle_steers_des_mpc={:.1f} angle_steers={:.1f} cur_state={:.5f} rate_desired={:.5f}'.format( self.angle_steers_des_mpc, angle_steers, delta_desired, rate_desired )
+    self.trpathPlan.add( 'pathPlan {}'.format( str_log3 ) )   
+
 
     if LOG_MPC:
       dat = messaging.new_message('liveMpc')
