@@ -41,7 +41,7 @@ class LatControlPID():
     self.deadzone = ATOMC.deadzone
 
 
-    str1 = 'bp={}  kp={},{} ki={},{} kf={},{}'.format( self.sr_boost_bp, self.steer_Kp1, self.steer_Kp2, self.steer_Ki1, self.steer_Ki2, self.steer_Kf1, self.steer_Kf2 )
+    str1 = 'bp={}  kp={},{} ki={},{} kd={},{} kf={},{}'.format( self.sr_boost_bp, self.steer_Kp1, self.steer_Kp2, self.steer_Ki1, self.steer_Ki2, self.steer_Kd1, self.steer_Kd2, self.steer_Kf1, self.steer_Kf2 )
     self.trPID.add( str1 )    
 
     cv_angle = abs(self.angle_steers_des)
