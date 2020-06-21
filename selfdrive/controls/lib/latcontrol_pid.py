@@ -87,10 +87,6 @@ class LatControlPID():
 
 
   def update(self, active, CS, CP, path_plan):
-    if CS.buttonEvents.type == ButtonType.cancel:
-      ATOMC.read_tune()
-
-
     self.linear2_tune( CP, CS.vEgo )
 
     pid_log = log.ControlsState.LateralPIDState.new_message()
