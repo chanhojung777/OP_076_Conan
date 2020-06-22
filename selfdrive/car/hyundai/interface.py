@@ -322,7 +322,7 @@ class CarInterface(CarInterfaceBase):
         self.meg_name = EventName.resumeRequired       
       elif self.CC.lane_change_torque_lower:
         self.meg_name = EventName.laneChangeManual
-      elif self.CC.steer_torque_over_timer and self.CC.steer_torque_ratio < 0.7:
+      elif self.CC.steer_torque_over_timer and self.CC.steer_torque_ratio < 0.1:
         self.meg_name = EventName.steerTorqueOver
       elif self.CC.steer_torque_ratio < 0.5 and self.CS.clu_Vanz > 5:
         self.meg_name = EventName.steerTorqueLow

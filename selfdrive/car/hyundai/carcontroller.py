@@ -111,7 +111,7 @@ class CarController():
       self.steer_torque_over_timer = 0
 
 
-    if  CS.out.leftBlinker or CS.out.rightBlinker:
+    if CS.out.leftBlinker or CS.out.rightBlinker:
       self.nBlinker += 1
     elif self.nBlinker:
       self.nBlinker = 0
@@ -125,6 +125,7 @@ class CarController():
     elif path_plan.laneChangeState != LaneChangeState.off:
       self.steer_torque_ratio_dir = 1
       self.steer_torque_over_timer = 0
+      self.nBlinker = 0
     elif self.steer_torque_over_timer:  #or CS.out.steerWarning:
       self.steer_torque_ratio_dir = -1
     elif steer_angle_lower:
@@ -146,10 +147,10 @@ class CarController():
     # smoth torque enable or disable
     if self.steer_torque_ratio_dir >= 1:
       if self.steer_torque_ratio < 1:
-        self.steer_torque_ratio += 0.002
+        self.steer_torque_ratio += 0.002  # 5 sec
     elif self.steer_torque_ratio_dir <= -1:
       if self.steer_torque_ratio > 0:
-        self.steer_torque_ratio -= 0.002
+        self.steer_torque_ratio -= 0.005  # 2 sec
 
     if self.steer_torque_ratio < 0:
       self.steer_torque_ratio = 0

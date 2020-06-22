@@ -99,11 +99,13 @@ class PIController():
          not freeze_integrator:
         self.i = i
 
-
 		# Compute the derivative output
     if self._k_d is not None:
-      delta = (error - self.errorPrev) / self.d_rate
-      self.d = delta * self.k_d
+      if override:
+        self.d = 0
+      else:
+        delta = (error - self.errorPrev) / self.d_rate
+        self.d = delta * self.k_d
 
     # input 
     #if self._k_d is not None:
