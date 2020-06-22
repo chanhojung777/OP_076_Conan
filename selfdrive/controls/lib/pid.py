@@ -22,6 +22,7 @@ class PIController():
 
     self.time_cnt = 0
     self.errorPrev = 0	# History: Previous error
+    self.prevInput = 0
 
     self.pos_limit = pos_limit
     self.neg_limit = neg_limit
@@ -72,6 +73,7 @@ class PIController():
     self.i = 0.0
     self.f = 0.0
     self.d = 0.0
+    self.d1 = 0.0
     self.sat_count = 0.0
     self.saturated = False
     self.control = 0
@@ -108,10 +110,10 @@ class PIController():
         self.d = delta * self.k_d
 
     # input 
-    #if self._k_d is not None:
-    #  dInput = setpoint - self.prevInput
-    #  self.d = -self.k_d * (dInput / self.d_rate)
-    #  self.prevInput = setpoint
+    if self._k_d is not None:
+      dInput = setpoint - self.prevInput
+      self.d1 = -self.k_d * (dInput / self.d_rate)
+      
 
     control = self.p + self.f + self.i + self.d
     if self.convert is not None:
@@ -122,12 +124,13 @@ class PIController():
     self.control = clip(control, self.neg_limit, self.pos_limit)
 
     self.errorPrev = error
+    self.prevInput = setpoint
+
 
     self.time_cnt += 1
-    if self.time_cnt > 10:
+    if self.time_cnt > 2:
       self.time_cnt = 0
+      str1 = 'speed={:.2f} control={:.5f} a={:.2f}/{:.2f}/{:.0f} p={:.5f} f={:.5f} i={:.5f} d={:.5f} d1={:.5f}'.format( speed*3.6, self.control, setpoint, measurement, override, self.p, self.f, self.i, self.d, self.d1 )
+      self.trPID.add( str1 )
 
-    str1 = 'speed={:.2f} control={:.5f} a={:.2f}/{:.2f}/{:.0f} p={:.5f} f={:.5f} i={:.5f} d={:.5f}'.format( speed*3.6, self.control, setpoint, measurement, override, self.p, self.f, self.i, self.d )
-    self.trPID.add( str1 )
-      
     return self.control
