@@ -29,6 +29,7 @@ class PIController():
     self.sat_count_rate = 1.0 / rate
     self.i_unwind_rate = 0.3 / rate
     self.i_rate = 1.0 / rate
+    self.d_rate = 1.0 / rate
     self.sat_limit = sat_limit
     self.convert = convert
 
@@ -101,8 +102,14 @@ class PIController():
 
 		# Compute the derivative output
     if self._k_d is not None:
-      delta = error - self.errorPrev
+      delta = (error - self.errorPrev) / self.d_rate
       self.d = delta * self.k_d
+
+    # input 
+    #if self._k_d is not None:
+    #  dInput = setpoint - self.prevInput
+    #  self.d = -self.k_d * (dInput / self.d_rate)
+    #  self.prevInput = setpoint
 
     control = self.p + self.f + self.i + self.d
     if self.convert is not None:
