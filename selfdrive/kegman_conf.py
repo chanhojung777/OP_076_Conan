@@ -54,6 +54,7 @@ class kegman_conf():
       if "steerRatio" not in self.config:
         self.config.update({"steerRatio":"12.5"})
         self.config.update({"steerRateCost":"0.5"})
+        self.config.update({"tire_stiffness_factor":"1.0"})
         self.element_updated = True
 		
       if "sR_boost" not in self.config:
@@ -74,7 +75,7 @@ class kegman_conf():
                     "sR_Kp2":"0.15", "sR_Ki2":"0.02", "sR_Kd2":"0.0", "sR_Kf2":"0.00003", \
                     "sR_BP0":"3", "sR_BP1":"15", \
                     "sR_boost":"1.5", "deadzone":"0.0", "steerOffset":"0.0", \
-                    "steerRatio":"10.5", "steerRateCost":"0.4", \
+                    "steerRatio":"10.5", "steerRateCost":"0.4", "tire_stiffness_factor":"1.0",\
                     "LearnerParams":"0" }
       self.write_config(self.config)
     return self.config
