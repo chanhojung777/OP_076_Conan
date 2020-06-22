@@ -101,7 +101,7 @@ class CarController():
         param.STEER_DELTA_DOWN = 3
     else:
         param.STEER_DELTA_UP = 3
-        param.STEER_DELTA_DOWN = 4
+        param.STEER_DELTA_DOWN = 5
 
 
     # streer over check
@@ -117,7 +117,7 @@ class CarController():
       self.nBlinker = 0
 
     # 차선이 없고 앞차량이 없으면.
-    steer_angle_lower = self.dRel > 30 and (not CC.hudControl.leftLaneVisible  and not CC.hudControl.rightLaneVisible)
+    steer_angle_lower = self.dRel > 20 and (not CC.hudControl.leftLaneVisible  and not CC.hudControl.rightLaneVisible)
 
     if v_ego_kph < 1:
       self.steer_torque_over_timer = 0
@@ -131,7 +131,7 @@ class CarController():
     elif steer_angle_lower:
       param.STEER_MAX *= 0.5
       param.STEER_DELTA_UP  = 1
-      param.STEER_DELTA_DOWN = 1
+      param.STEER_DELTA_DOWN = 2
       self.steer_torque_ratio_dir = 1      
     else:
       self.steer_torque_ratio_dir = 1
