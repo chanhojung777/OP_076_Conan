@@ -233,10 +233,11 @@ def thermald_thread():
     elif ignition == False or IsDriverViewEnabled:
       IsDriverViewEnabled = params.get("IsDriverViewEnabled") == b"1"
       ignition = IsDriverViewEnabled
+      print( 'ignition={} IsDriverViewEnabled ={} '.format( ignition,  IsDriverViewEnabled ) )
 
 
 
-    print( 'ignition={} IsDriverViewEnabled ={} health.health.hwType={}'.format(ignition,  IsDriverViewEnabled, health.health.hwType) )
+    
     # get_network_type is an expensive call. update every 10s
     if (count % int(10. / DT_TRML)) == 0:
       try:
