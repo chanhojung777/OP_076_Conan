@@ -206,18 +206,11 @@ def thermald_thread():
         if no_panda_cnt > DISCONNECT_TIMEOUT / DT_TRML:
           if ignition:
             cloudlog.error("Lost panda connection while onroad")
-          
           ignition = False
-          if ignition == False:
-            IsDriverViewEnabled = params.get("IsDriverViewEnabled") == b"1"
-            ignition = IsDriverViewEnabled
-
-
       else:
         no_panda_cnt = 0
         ignition = health.health.ignitionLine or health.health.ignitionCan
-
-      print( 'ignition={} IsDriverViewEnabled ={} health.health.hwType={}'.format(ignition,  IsDriverViewEnabled, health.health.hwType) )        
+     
 
       # Setup fan handler on first connect to panda
       if handle_fan is None and health.health.hwType != log.HealthData.HwType.unknown:
@@ -237,7 +230,13 @@ def thermald_thread():
           health_prev.health.hwType != log.HealthData.HwType.unknown:
           params.panda_disconnect()
       health_prev = health
+    elif ignition == False or IsDriverViewEnabled:
+      IsDriverViewEnabled = params.get("IsDriverViewEnabled") == b"1"
+      ignition = IsDriverViewEnabled
 
+
+
+    print( 'ignition={} IsDriverViewEnabled ={} health.health.hwType={}'.format(ignition,  IsDriverViewEnabled, health.health.hwType) )
     # get_network_type is an expensive call. update every 10s
     if (count % int(10. / DT_TRML)) == 0:
       try:
