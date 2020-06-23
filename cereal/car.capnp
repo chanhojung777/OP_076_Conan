@@ -406,7 +406,9 @@ struct CarParams {
   communityFeature @46: Bool;  # true if a community maintained feature is detected
   fingerprintSource @49: FingerprintSource;
   networkLocation @50 :NetworkLocation;  # Where Panda/C2 is integrated into the car's CAN network
-  mdpsBus @51: Int8;
+  #mdpsBus @51: Int8;  # test
+  mdpsBus @51: List(Float32);
+  
 
 
   struct LateralParams {
