@@ -26,7 +26,7 @@ class CarController():
     self.last_resume_frame = 0
     self.last_lead_distance = 0
 
-    self.longcontrol = False
+
 
     self.nBlinker = 0
     self.lane_change_torque_lower = 0

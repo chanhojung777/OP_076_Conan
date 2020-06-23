@@ -372,7 +372,7 @@ class Controls:
     v_acc_sol = plan.vStart + dt * (a_acc_sol + plan.aStart) / 2.0
 
     # Gas/Brake PID loop
-    if self.CI.CC.longcontrol:
+    if self.CP.longcontrolEnabled:
       actuators.gas, actuators.brake = self.LoC.update(self.active, CS, v_acc_sol, plan.vTargetFuture, a_acc_sol, self.CP)
       
     # Steering PID loop and lateral MPC

@@ -71,6 +71,8 @@ class CarInterface(CarInterfaceBase):
     # Hyundai port is a community feature for now
     ret.communityFeature = False  #True
 
+    ret.longcontrolEnabled = False
+
     """
       0.7.5
       ret.steerActuatorDelay = 0.1  # Default delay   0.1
