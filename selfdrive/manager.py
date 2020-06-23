@@ -189,7 +189,7 @@ managed_processes = {
   #"updated": "selfdrive.updated",   # delete able
   #"dmonitoringmodeld": ("selfdrive/modeld", ["./dmonitoringmodeld"]),
   "modeld": ("selfdrive/modeld", ["./modeld"]),
-  "driverview": "selfdrive.controls.lib.driverview",
+  #"driverview": "selfdrive.controls.lib.driverview",
 }
 
 daemon_processes = {
@@ -232,7 +232,7 @@ car_started_processes = [
   'plannerd',
   'loggerd',
   'radard',
-  'dmonitoringd',
+ # 'dmonitoringd',
   'calibrationd',
   'paramsd',
   'camerad',
@@ -242,17 +242,17 @@ car_started_processes = [
   'locationd',
 ]
 
-if WEBCAM:
-  car_started_processes += [
-    'dmonitoringmodeld',
-  ]
+#if WEBCAM:
+#  car_started_processes += [
+#    'dmonitoringmodeld',
+#  ]
 
 if ANDROID:
   car_started_processes += [
     'sensord',
     'clocksd',
     'gpsd',
-    'dmonitoringmodeld',
+    #'dmonitoringmodeld',
   ]
 
 def register_managed_process(name, desc, car_started=False):

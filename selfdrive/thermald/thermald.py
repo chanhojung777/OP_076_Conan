@@ -339,6 +339,9 @@ def thermald_thread():
 
     #ignition = True  #  영상보기.
 
+    IsDriverViewEnabled = params.get("IsDriverViewEnabled") == b"1"
+    print( 'IsDriverViewEnabled={}'.format( IsDriverViewEnabled) )
+
     should_start = ignition
 
     # with 2% left, we killall, otherwise the phone will take a long time to boot
@@ -355,7 +358,7 @@ def thermald_thread():
 
     # don't start while taking snapshot
     if not should_start_prev:
-      is_viewing_driver = params.get("IsDriverViewEnabled") == b"1"
+      is_viewing_driver = False  #params.get("IsDriverViewEnabled") == b"1"
       is_taking_snapshot = params.get("IsTakingSnapshot") == b"1"
       should_start = should_start and (not is_taking_snapshot) and (not is_viewing_driver)
 
