@@ -188,6 +188,8 @@ def thermald_thread():
   pm = PowerMonitoring()
   no_panda_cnt = 0
 
+  IsDriverViewEnabled = 0
+
   while 1:
     ts = sec_since_boot()
     health = messaging.recv_sock(health_sock, wait=True)
@@ -204,7 +206,13 @@ def thermald_thread():
         if no_panda_cnt > DISCONNECT_TIMEOUT / DT_TRML:
           if ignition:
             cloudlog.error("Lost panda connection while onroad")
+          
           ignition = False
+          if ignition == False:
+            IsDriverViewEnabled = params.get("IsDriverViewEnabled") == b"1"
+            ignition = IsDriverViewEnabled
+
+
       else:
         no_panda_cnt = 0
         ignition = health.health.ignitionLine or health.health.ignitionCan
@@ -339,11 +347,7 @@ def thermald_thread():
 
     #ignition = True  #  영상보기.
 
-    if ignition == False:
-      IsDriverViewEnabled = params.get("IsDriverViewEnabled") == b"1"
-      #if IsDriverViewEnabled:
-      #   params.put( "IsDriverViewEnabled", "0" )
-      ignition = IsDriverViewEnabled
+
 
     should_start = ignition
 
