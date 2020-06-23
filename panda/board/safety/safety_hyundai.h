@@ -103,9 +103,11 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
   //                               hyundai_get_counter);
 
   bool valid = addr_safety_check(to_push, hyundai_rx_checks, HYUNDAI_RX_CHECK_LEN,
-                                 NULL, NULL, NULL);                                 
+                                 NULL, NULL, NULL);                           
 
-  if( !valid ) return valid;
+  bool unsafe_allow_gas = unsafe_mode & UNSAFE_DISABLE_DISENGAGE_ON_GAS;    
+
+  if( valid == 0 ) return valid;
 
 
     int addr = GET_ADDR(to_push);
@@ -196,7 +198,7 @@ static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
 
     // GAS_START: check gas pressed(START)
 
-    bool unsafe_allow_gas = unsafe_mode & UNSAFE_DISABLE_DISENGAGE_ON_GAS;    
+
     // exit controls on rising edge of gas press for cars with long control
     if (addr == 608 && OP_SCC_live && bus == 0) {
       bool gas_pressed = (GET_BYTE(to_push, 7) >> 6) != 0;
