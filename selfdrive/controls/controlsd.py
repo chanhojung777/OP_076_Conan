@@ -53,8 +53,12 @@ class Controls:
 
     self.sm = sm
     if self.sm is None:
-      self.sm = messaging.SubMaster(['thermal', 'health', 'model', 'liveCalibration', \
-                                     'dMonitoringState', 'plan', 'pathPlan', 'liveLocationKalman'])
+      socks = ['thermal', 'health', 'model', 'liveCalibration', 'dMonitoringState', 'plan', 'pathPlan', 'liveLocationKalman']
+      self.sm = messaging.SubMaster(socks, ignore_alive=['dMonitoringState'])                                     
+
+      #self.sm = messaging.SubMaster(['thermal', 'health', 'model', 'liveCalibration', \
+      #                               'dMonitoringState', 'plan', 'pathPlan', 'liveLocationKalman'])
+
 
     self.can_sock = can_sock
     if can_sock is None:
@@ -133,6 +137,8 @@ class Controls:
     self.sm['dMonitoringState'].events = []
     self.sm['dMonitoringState'].awarenessStatus = 1.
     self.sm['dMonitoringState'].faceDetected = False
+
+ 
 
     self.startup_event = get_startup_event(car_recognized, controller_available, hw_type)
 
