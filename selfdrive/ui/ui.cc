@@ -98,6 +98,10 @@ static void navigate_to_home(UIState *s) {
 #endif
 }
 
+static void handle_driver_view_touch(UIState *s, int touch_x, int touch_y) {
+  int err = write_db_value("IsDriverViewEnabled", "0", 1);
+}
+
 static void handle_sidebar_touch(UIState *s, int touch_x, int touch_y) {
   if (!s->scene.uilayout_sidebarcollapsed && touch_x <= sbr_w) {
     if (touch_x >= settings_btn_x && touch_x < (settings_btn_x + settings_btn_w)
@@ -109,15 +113,14 @@ static void handle_sidebar_touch(UIState *s, int touch_x, int touch_y) {
       navigate_to_home(s);
       if (s->started) {
         s->scene.uilayout_sidebarcollapsed = true;
-        update_offroad_layout_state(s);
+        update_offroad_layout_state(s, touch_x, touch_y );
+        handle_driver_view_touch(0)
       }
     }
   }
 }
 
-static void handle_driver_view_touch(UIState *s, int touch_x, int touch_y) {
-  int err = write_db_value("IsDriverViewEnabled", "0", 1);
-}
+
 
 static void handle_vision_touch(UIState *s, int touch_x, int touch_y) {
   if (s->started && (touch_x >= s->scene.ui_viz_rx - bdr_s)
@@ -921,10 +924,6 @@ int main(int argc, char* argv[]) {
     int touched = touch_poll(&touch, &touch_x, &touch_y, 0);
     if (touched == 1) {
       set_awake(s, true);
-      printf( "touched = %d (%d,%d) ", touched, touch_x, touch_y );
-      
-
-      handle_driver_view_touch( s, touch_x, touch_y);
 
       if( touch_x  < 1660 && touch_y < 885 )
       {
