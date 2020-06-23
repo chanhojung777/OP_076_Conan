@@ -395,12 +395,12 @@ void handle_message(UIState *s, SubMaster &sm) {
     const char* va_text1 = user_text1.c_str();
     const char* va_text2 = user_text2.c_str();    
     if (va_text1) 
-      snprintf(scene.alert.text1, sizeof(scene.alert.text1), "[%s", va_text1);
+      snprintf(scene.alert.text1, sizeof(scene.alert.text1), "%s", va_text1);
     else 
       scene.alert.text1[0] = '\0';
 
     if (va_text2) 
-      snprintf(scene.alert.text2, sizeof(scene.alert.text2), "[%s", va_text2);
+      snprintf(scene.alert.text2, sizeof(scene.alert.text2), "%s", va_text2);
     else 
       scene.alert.text2[0] = '\0';
 
@@ -921,6 +921,10 @@ int main(int argc, char* argv[]) {
     int touched = touch_poll(&touch, &touch_x, &touch_y, 0);
     if (touched == 1) {
       set_awake(s, true);
+      printf( "touched = %d (%d,%d) ", touched, touch_x, touch_y );
+      
+
+      handle_driver_view_touch( s, touch_x, touch_y)
 
       if( touch_x  < 1660 && touch_y < 885 )
       {
