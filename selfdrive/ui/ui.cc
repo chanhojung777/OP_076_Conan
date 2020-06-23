@@ -924,7 +924,7 @@ int main(int argc, char* argv[]) {
       printf( "touched = %d (%d,%d) ", touched, touch_x, touch_y );
       
 
-      handle_driver_view_touch( s, touch_x, touch_y)
+      handle_driver_view_touch( s, touch_x, touch_y);
 
       if( touch_x  < 1660 && touch_y < 885 )
       {
