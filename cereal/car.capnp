@@ -407,7 +407,7 @@ struct CarParams {
   fingerprintSource @49: FingerprintSource;
   networkLocation @50 :NetworkLocation;  # Where Panda/C2 is integrated into the car's CAN network
   #mdpsBus @51: Int8;  # test
-  test_list @51: List(Float32);
+  testBus @51: List(Float32);
   
 
 
