@@ -72,7 +72,7 @@ class PathPlanner():
     # atom
     self.trPATH = trace1.Loger("path")
     self.trLearner = trace1.Loger("Learner")
-    #self.trpathPlan = trace1.Loger("pathPlan")
+    self.trpathPlan = trace1.Loger("pathPlan")
 
     self.atom_timer_cnt = 0
     self.atom_steer_ratio = None
@@ -258,7 +258,7 @@ class PathPlanner():
       self.solution_invalid_cnt += 1
     else:
       self.solution_invalid_cnt = 0
-    plan_solution_valid = self.solution_invalid_cnt < 2
+    plan_solution_valid = self.solution_invalid_cnt < 3
 
     plan_send = messaging.new_message('pathPlan')
     plan_send.valid = sm.all_alive_and_valid(service_list=['carState', 'controlsState', 'liveParameters', 'model'])
@@ -281,8 +281,8 @@ class PathPlanner():
 
     pm.send('pathPlan', plan_send)
 
-    #str_log3 = 'angle_steers_des_mpc={:.1f} angle_steers={:.1f} cur_state={:.5f} rate_desired={:.5f}'.format( self.angle_steers_des_mpc, angle_steers, delta_desired, rate_desired )
-    #self.trpathPlan.add( 'pathPlan {}'.format( str_log3 ) )   
+    str_log3 = 'angle_steers_des_mpc={:.1f} angle_steers={:.1f} solution_invalid_cnt={:.5f} mpc_solution={:.0f}{:.3f}'.format( self.angle_steers_des_mpc, angle_steers, self.solution_invalid_cnt, self.mpc_solution[0].cost, mpc_nans )
+    self.trpathPlan.add( 'pathPlan {}'.format( str_log3 ) )   
 
 
     if LOG_MPC:
