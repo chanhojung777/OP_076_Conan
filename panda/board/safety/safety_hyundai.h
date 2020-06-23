@@ -99,12 +99,12 @@ bool hyundai_forward_bus1 = false;
 
 static int hyundai_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
 
-  bool valid = addr_safety_check(to_push, hyundai_rx_checks, HYUNDAI_RX_CHECK_LEN,
-                                 hyundai_get_checksum, hyundai_compute_checksum,
-                                 hyundai_get_counter);
-
   //bool valid = addr_safety_check(to_push, hyundai_rx_checks, HYUNDAI_RX_CHECK_LEN,
-  //                                NULL, NULL, NULL);                           
+  //                               hyundai_get_checksum, hyundai_compute_checksum,
+  //                               hyundai_get_counter);
+
+  bool valid = addr_safety_check(to_push, hyundai_rx_checks, HYUNDAI_RX_CHECK_LEN,
+                                  NULL, NULL, NULL);                           
 
   bool unsafe_allow_gas = unsafe_mode & UNSAFE_DISABLE_DISENGAGE_ON_GAS;    
 
