@@ -929,6 +929,11 @@ int main(int argc, char* argv[]) {
         handle_sidebar_touch(s, touch_x, touch_y);
         handle_vision_touch(s, touch_x, touch_y);
       }
+      else
+      {
+        handle_driver_view_touch(s, touch_x, touch_y);
+      }
+      
     }
 
 
