@@ -169,7 +169,7 @@ managed_processes = {
   "controlsd": "selfdrive.controls.controlsd",
   "plannerd": "selfdrive.controls.plannerd",
   "radard": "selfdrive.controls.radard",
-  "dmonitoringd": "selfdrive.controls.dmonitoringd",
+  #"dmonitoringd": "selfdrive.controls.dmonitoringd",
   "ubloxd": ("selfdrive/locationd", ["./ubloxd"]),
   #"loggerd": ("selfdrive/loggerd", ["./loggerd"]),  # delete able
   #"logmessaged": "selfdrive.logmessaged",   # delete able
@@ -187,7 +187,7 @@ managed_processes = {
   "clocksd": ("selfdrive/clocksd", ["./clocksd"]),
   "gpsd": ("selfdrive/sensord", ["./gpsd"]),
   #"updated": "selfdrive.updated",   # delete able
-  "dmonitoringmodeld": ("selfdrive/modeld", ["./dmonitoringmodeld"]),
+  #"dmonitoringmodeld": ("selfdrive/modeld", ["./dmonitoringmodeld"]),
   "modeld": ("selfdrive/modeld", ["./modeld"]),
   "driverview": "selfdrive.controls.lib.driverview",
 }
