@@ -233,7 +233,7 @@ def thermald_thread():
     elif ignition == False or IsDriverViewEnabled:
       IsDriverViewEnabled = params.get("IsDriverViewEnabled") == b"1"
       ignition = IsDriverViewEnabled
-      print( 'ignition={} IsDriverViewEnabled ={} '.format( ignition,  IsDriverViewEnabled ) )
+      #print( 'ignition={} IsDriverViewEnabled ={} '.format( ignition,  IsDriverViewEnabled ) )
 
 
 
