@@ -113,8 +113,9 @@ static void handle_sidebar_touch(UIState *s, int touch_x, int touch_y) {
       navigate_to_home(s);
       if (s->started) {
         s->scene.uilayout_sidebarcollapsed = true;
-        update_offroad_layout_state(s, touch_x, touch_y );
-        handle_driver_view_touch(0);
+        update_offroad_layout_state(s);
+
+        handle_driver_view_touch(s, touch_x, touch_y);
       }
     }
   }
