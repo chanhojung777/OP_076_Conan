@@ -66,7 +66,7 @@ class CarInterface(CarInterfaceBase):
 
     ret.carName = "hyundai"
     ret.safetyModel = car.CarParams.SafetyModel.hyundai
-    ret.radarOffCan = True  #False(선행차우선)  #True(차선우선)    #선행차량 인식 마크 유무.
+    ret.radarOffCan = False  #False(선행차우선)  #True(차선우선)    #선행차량 인식 마크 유무.
 
     # Hyundai port is a community feature for now
     ret.communityFeature = False  #True
