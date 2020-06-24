@@ -687,8 +687,13 @@ EVENTS = {
   },
 
   EventName.plannerError: {
-    ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Planner Solution Error"),
-    ET.NO_ENTRY: NoEntryAlert("Planner Solution Error"),
+    #ET.IMMEDIATE_DISABLE: ImmediateDisableAlert("Planner Solution Error"),
+    #ET.NO_ENTRY: NoEntryAlert("Planner Solution Error"),
+    ET.WARNING: Alert(
+    "TAKE CONTROL",
+    "Planner Solution Error",
+    AlertStatus.userPrompt, AlertSize.mid,
+    Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimePrompt, 0., 0., 5.),
   },
 
   EventName.relayMalfunction: {
