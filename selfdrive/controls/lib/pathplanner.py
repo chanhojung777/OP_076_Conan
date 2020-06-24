@@ -282,7 +282,7 @@ class PathPlanner():
     pm.send('pathPlan', plan_send)
 
     if self.solution_invalid_cnt > 0:
-      str_log3 = 'angle_steers_des_mpc={:.1f} angle_steers={:.1f} solution_invalid_cnt={:.0f} mpc_solution={:.0f}{:.3f}'.format( self.angle_steers_des_mpc, angle_steers, self.solution_invalid_cnt, self.mpc_solution[0].cost, mpc_nans )
+      str_log3 = 'v_ego_kph={:.1f} angle_steers_des_mpc={:.1f} angle_steers={:.1f} solution_invalid_cnt={:.0f} mpc_solution={:.1f}/{:.0f}'.format( v_ego_kph, self.angle_steers_des_mpc, angle_steers, self.solution_invalid_cnt, self.mpc_solution[0].cost, mpc_nans )
       self.trpathPlan.add( 'pathPlan {}'.format( str_log3 ) )   
 
 
