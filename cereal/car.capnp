@@ -408,9 +408,17 @@ struct CarParams {
   networkLocation @50 :NetworkLocation;  # Where Panda/C2 is integrated into the car's CAN network
   #mdpsBus @51: Int8;  # test
   longcontrolEnabled @51  :Bool;
-  testBus @52 :List(Float32);
-  
+  lateralPIDatom @52 :LateralPIDatom;
 
+  struct LateralPIDatom {
+    kBP @0 :List(Float32);
+    kpV @1 :List(Float32);
+    kiV @2 :List(Float32);
+    kf  @3 :List(Float32);
+    kpV2 @4 :List(Float32);
+    kiV2 @5 :List(Float32);
+    kf2  @6 :List(Float32);
+  }
 
   struct LateralParams {
     torqueBP @0 :List(Int32);
