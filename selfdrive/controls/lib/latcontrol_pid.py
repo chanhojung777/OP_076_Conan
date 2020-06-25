@@ -4,14 +4,13 @@ from cereal import car
 from cereal import log
 
 from common.numpy_fast import interp
-from selfdrive.car.hyundai.carstate import ATOMC
 import common.log as trace1
 
 ButtonType = car.CarState.ButtonEvent.Type
 
 class LatControlPID():
   def __init__(self, CP):
-    self.trPID = trace1.Loger("pid")   
+    self.trPID = trace1.Loger("pid")
     self.angle_steers_des = 0.
 
 
@@ -25,20 +24,19 @@ class LatControlPID():
 
 
   def linear2_tune( self, CP, v_ego ):  # angle(조향각에 의한 변화)
-    global ATOMC
 
-    self.steer_Kp1 = ATOMC.steer_Kp1  #[0.11,0.12]
-    self.steer_Ki1 = ATOMC.steer_Ki1  #[0.008,0.01]
-    self.steer_Kd1 = ATOMC.steer_Kd1
-    self.steer_Kf1 = ATOMC.steer_Kf1 #[0.000001,0.00001]
+    self.steer_Kp1 = CP.lateralPIDatom.kpV
+    self.steer_Ki1 = CP.lateralPIDatom.kiV
+    self.steer_Kd1 = CP.lateralPIDatom.kdV
+    self.steer_Kf1 = CP.lateralPIDatom.kfV
 
-    self.steer_Kp2 = ATOMC.steer_Kp2 #[0.13,0.15]
-    self.steer_Ki2 = ATOMC.steer_Ki2 #[0.015,0.02]
-    self.steer_Kd2 = ATOMC.steer_Kd2 #[0.015,0.02]
-    self.steer_Kf2 = ATOMC.steer_Kf2  #[0.00003,0.00003]
+    self.steer_Kp2 = CP.lateralPIDatom.kpV2
+    self.steer_Ki2 = CP.lateralPIDatom.kiV2
+    self.steer_Kd2 = CP.lateralPIDatom.kdV2
+    self.steer_Kf2 = CP.lateralPIDatom.kfV2
 
-    self.sr_boost_bp = ATOMC.sr_boost_bp
-    self.deadzone = ATOMC.deadzone
+    self.sr_boost_bp = CP.lateralsRatom.boostBP
+    self.deadzone =  CP.lateralsRatom.deadzone
 
 
     str1 = 'bp={}  kp={},{} ki={},{} kd={},{} kf={},{}'.format( self.sr_boost_bp, self.steer_Kp1, self.steer_Kp2, self.steer_Ki1, self.steer_Ki2, self.steer_Kd1, self.steer_Kd2, self.steer_Kf1, self.steer_Kf2 )
@@ -73,16 +71,12 @@ class LatControlPID():
     self.steerKf1 = interp( cv_angle, cv, fKf1 )
     self.steerKf2 = interp( cv_angle, cv, fKf2 )
 
-
-    xp = CP.lateralTuning.pid.kpBP
+    kBP = CP.lateralPIDatom.kBP  #CP.lateralTuning.pid.kpBP
     fp = [float(self.steerKf1), float(self.steerKf2) ]
-    self.steerKfV = interp( v_ego,  xp, fp )
+    self.steerKf = interp( v_ego,  kBP, fp )
 
-
-
-
-    kBP = CP.lateralTuning.pid.kpBP
-    self.pid.gain( (kBP, self.steerKpV), (kBP, self.steerKiV), k_f=self.steerKfV, k_d=(kBP, self.steerKdV) )
+    #kBP =  CP.lateralPIDatom.kBP #CP.lateralTuning.pid.kpBP
+    self.pid.gain( (kBP, self.steerKpV), (kBP, self.steerKiV), k_f=self.steerKf, k_d=(kBP, self.steerKdV) )
 
 
 

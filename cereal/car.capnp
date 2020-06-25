@@ -424,11 +424,11 @@ struct CarParams {
     kpV @1 :List(Float32);
     kiV @2 :List(Float32);
     kdV @3 :List(Float32);
-    kf  @4 :List(Float32);
+    kfV  @4 :List(Float32);
     kpV2 @5 :List(Float32);
     kiV2 @6 :List(Float32);
     kdV2 @7 :List(Float32);
-    kf2  @8 :List(Float32);
+    kfV2  @8 :List(Float32);
   }
 
   struct LateralParams {

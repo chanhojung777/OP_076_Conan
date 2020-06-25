@@ -121,11 +121,11 @@ class CarInterface(CarInterfaceBase):
       ret.lateralPIDatom.kpV  = ATOMC.steer_Kp1
       ret.lateralPIDatom.kiV  = ATOMC.steer_Ki1
       ret.lateralPIDatom.kdV  = ATOMC.steer_Kd1
-      ret.lateralPIDatom.kf   = ATOMC.steer_Kf1
+      ret.lateralPIDatom.kfV  = ATOMC.steer_Kf1
       ret.lateralPIDatom.kpV2 = ATOMC.steer_Kp2
       ret.lateralPIDatom.kiV2 = ATOMC.steer_Ki2
       ret.lateralPIDatom.kdV2 = ATOMC.steer_Kd2
-      ret.lateralPIDatom.kf2  = ATOMC.steer_Kf2
+      ret.lateralPIDatom.kfV2 = ATOMC.steer_Kf2
 
       ret.lateralsRatom.boostBP = ATOMC.sr_boost_bp
       ret.lateralsRatom.boostRange = ATOMC.sr_boost_range
