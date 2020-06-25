@@ -23,7 +23,12 @@ class LatControlPID():
 
 
 
-  def linear2_tune( self, CP, v_ego ):  # angle(조향각에 의한 변화)
+  def linear2_tune( self, CS, CP ):  # angle(조향각에 의한 변화)
+    v_ego = CS.vEgo
+    #if CS.cruiseState.enabled and self.prev_cruise_buttons  != CS.cruiseState.enabled:
+    #  self.prev_cruise_buttons = CS.cruiseState.enabled
+    #  if self.prev_cruise_buttons == Buttons.CANCEL:
+    #    ATOMC.read_tune() 
 
     self.steer_Kp1 = CP.lateralPIDatom.kpV
     self.steer_Ki1 = CP.lateralPIDatom.kiV
@@ -82,7 +87,7 @@ class LatControlPID():
 
   def update(self, active, CS, CP, path_plan):
     self.angle_steers_des = path_plan.angleSteers    
-    self.linear2_tune( CP, CS.vEgo )
+    self.linear2_tune( CS, CP )
 
     pid_log = log.ControlsState.LateralPIDState.new_message()
     pid_log.steerAngle = float(CS.steeringAngle)

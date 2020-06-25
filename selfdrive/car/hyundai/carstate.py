@@ -3,13 +3,13 @@ from selfdrive.car.hyundai.values import DBC, STEER_THRESHOLD, FEATURES
 from selfdrive.car.interfaces import CarStateBase
 from opendbc.can.parser import CANParser
 from selfdrive.config import Conversions as CV
-from selfdrive.atom_conf import AtomConf
+
 from selfdrive.car.hyundai.values import Buttons
 
 
 GearShifter = car.CarState.GearShifter
 
-ATOMC = AtomConf()
+
 
 
 
@@ -40,8 +40,6 @@ class CarState(CarStateBase):
     self.TSigRHSw = 0
 
   def update(self, cp, cp_cam):
-    global ATOMC
-
     self.prev_cruise_main_button = self.cruise_main_button
     self.prev_cruise_buttons  = self.cruise_buttons
 
@@ -61,7 +59,7 @@ class CarState(CarStateBase):
 
     ret.standstill = ret.vEgoRaw < 0.1
 
-    ret.steeringAngle = cp.vl["SAS11"]['SAS_Angle']  - ATOMC.steerOffset
+    ret.steeringAngle = cp.vl["SAS11"]['SAS_Angle']  - self.CP.lateralsRatom.steerOffset
     ret.steeringRate = cp.vl["SAS11"]['SAS_Speed']
     ret.yawRate = cp.vl["ESP12"]['YAW_RATE']
     self.TSigLHSw = cp.vl["CGW1"]['CF_Gway_TSigLHSw']
@@ -211,10 +209,6 @@ class CarState(CarStateBase):
     self.steer_state = cp.vl["MDPS12"]['CF_Mdps_ToiActive'] # 0 NOT ACTIVE, 1 ACTIVE
     self.lead_distance = cp.vl["SCC11"]['ACC_ObjDist']
 
-
-    #if self.lkas_button_on and self.prev_cruise_buttons  != self.cruise_buttons:
-    #  if self.prev_cruise_buttons == Buttons.CANCEL:
-    #    ATOMC.read_tune()
 
 
     return ret

@@ -4,9 +4,9 @@ from selfdrive.config import Conversions as CV
 from selfdrive.car.hyundai.values import Ecu, ECU_FINGERPRINT, CAR, FINGERPRINTS, Buttons
 from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, is_ecu_disconnected, gen_empty_fingerprint
 from selfdrive.car.interfaces import CarInterfaceBase, MAX_CTRL_SPEED
-from selfdrive.car.hyundai.carstate import ATOMC
+from selfdrive.atom_conf import AtomConf
 
-
+ATOMC = AtomConf()
 
 EventName = car.CarEvent.EventName
 ButtonType = car.CarState.ButtonEvent.Type
@@ -68,7 +68,6 @@ class CarInterface(CarInterfaceBase):
       #ret.lateralTuning.pid.kf = 0.00003 
       #ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[9., 22.], [9., 22.]]
       #ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.15, 0.20], [0.03, 0.04]]
-
 
 
       # 2번 튜닝.

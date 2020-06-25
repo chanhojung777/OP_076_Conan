@@ -6,7 +6,6 @@ from selfdrive.controls.lib.lateral_mpc import libmpc_py
 from selfdrive.controls.lib.drive_helpers import MPC_COST_LAT
 from selfdrive.controls.lib.lane_planner import LanePlanner
 from selfdrive.config import Conversions as CV
-from selfdrive.car.hyundai.carstate import ATOMC
 from common.params import Params
 from common.numpy_fast import interp
 import cereal.messaging as messaging
@@ -105,7 +104,6 @@ class PathPlanner():
     self.angle_steers_des_time = 0.0
 
   def update(self, sm, pm, CP, VM):
-    global ATOMC
     self.atom_timer_cnt += 1
     if self.atom_timer_cnt > 1000:
       self.atom_timer_cnt = 0
@@ -124,20 +122,20 @@ class PathPlanner():
       str_log3 = 'angleOffset={:.1f} angleOffsetAverage={:.3f} steerRatio={:.2f} stiffnessFactor={:.3f} '.format( angle_offset, angleOffsetAverage, self.atom_steer_ratio, stiffnessFactor )
       self.trLearner.add( 'LearnerParam {}'.format( str_log3 ) )       
 
-    if ATOMC.LearnerParams:
+    if CP.lateralsRatom.learnerParams:
       pass
     else:
       angle_offset = 0
       angleOffsetAverage = 0
-      stiffnessFactor = ATOMC.tire_stiffness_factor
+      stiffnessFactor = CP.lateralsRatom.tireStiffnessFactor
       # atom
-      self.atom_sr_boost_bp = ATOMC.sr_boost_bp
-      self.atom_sr_boost_range = ATOMC.sr_boost_range
+      self.atom_sr_boost_bp = CP.lateralsRatom.boostBP
+      self.atom_sr_boost_range = CP.lateralsRatom.boostRange
       boost_rate = interp(abs(angle_steers), self.atom_sr_boost_bp, self.atom_sr_boost_range)
-      self.atom_steer_ratio = ATOMC.steerRatio + boost_rate
-      self.steer_rate_cost = ATOMC.steerRateCost
+      self.atom_steer_ratio = CP.steerRatio + boost_rate
+      self.steer_rate_cost = CP.steerRateCost
 
-      str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format( CP.steerRatio, ATOMC.steerRatio, self.atom_sr_boost_bp, self.atom_sr_boost_range )
+      str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format( CP.steerRatio, CP.steerRatio, self.atom_sr_boost_bp, self.atom_sr_boost_range )
       str_log2 = 'steerRateCost={:.2f}'.format( self.steer_rate_cost )
       self.trPATH.add( '{} {}'.format( str_log1, str_log2 ) )
       
