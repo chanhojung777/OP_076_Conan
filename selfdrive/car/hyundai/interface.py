@@ -117,7 +117,7 @@ class CarInterface(CarInterfaceBase):
 
 
       # 3번 atom param.
-      ret.lateralPIDatom.kBP  = [[9., 22.], [9., 22.]]
+      ret.lateralPIDatom.kBP  = [9., 22.]
       ret.lateralPIDatom.kpV  = ATOMC.steer_Kp1
       ret.lateralPIDatom.kiV  = ATOMC.steer_Ki1
       ret.lateralPIDatom.kdV  = ATOMC.steer_Kd1
