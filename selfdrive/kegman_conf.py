@@ -6,7 +6,7 @@ json_file_name = '/data/kegman_076.json'
 
 class kegman_conf():
   def __init__(self, CP=None):
-    self.conf = self.read_config()
+    #self.conf = self.read_config()
     self.config = None
 
   def read_config(self):
