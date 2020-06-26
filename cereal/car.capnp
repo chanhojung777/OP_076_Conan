@@ -408,13 +408,24 @@ struct CarParams {
   networkLocation @50 :NetworkLocation;  # Where Panda/C2 is integrated into the car's CAN network
   longcontrolEnabled @51  :Bool;
   lateralPIDatom @52 :LateralPIDatom;
-  lateralsRatom @53 :LateralsRatom;
+  lateralCVatom @53 :LateralCVatom;
+  lateralsRatom @54 :LateralsRatom;
 
   struct LateralsRatom {
     learnerParams @0 :Int16;    
     deadzone @1 :Float32;
     steerOffset @2 :Float32;
     tireStiffnessFactor @3 :Float32;
+  }
+
+  struct LateralCVatom {
+    cvBPV @0 :List(Float32);
+    cvSteerMax1 @1 :List(Float32);
+    cvSteerDeltaUp1 @2 :List(Float32);
+    cvSteerDeltaDn1 @3 :List(Float32);
+    cvSteerMax2 @4 :List(Float32);
+    cvSteerDeltaUp2 @5 :List(Float32);
+    cvSteerDeltaDn2 @6 :List(Float32);
   }
 
   struct LateralPIDatom {
