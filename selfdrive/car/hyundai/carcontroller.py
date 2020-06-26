@@ -121,7 +121,7 @@ class CarController():
     # dn
     self.steerDN1 = interp( cv_value, cv_BPV, self.cvSteerDeltaDnV1 )
     self.steerDN2 = interp( cv_value, cv_BPV, self.cvSteerDeltaDnV2 )    
-    self.steerDNV = [ float(self.steerKd1), float(self.steerKd2) ]
+    self.steerDNV = [ float(self.steerDN1), float(self.steerDN2) ]
     self.DN = interp( v_ego_kph, self.kBPV, self.steerDNV )
 
 
