@@ -39,8 +39,8 @@ class kegman_conf():
         self.write_config(self.config)
 
     else:
-      self.write_config(self.init)
-      self.config = self.init
+      self.config = self.init      
+      self.write_config(self.config)
 
     return self.config
 
