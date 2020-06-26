@@ -88,7 +88,7 @@ class CarInterface(CarInterfaceBase):
       ret.lateralPIDatom.kBPV = [0.15, 0.20]  # 속도.
     
       ret.lateralPIDatom.sRkBPV = ATOMC.sR_BPV   # 조향각.
-      ret.lateralPIDatom.sRBoostV = ATOMC.sR_Boost      
+      ret.lateralPIDatom.sRBoostV = ATOMC.sR_BoostV
       ret.lateralPIDatom.sRkpV1 = ATOMC.sR_kpV1
       ret.lateralPIDatom.sRkiV1 = ATOMC.sR_kiV1
       ret.lateralPIDatom.sRkdV1 = ATOMC.sR_kdV1
