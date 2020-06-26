@@ -4,7 +4,7 @@ from selfdrive.car.hyundai.hyundaican import create_lkas11, create_clu11, create
 from selfdrive.car.hyundai.values import Buttons, SteerLimitParams, CAR
 from opendbc.can.packer import CANPacker
 from selfdrive.config import Conversions as CV
-
+from common.numpy_fast import interp
 from selfdrive.car.hyundai.spdcontroller  import SpdController
 import common.log as trace1
 import common.CTime1000 as tm
@@ -17,6 +17,7 @@ LaneChangeState = log.PathPlan.LaneChangeState
 
 class CarController():
   def __init__(self, dbc_name, CP, VM):
+    self.CP = CP
     self.apply_steer_last = 0
     self.car_fingerprint = CP.carFingerprint
     self.packer = CANPacker(dbc_name)
@@ -90,6 +91,43 @@ class CarController():
       sys_state = 6
 
     return sys_warning, sys_state
+
+
+  def cV_tune( self, CS, CP ):  # cV(곡률에 의한 변화)
+    v_ego_kph = CS.out.vEgo * CV.MS_TO_KPH
+
+    self.kBPV = CP.lateralPIDatom.kBPV
+    self.cVBPV = CP.lateralCVatom.cvBPV
+    self.cvSteerMaxV1  = CP.lateralCVatom.cvSteerMaxV1
+    self.cvSteerDeltaUpV1 = CP.lateralCVatom.cvSteerDeltaUpV1
+    self.cvSteerDeltaDnV1 = CP.lateralCVatom.cvSteerDeltaDnV1
+    self.cvSteerMaxV2 = CP.lateralCVatom.cvSteerMaxV2
+    self.cvSteerDeltaUpV2 = CP.lateralCVatom.cvSteerDeltaUpV2
+    self.cvSteerDeltaDnV2 = CP.lateralCVatom.cvSteerDeltaDnV2
+
+
+    cv_value = abs(self.angle_steers_des)
+    cv_BPV = self.cVBPV   # 곡률
+
+    # Max
+    self.steerMax1 = interp( cv_value, cv_BPV, self.cvSteerMaxV1 )
+    self.steerMax2 = interp( cv_value, cv_BPV, self.cvSteerMaxV2 )
+    self.steerMaxV = [ float(self.steerMax1), float(self.steerMax2) ]
+    self.MAX = interp( v_ego_kph, self.kBPV, self.steerMaxV )  
+
+    # Up
+    self.steerUP1 = interp( cv_value, cv_BPV, self.cvSteerDeltaUpV1 )
+    self.steerUP2 = interp( cv_value, cv_BPV, self.cvSteerDeltaUpV2 )
+    self.steerUPV = [ float(self.steerUP1), float(self.steerUP2) ]
+    self.UP = interp( v_ego_kph, self.kBPV, self.steerUPV )
+
+    # dn
+    self.steerDN1 = interp( cv_value, cv_BPV, self.cvSteerDeltaDnV1 )
+    self.steerDN2 = interp( cv_value, cv_BPV, self.cvSteerDeltaDnV2 )    
+    self.steerDNV = [ float(self.steerKd1), float(self.steerKd2) ]
+    self.DN = interp( v_ego_kph, self.kBPV, self.steerDNV )
+
+
 
   def steerParams_torque(self, CS, abs_angle_steers, path_plan, CC ):
     param = SteerLimitParams()
