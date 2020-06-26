@@ -19,13 +19,13 @@ class AtomConf():
     self.sR_kfV2 = [0.00003,0.00003]
 
     self.cvBPV = [80,255]
-    self.cvSteerMax1 = [255,200]
-    self.cvSteerDeltaUp1 = [3,2]
-    self.cvSteerDeltaDn1 = [5,3]
+    self.cvSteerMaxV1 = [255,200]
+    self.cvSteerDeltaUpV1 = [3,2]
+    self.cvSteerDeltaDnV1 = [5,3]
 
-    self.cvSteerMax2 = [255,200]
-    self.cvSteerDeltaUp2 = [3,2]
-    self.cvSteerDeltaDn2 = [5,3]
+    self.cvSteerMaxV2 = [255,200]
+    self.cvSteerDeltaUpV2 = [3,2]
+    self.cvSteerDeltaDnV2 = [5,3]
 
 
     self.deadzone = 0.1
@@ -55,13 +55,13 @@ class AtomConf():
 
 
     self.cvBPV = conf['cvBPV']
-    self.cvSteerMax1 = conf['cvSteerMaxV1']
-    self.cvSteerDeltaUp1 = conf['cvSteerDeltaUpV1']
-    self.cvSteerDeltaDn1 = conf['cvSteerDeltaDnV1']
+    self.cvSteerMaxV1 = conf['cvSteerMaxV1']
+    self.cvSteerDeltaUpV1 = conf['cvSteerDeltaUpV1']
+    self.cvSteerDeltaDnV1 = conf['cvSteerDeltaDnV1']
 
-    self.cvSteerMax2 = conf['cvSteerMaxV2']
-    self.cvSteerDeltaUp2 = conf['cvSteerDeltaUpV2']
-    self.cvSteerDeltaDn2 = conf['cvSteerDeltaDnV2']
+    self.cvSteerMaxV2 = conf['cvSteerMaxV2']
+    self.cvSteerDeltaUpV2 = conf['cvSteerDeltaUpV2']
+    self.cvSteerDeltaDnV2 = conf['cvSteerDeltaDnV2']
 
     self.steerRatio = conf['steerRatio']
     self.steerRateCost = conf['steerRateCost']

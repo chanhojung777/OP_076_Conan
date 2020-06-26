@@ -99,6 +99,15 @@ class CarInterface(CarInterfaceBase):
       ret.lateralPIDatom.sRkdV2 = ATOMC.sR_kdV2
       ret.lateralPIDatom.sRkfV2 = ATOMC.sR_kfV2
 
+      
+      ret.lateralCVatom.cvBPV = ATOMC.cvBPV
+      ret.lateralCVatom.cvSteerMaxV1 = ATOMC.cvSteerMaxV1
+      ret.lateralCVatom.cvSteerDeltaUpV1 = ATOMC.cvSteerDeltaUpV1
+      ret.lateralCVatom.cvSteerDeltaDnV1 = ATOMC.cvSteerDeltaDnV1
+      ret.lateralCVatom.cvSteerMaxV2 = ATOMC.cvSteerMaxV2
+      ret.lateralCVatom.cvSteerDeltaUpV2 = ATOMC.cvSteerDeltaUpV2
+      ret.lateralCVatom.cvSteerDeltaDnV2 = ATOMC.cvSteerDeltaDnV2
+
       ret.lateralsRatom.learnerParams = ATOMC.learnerParams
       ret.lateralsRatom.deadzone = ATOMC.deadzone
       ret.lateralsRatom.steerOffset = ATOMC.steerOffset

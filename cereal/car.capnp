@@ -420,12 +420,12 @@ struct CarParams {
 
   struct LateralCVatom {
     cvBPV @0 :List(Float32);
-    cvSteerMax1 @1 :List(Float32);
-    cvSteerDeltaUp1 @2 :List(Float32);
-    cvSteerDeltaDn1 @3 :List(Float32);
-    cvSteerMax2 @4 :List(Float32);
-    cvSteerDeltaUp2 @5 :List(Float32);
-    cvSteerDeltaDn2 @6 :List(Float32);
+    cvSteerMaxV1 @1 :List(Float32);
+    cvSteerDeltaUpV1 @2 :List(Float32);
+    cvSteerDeltaDnV1 @3 :List(Float32);
+    cvSteerMaxV2 @4 :List(Float32);
+    cvSteerDeltaUpV2 @5 :List(Float32);
+    cvSteerDeltaDnV2 @6 :List(Float32);
   }
 
   struct LateralPIDatom {
