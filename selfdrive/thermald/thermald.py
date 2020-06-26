@@ -349,8 +349,6 @@ def thermald_thread():
 
     #ignition = True  #  영상보기.
 
-
-
     should_start = ignition
 
     # with 2% left, we killall, otherwise the phone will take a long time to boot
@@ -418,14 +416,14 @@ def thermald_thread():
 
       if power_shutdown:
         os.system('LD_LIBRARY_PATH="" svc power shutdown')
-        print( 'batterypercent={} should_start={}'.format(msg.thermal.batteryPercent, should_start) )
+        print( 'power_shutdown batterypercent={} should_start={}'.format(msg.thermal.batteryPercent, should_start) )
 
 
       #if msg.thermal.batteryPercent < BATT_PERC_OFF and msg.thermal.batteryStatus == "Discharging" and \
       #   started_seen and (current_ts - off_ts) > 60:
       #  os.system('LD_LIBRARY_PATH="" svc power shutdown')
 
-      #print( 'batterypercent={} should_start={}'.format(msg.thermal.batteryPercent, should_start) )
+    # print( 'batterypercent={} should_start={}'.format(msg.thermal.batteryPercent, should_start) )
     # Offroad power monitoring
     pm.calculate(health)
     msg.thermal.offroadPowerUsage = pm.get_power_used()
