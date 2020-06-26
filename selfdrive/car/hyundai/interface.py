@@ -99,26 +99,10 @@ class CarInterface(CarInterfaceBase):
       ret.lateralPIDatom.sRkdV2 = ATOMC.sR_kdV2
       ret.lateralPIDatom.sRkfV2 = ATOMC.sR_kfV2
 
-
       ret.lateralsRatom.learnerParams = ATOMC.learnerParams
       ret.lateralsRatom.deadzone = ATOMC.deadzone
       ret.lateralsRatom.steerOffset = ATOMC.steerOffset
       ret.lateralsRatom.tireStiffnessFactor = ATOMC.tire_stiffness_factor
-
-
-
-      # indi
-      #ret.lateralTuning.init('indi')
-      #ret.lateralTuning.indi.innerLoopGain = 3.0
-      #ret.lateralTuning.indi.outerLoopGain = 2.0
-      #ret.lateralTuning.indi.timeConstant = 1.0
-      #ret.lateralTuning.indi.actuatorEffectiveness = 1.5
-      #ret.steerRatio = 9.0 
-
-
-      #ret.steerActuatorDelay = 0.1 # Stinger GT Limited AWD 3.3T stock value (Tunder's 2020) 
-      #ret.steerLimitTimer = 0.4 # stock is 0.01 but 0.04 seems to work well
-      #tire_stiffness_factor = 1.125 # LiveParameters (Tunder's 2020)
 
  
     elif candidate == CAR.SANTA_FE:
@@ -204,6 +188,19 @@ class CarInterface(CarInterfaceBase):
       #ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       #ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
 
+      # IQR
+      #ret.lateralTuning.init('lqr')
+      #ret.lateralTuning.lqr.scale = 1500.0
+      #ret.lateralTuning.lqr.ki = 0.05
+      #ret.lateralTuning.lqr.dcGain = 0.002237852961363602
+      # State space system
+      #ret.lateralTuning.lqr.a = [0.,1,-0.22619643, 1.2182268]
+      #ret.lateralTuning.lqr.b = [-0.000019, 0.0000039]
+      #ret.lateralTuning.lqr.c = [1,0]
+      #ret.lateralTuning.lqr.k = [-110.73,451.22]
+      #ret.lateralTuning.lqr.l = [0.3233671, 0.3185757]
+
+      # indi
       ret.lateralTuning.init('indi')
       ret.lateralTuning.indi.innerLoopGain = 3.0
       ret.lateralTuning.indi.outerLoopGain = 2.0
