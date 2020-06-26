@@ -131,7 +131,7 @@ class PathPlanner():
 
       # atom
       self.atom_sr_boost_bp = CP.lateralPIDatom.sRkBPV
-      self.atom_sr_boost_range = CP.lateralPIDatom.sRBoost
+      self.atom_sr_boost_range = CP.lateralPIDatom.sRBoostV
       boost_rate = interp(abs(angle_steers), self.atom_sr_boost_bp, self.atom_sr_boost_range)
       self.atom_steer_ratio = CP.steerRatio + boost_rate
       self.steer_rate_cost = CP.steerRateCost
