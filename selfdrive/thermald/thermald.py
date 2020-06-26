@@ -384,11 +384,11 @@ def thermald_thread():
       if thermal_status_prev >= ThermalStatus.danger:
         params.delete("Offroad_TemperatureTooHigh")
 
+    current_ts = sec_since_boot()
     if should_start:
       if not should_start_prev:
         params.delete("IsOffroad")
 
-      current_ts = sec_since_boot()
       off_ts = None
       if started_ts is None:
         started_ts = current_ts
@@ -406,7 +406,6 @@ def thermald_thread():
       # shutdown if the battery gets lower than 3%, it's discharging, we aren't running for
       # more than a minute but we were running
       power_shutdown = False
-      current_ts = sec_since_boot()
       if msg.thermal.batteryStatus == "Discharging":
         delta_ts = current_ts - off_ts
         if started_seen:
