@@ -48,6 +48,15 @@ class CarController():
     self.hud_timer_left = 0
     self.hud_timer_right = 0
 
+    self.kBPV = CP.lateralPIDatom.kBPV
+    self.cVBPV = CP.lateralCVatom.cvBPV
+    self.cvSteerMaxV1  = CP.lateralCVatom.cvSteerMaxV1
+    self.cvSteerDeltaUpV1 = CP.lateralCVatom.cvSteerDeltaUpV1
+    self.cvSteerDeltaDnV1 = CP.lateralCVatom.cvSteerDeltaDnV1
+    self.cvSteerMaxV2 = CP.lateralCVatom.cvSteerMaxV2
+    self.cvSteerDeltaUpV2 = CP.lateralCVatom.cvSteerDeltaUpV2
+    self.cvSteerDeltaDnV2 = CP.lateralCVatom.cvSteerDeltaDnV2    
+
   def limit_ctrl(self, value, limit, offset ):
       p_limit = offset + limit
       m_limit = offset - limit
@@ -93,20 +102,8 @@ class CarController():
     return sys_warning, sys_state
 
 
-  def cV_tune( self, CS, CP ):  # cV(곡률에 의한 변화)
-    v_ego_kph = CS.out.vEgo * CV.MS_TO_KPH
-
-    self.kBPV = CP.lateralPIDatom.kBPV
-    self.cVBPV = CP.lateralCVatom.cvBPV
-    self.cvSteerMaxV1  = CP.lateralCVatom.cvSteerMaxV1
-    self.cvSteerDeltaUpV1 = CP.lateralCVatom.cvSteerDeltaUpV1
-    self.cvSteerDeltaDnV1 = CP.lateralCVatom.cvSteerDeltaDnV1
-    self.cvSteerMaxV2 = CP.lateralCVatom.cvSteerMaxV2
-    self.cvSteerDeltaUpV2 = CP.lateralCVatom.cvSteerDeltaUpV2
-    self.cvSteerDeltaDnV2 = CP.lateralCVatom.cvSteerDeltaDnV2
-
-
-    cv_value = abs(self.angle_steers_des)
+  def cV_tune( self, v_ego_kph, cv_value ):  # cV(곡률에 의한 변화)
+    #cv_value = abs(self.angle_steers_des)
     cv_BPV = self.cVBPV   # 곡률
 
     # Max
@@ -132,6 +129,11 @@ class CarController():
   def steerParams_torque(self, CS, abs_angle_steers, path_plan, CC ):
     param = SteerLimitParams()
     v_ego_kph = CS.out.vEgo * CV.MS_TO_KPH
+
+    #self.cV_tune( v_ego_kph, self.model_speed )
+    #param.STEER_MAX = self.MAX
+    #param.STEER_DELTA_UP = self.UP
+    #param.STEER_DELTA_DOWN = self.DN
 
     # 직선 코스
     if abs_angle_steers < 1 or v_ego_kph < 5:
