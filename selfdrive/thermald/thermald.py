@@ -405,7 +405,8 @@ def thermald_thread():
 
       # shutdown if the battery gets lower than 3%, it's discharging, we aren't running for
       # more than a minute but we were running
-      power_shutdown = False      
+      power_shutdown = False
+      current_ts = sec_since_boot()
       if msg.thermal.batteryStatus == "Discharging":
         delta_ts = current_ts - off_ts
         if started_seen:
