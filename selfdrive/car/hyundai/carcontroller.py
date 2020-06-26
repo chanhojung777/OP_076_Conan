@@ -130,18 +130,18 @@ class CarController():
     param = SteerLimitParams()
     v_ego_kph = CS.out.vEgo * CV.MS_TO_KPH
 
-    #self.cV_tune( v_ego_kph, self.model_speed )
-    #param.STEER_MAX = self.MAX
-    #param.STEER_DELTA_UP = self.UP
-    #param.STEER_DELTA_DOWN = self.DN
+    self.cV_tune( v_ego_kph, self.model_speed )
+    param.STEER_MAX = min( param.STEER_MAX, self.MAX)
+    param.STEER_DELTA_UP = min( param.STEER_DELTA_UP, self.UP)
+    param.STEER_DELTA_DOWN = min( param.STEER_DELTA_DOWN, self.DN )
 
     # 직선 코스
-    if abs_angle_steers < 1 or v_ego_kph < 5:
-        param.STEER_DELTA_UP  = 2
-        param.STEER_DELTA_DOWN = 3
-    else:
-        param.STEER_DELTA_UP = 3
-        param.STEER_DELTA_DOWN = 5
+    #if abs_angle_steers < 1 or v_ego_kph < 5:
+    #    param.STEER_DELTA_UP  = 2
+    #    param.STEER_DELTA_DOWN = 3
+    #else:
+    #    param.STEER_DELTA_UP = 3
+    #    param.STEER_DELTA_DOWN = 5
 
 
     # streer over check
