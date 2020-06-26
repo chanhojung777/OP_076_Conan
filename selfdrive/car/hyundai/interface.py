@@ -56,7 +56,10 @@ class CarInterface(CarInterfaceBase):
     ret.steerActuatorDelay = 0.1  # Default delay
     ret.steerRateCost = 0.5
     ret.steerLimitTimer = 0.4
+
+    ret.lateralTuning.pid.kf = 0.000005
     ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[9., 22.], [9., 22.]]
+    ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.15, 0.20], [0.03, 0.04]]
 
     if candidate == CAR.GRANDEUR_HYBRID:
       ret.mass = 1675. + STD_CARGO_KG
@@ -71,27 +74,33 @@ class CarInterface(CarInterfaceBase):
 
 
       # 2번 튜닝.
-      ret.steerRatio = ATOMC.steerRatio  #10.5  #12.5
-      ret.steerRateCost = ATOMC.steerRateCost #0.4 #0.4
-      ret.lateralTuning.pid.kf = ATOMC.steer_Kf1[0] #0.00001
-      ret.lateralTuning.pid.kpV = ATOMC.steer_Kp1  #[0.12, 0.15]
-      ret.lateralTuning.pid.kiV = ATOMC.steer_Ki1  #[0.02, 0.02]
+      #ret.steerRatio = ATOMC.steerRatio  #10.5  #12.5
+      #ret.steerRateCost = ATOMC.steerRateCost #0.4 #0.4
+      #ret.lateralTuning.pid.kf = ATOMC.steer_Kf1[0] #0.00001
+      #ret.lateralTuning.pid.kpV = ATOMC.steer_Kp1  #[0.12, 0.15]
+      #ret.lateralTuning.pid.kiV = ATOMC.steer_Ki1  #[0.02, 0.02]
 
 
       # 3번 atom param.
-      ret.lateralPIDatom.kBP  = [9., 22.]
-      ret.lateralPIDatom.kpV  = ATOMC.steer_Kp1
-      ret.lateralPIDatom.kiV  = ATOMC.steer_Ki1
-      ret.lateralPIDatom.kdV  = ATOMC.steer_Kd1
-      ret.lateralPIDatom.kfV  = ATOMC.steer_Kf1
-      ret.lateralPIDatom.kpV2 = ATOMC.steer_Kp2
-      ret.lateralPIDatom.kiV2 = ATOMC.steer_Ki2
-      ret.lateralPIDatom.kdV2 = ATOMC.steer_Kd2
-      ret.lateralPIDatom.kfV2 = ATOMC.steer_Kf2
+      ret.steerRatio = ATOMC.steerRatio  #10.5  #12.5
+      ret.steerRateCost = ATOMC.steerRateCost #0.4 #0.4
 
-      ret.lateralsRatom.boostBP = ATOMC.sr_boost_bp
-      ret.lateralsRatom.boostRange = ATOMC.sr_boost_range
-      ret.lateralsRatom.learnerParams = ATOMC.LearnerParams
+      ret.lateralPIDatom.kBPV = [0.15, 0.20]  # 속도.
+    
+      ret.lateralPIDatom.sRkBPV = ATOMC.sR_BPV   # 조향각.
+      ret.lateralPIDatom.sRBoostV = ATOMC.sR_Boost      
+      ret.lateralPIDatom.sRkpV1 = ATOMC.sR_kpV1
+      ret.lateralPIDatom.sRkiV1 = ATOMC.sR_kiV1
+      ret.lateralPIDatom.sRkdV1 = ATOMC.sR_kdV1
+      ret.lateralPIDatom.sRkfV1 = ATOMC.sR_kfV1
+
+      ret.lateralPIDatom.sRkpV2 = ATOMC.sR_kpV2
+      ret.lateralPIDatom.sRkiV2 = ATOMC.sR_kiV2
+      ret.lateralPIDatom.sRkdV2 = ATOMC.sR_kdV2
+      ret.lateralPIDatom.sRkfV2 = ATOMC.sR_kfV2
+
+
+      ret.lateralsRatom.learnerParams = ATOMC.learnerParams
       ret.lateralsRatom.deadzone = ATOMC.deadzone
       ret.lateralsRatom.steerOffset = ATOMC.steerOffset
       ret.lateralsRatom.tireStiffnessFactor = ATOMC.tire_stiffness_factor

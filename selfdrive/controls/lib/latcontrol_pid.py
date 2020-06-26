@@ -30,57 +30,58 @@ class LatControlPID():
     #  if self.prev_cruise_buttons == Buttons.CANCEL:
     #    ATOMC.read_tune() 
 
-    self.steer_Kp1 = CP.lateralPIDatom.kpV
-    self.steer_Ki1 = CP.lateralPIDatom.kiV
-    self.steer_Kd1 = CP.lateralPIDatom.kdV
-    self.steer_Kf1 = CP.lateralPIDatom.kfV
+    self.kBPV = CP.lateralPIDatom.kBPV
+    self.sRkBPV = CP.lateralPIDatom.sRkBPV
+    self.sRBoostV = CP.lateralPIDatom.sRBoostV
 
-    self.steer_Kp2 = CP.lateralPIDatom.kpV2
-    self.steer_Ki2 = CP.lateralPIDatom.kiV2
-    self.steer_Kd2 = CP.lateralPIDatom.kdV2
-    self.steer_Kf2 = CP.lateralPIDatom.kfV2
+    self.sRkpV1 = CP.lateralPIDatom.sRkpV1
+    self.sRkiV1 = CP.lateralPIDatom.sRkiV1
+    self.sRkdV1 = CP.lateralPIDatom.sRkdV1
+    self.sRkfV1 = CP.lateralPIDatom.sRkfV1
+    self.sRkpV2 = CP.lateralPIDatom.sRkpV2
+    self.sRkiV2 = CP.lateralPIDatom.sRkiV2
+    self.sRkdV2 = CP.lateralPIDatom.sRkdV2
+    self.sRkfV2 = CP.lateralPIDatom.sRkfV2
 
-    self.sr_boost_bp = CP.lateralsRatom.boostBP
     self.deadzone =  CP.lateralsRatom.deadzone
 
 
-    str1 = 'bp={}  kp={},{} ki={},{} kd={},{} kf={},{}'.format( self.sr_boost_bp, self.steer_Kp1, self.steer_Kp2, self.steer_Ki1, self.steer_Ki2, self.steer_Kd1, self.steer_Kd2, self.steer_Kf1, self.steer_Kf2 )
+    str1 = 'bp={}  srBP={} sRBoost={} sRkpV={},{} sRkiV={},{} sRkdV={},{} sRkfV={},{}'.format( self.kBPV, self.sRkBPV, self.sRBoostV, self.sRkpV1, self.sRkpV2, self.sRkiV1, self.sRkiV2, self.sRkdV1, self.sRkdV2, self.sRkfV1, self.sRkfV2 )
     self.trPID.add( str1 )    
 
     cv_angle = abs(self.angle_steers_des)
-    cv = self.sr_boost_bp  #[ 4, 30 ]  # angle
+    cv = self.sRkBPV   # angle
     # Kp
-    fKp1 = [float(self.steer_Kp1[ 0 ]), float(self.steer_Kp1[ 1 ]) ]
-    fKp2 = [float(self.steer_Kp2[ 0 ]), float(self.steer_Kp2[ 1 ]) ]
+    fKp1 = self.sRkpV1
+    fKp2 = self.sRkpV2
     self.steerKp1 = interp( cv_angle, cv, fKp1 )
     self.steerKp2 = interp( cv_angle, cv, fKp2 )
     self.steerKpV = [ float(self.steerKp1), float(self.steerKp2) ]
 
     # Ki
-    fKi1 = [float(self.steer_Ki1[ 0 ]), float(self.steer_Ki1[ 1 ]) ]
-    fKi2 = [float(self.steer_Ki2[ 0 ]), float(self.steer_Ki2[ 1 ]) ]
+    fKi1 = self.sRkiV1
+    fKi2 = self.sRkiV2
     self.steerKi1 = interp( cv_angle, cv, fKi1 )
     self.steerKi2 = interp( cv_angle, cv, fKi2 )
     self.steerKiV = [ float(self.steerKi1), float(self.steerKi2) ]
 
     # Kd
-    fKd1 = [float(self.steer_Kd1[ 0 ]), float(self.steer_Kd1[ 1 ]) ]
-    fKd2 = [float(self.steer_Kd2[ 0 ]), float(self.steer_Kd2[ 1 ]) ]
+    fKd1 = self.sRkdV1
+    fKd2 = self.sRkdV2
     self.steerKd1 = interp( cv_angle, cv, fKd1 )
     self.steerKd2 = interp( cv_angle, cv, fKd2 )    
     self.steerKdV = [ float(self.steerKd1), float(self.steerKd2) ]
 
     # kf
-    fKf1 = [float(self.steer_Kf1[ 0 ]), float(self.steer_Kf1[ 1 ]) ]
-    fKf2 = [float(self.steer_Kf2[ 0 ]), float(self.steer_Kf2[ 1 ]) ]
+    fKf1 = self.sRkfV1
+    fKf2 = self.sRkfV2
     self.steerKf1 = interp( cv_angle, cv, fKf1 )
     self.steerKf2 = interp( cv_angle, cv, fKf2 )
 
-    kBP = CP.lateralPIDatom.kBP  #CP.lateralTuning.pid.kpBP
+    kBP = self.kBPV
     fp = [float(self.steerKf1), float(self.steerKf2) ]
     self.steerKf = interp( v_ego,  kBP, fp )
 
-    #kBP =  CP.lateralPIDatom.kBP #CP.lateralTuning.pid.kpBP
     self.pid.gain( (kBP, self.steerKpV), (kBP, self.steerKiV), k_f=self.steerKf, k_d=(kBP, self.steerKdV) )
 
 

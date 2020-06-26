@@ -128,9 +128,10 @@ class PathPlanner():
       angle_offset = 0
       angleOffsetAverage = 0
       stiffnessFactor = CP.lateralsRatom.tireStiffnessFactor
+
       # atom
-      self.atom_sr_boost_bp = CP.lateralsRatom.boostBP
-      self.atom_sr_boost_range = CP.lateralsRatom.boostRange
+      self.atom_sr_boost_bp = CP.lateralPIDatom.sRkBPV
+      self.atom_sr_boost_range = CP.lateralPIDatom.sRBoost
       boost_rate = interp(abs(angle_steers), self.atom_sr_boost_bp, self.atom_sr_boost_range)
       self.atom_steer_ratio = CP.steerRatio + boost_rate
       self.steer_rate_cost = CP.steerRateCost

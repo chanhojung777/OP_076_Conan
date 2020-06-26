@@ -411,24 +411,24 @@ struct CarParams {
   lateralsRatom @53 :LateralsRatom;
 
   struct LateralsRatom {
-    boostBP @0 :List(Float32);
-    boostRange @1 :List(Float32);
-    learnerParams @2 :Int16;    
-    deadzone @3 :Float32;
-    steerOffset @4 :Float32;
-    tireStiffnessFactor @5 :Float32;
+    learnerParams @0 :Int16;    
+    deadzone @1 :Float32;
+    steerOffset @2 :Float32;
+    tireStiffnessFactor @3 :Float32;
   }
 
   struct LateralPIDatom {
-    kBP @0 :List(Float32);
-    kpV @1 :List(Float32);
-    kiV @2 :List(Float32);
-    kdV @3 :List(Float32);
-    kfV  @4 :List(Float32);
-    kpV2 @5 :List(Float32);
-    kiV2 @6 :List(Float32);
-    kdV2 @7 :List(Float32);
-    kfV2  @8 :List(Float32);
+    kBPV @0 :List(Float32);
+    sRkBPV @1 :List(Float32);
+    sRkpV1 @2 :List(Float32);
+    sRkiV1 @3 :List(Float32);
+    sRkdV1 @4 :List(Float32);
+    sRkfV1  @5 :List(Float32);
+    sRkpV2 @6 :List(Float32);
+    sRkiV2 @7 :List(Float32);
+    sRkdV2 @8 :List(Float32);
+    sRkfV2  @9 :List(Float32);
+    sRBoostV @10 :List(Float32);
   }
 
   struct LateralParams {
