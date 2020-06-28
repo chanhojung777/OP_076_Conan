@@ -4,7 +4,8 @@
 import numpy as np
 from collections import OrderedDict
 import matplotlib.pyplot as plt
-from selfdrive.car.honda.interface import CarInterface
+from selfdrive.car.hyundai.interface import CarInterface
+from selfdrive.car.hyundai.values import CAR
 from selfdrive.controls.lib.lateral_mpc import libmpc_py
 from selfdrive.controls.lib.vehicle_model import VehicleModel
 
@@ -41,7 +42,7 @@ deltas = []
 psis = []
 times = []
 
-CP = CarInterface.get_params("HONDA CIVIC 2016 TOURING")
+CP = CarInterface.get_params( CAR.GRANDEUR_HYBRID )
 VM = VehicleModel(CP)
 
 v_ref = 32.00  # 45 mph
