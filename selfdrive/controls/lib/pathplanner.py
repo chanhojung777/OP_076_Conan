@@ -133,12 +133,13 @@ class PathPlanner():
       stiffnessFactor = CP.lateralsRatom.tireStiffnessFactor
 
       # atom
-      self.atom_sr_boost_bp = CP.lateralPIDatom.sRkBPV
-      self.atom_sr_boost_range = CP.lateralPIDatom.sRBoostV
+      self.atom_sr_boost_bp = sm['carParams'].lateralPIDatom.sRkBPV
+      self.atom_sr_boost_range = sm['carParams'].lateralPIDatom.sRBoostV
       boost_rate = interp(abs(angle_steers), self.atom_sr_boost_bp, self.atom_sr_boost_range)
       self.atom_steer_ratio = self.steerRatio + boost_rate
       self.steer_rate_cost = sm['carParams'].steerRateCost   
       self.steerRatio = sm['carParams'].steerRatio
+
 
       str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format( self.steerRatio, CP.steerRatio, self.atom_sr_boost_bp, self.atom_sr_boost_range )
       str_log2 = 'steerRateCost={:.2f}'.format( self.steer_rate_cost )
