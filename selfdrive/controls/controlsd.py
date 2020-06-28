@@ -538,6 +538,7 @@ class Controls:
 
     # carParams - logged every 50 seconds (> 1 per segment)
     if self.init_flag or (self.sm.frame % int(50. / DT_CTRL) == 0):
+      self.init_flag = False
       cp_send = messaging.new_message('carParams')
       cp_send.carParams = self.CP
       self.pm.send('carParams', cp_send)
@@ -565,7 +566,7 @@ class Controls:
     elif CS.cruiseState.enabled and self.hyundai_lkas:
       self.CP = CarInterface.live_tune( self.CP, True )      
       self.hyundai_lkas = False
-    
+      self.init_flag = True
 
     self.update_events(CS)
 
@@ -583,10 +584,9 @@ class Controls:
     self.publish_logs(CS, start_time, actuators, v_acc, a_acc, lac_log)
     self.prof.checkpoint("Sent")
 
-    self.init_flag = False
+
     if not CS.cruiseState.enabled and not self.hyundai_lkas:
       self.hyundai_lkas = True
-          
 
   def controlsd_thread(self):
     while True:
