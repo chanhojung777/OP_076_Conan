@@ -197,12 +197,12 @@ typedef struct UIScene {
     float deadzone;
     float steerOffset;
     float tireStiffnessFactor;
-  }
+  };
 
   struct _CAR_PARAMS
   {
       float steerRatio;
-      LateralsRatom  lateralsRatom;
+      struct LateralsRatom  lateralsRatom;
   } carParams;
 
 } UIScene;
