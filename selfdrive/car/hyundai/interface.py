@@ -254,7 +254,7 @@ class CarInterface(CarInterfaceBase):
     global ATOMC 
     ATOMC.read_tune()
 
-    CP.steerRatio = 1.0 #ATOMC.steerRatio  #10.5  #12.5
+    CP.steerRatio = ATOMC.steerRatio  #10.5  #12.5
     CP.steerRateCost = ATOMC.steerRateCost #0.4 #0.4
   
     CP.lateralPIDatom.sRkBPV = ATOMC.sR_BPV   # 조향각.
