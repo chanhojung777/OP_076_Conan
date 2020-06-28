@@ -44,7 +44,7 @@ class Controls:
     gc.disable()
     set_realtime_priority(3)
 
-    print("start Controls messages...")
+    print(" start_Controls  messages...1")
     # Setup sockets
     self.pm = pm
     if self.pm is None:
@@ -59,7 +59,7 @@ class Controls:
       #self.sm = messaging.SubMaster(['thermal', 'health', 'model', 'liveCalibration', \
       #                               'dMonitoringState', 'plan', 'pathPlan', 'liveLocationKalman'])
 
-
+    print(" start_Controls  messages...2")
     self.can_sock = can_sock
     if can_sock is None:
       can_timeout = None if os.environ.get('NO_CAN_TIMEOUT', False) else 100
