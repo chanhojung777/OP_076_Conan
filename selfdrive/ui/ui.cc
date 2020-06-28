@@ -514,7 +514,7 @@ void handle_message(UIState *s, SubMaster &sm) {
   }
 
   if (sm.updated("carParams")) {
-    auto data = sm["carParams"].getCarState();
+    auto data = sm["carParams"].getcarParams();
     scene.carParams.steerRatio = data.getSteerRatio();
 
     auto lateralsRatom = data.getLateralsRatom();
