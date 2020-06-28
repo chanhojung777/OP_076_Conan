@@ -16,6 +16,7 @@ class CarInterface(CarInterfaceBase):
 
     self.meg_timer = 0
     self.meg_name = 0
+    self.pre_button = 0
 
 
   @staticmethod
@@ -248,8 +249,39 @@ class CarInterface(CarInterfaceBase):
 
     return ret
 
-  def live_tune(self):
+  @staticmethod
+  def live_tune(CP):
+    global ATOMC 
     ATOMC.read_tune()
+
+    CP.steerRatio = ATOMC.steerRatio  #10.5  #12.5
+    CP.steerRateCost = ATOMC.steerRateCost #0.4 #0.4
+  
+    CP.lateralPIDatom.sRkBPV = ATOMC.sR_BPV   # 조향각.
+    CP.lateralPIDatom.sRBoostV = ATOMC.sR_BoostV
+    CP.lateralPIDatom.sRkpV1 = ATOMC.sR_kpV1
+    CP.lateralPIDatom.sRkiV1 = ATOMC.sR_kiV1
+    CP.lateralPIDatom.sRkdV1 = ATOMC.sR_kdV1
+    CP.lateralPIDatom.sRkfV1 = ATOMC.sR_kfV1
+
+    CP.lateralPIDatom.sRkpV2 = ATOMC.sR_kpV2
+    CP.lateralPIDatom.sRkiV2 = ATOMC.sR_kiV2
+    CP.lateralPIDatom.sRkdV2 = ATOMC.sR_kdV2
+    CP.lateralPIDatom.sRkfV2 = ATOMC.sR_kfV2
+    
+    CP.lateralCVatom.cvBPV = ATOMC.cvBPV
+    CP.lateralCVatom.cvSteerMaxV1 = ATOMC.cvSteerMaxV1
+    CP.lateralCVatom.cvSteerDeltaUpV1 = ATOMC.cvSteerDeltaUpV1
+    CP.lateralCVatom.cvSteerDeltaDnV1 = ATOMC.cvSteerDeltaDnV1
+    CP.lateralCVatom.cvSteerMaxV2 = ATOMC.cvSteerMaxV2
+    CP.lateralCVatom.cvSteerDeltaUpV2 = ATOMC.cvSteerDeltaUpV2
+    CP.lateralCVatom.cvSteerDeltaDnV2 = ATOMC.cvSteerDeltaDnV2
+
+    CP.lateralsRatom.learnerParams = ATOMC.learnerParams
+    CP.lateralsRatom.deadzone = ATOMC.deadzone
+    CP.lateralsRatom.steerOffset = ATOMC.steerOffset
+    CP.lateralsRatom.tireStiffnessFactor = ATOMC.tire_stiffness_factor    
+    return CP
 
   def update(self, c, can_strings):
     self.cp.update_strings(can_strings)
