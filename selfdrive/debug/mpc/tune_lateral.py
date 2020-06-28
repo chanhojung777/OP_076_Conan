@@ -3,7 +3,7 @@
 
 import numpy as np
 from collections import OrderedDict
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 from selfdrive.car.hyundai.interface import CarInterface
 from selfdrive.car.hyundai.values import CAR
 from selfdrive.controls.lib.lateral_mpc import libmpc_py
@@ -152,7 +152,7 @@ ys.append(sol_y)
 deltas.append(delta)
 
 
-
+"""
 plt.figure()
 
 for i in range(len(xs)):
@@ -187,3 +187,4 @@ for i in range(len(xs)):
   plt.grid(True)
 
 plt.show()
+"""
