@@ -987,8 +987,8 @@ static void ui_draw_debug(UIState *s)
   ui_print( s, x_pos, y_pos+50, "LP:%d", scene.carParams.lateralsRatom.learnerParams );
   ui_print( s, x_pos, y_pos+100, "dZ:%d", scene.carParams.lateralsRatom.deadzone );
 
-  ui_print( s, x_pos, y_pos+150, "sO:%d", scene.carParams.lateralsRatom.steerOffset );
-  ui_print( s, x_pos, y_pos+200, "tS:%d", scene.carParams.lateralsRatom.tireStiffnessFactor );
+  ui_print( s, x_pos, y_pos+150, "sO:%.3f", scene.carParams.lateralsRatom.steerOffset );
+  ui_print( s, x_pos, y_pos+200, "tS:%.3f", scene.carParams.lateralsRatom.tireStiffnessFactor );
 
 
   snprintf(speed_str, sizeof(speed_str), "%s", scene.alert.text1 );
