@@ -43,6 +43,12 @@ psis = []
 times = []
 
 CP = CarInterface.get_params( CAR.GRANDEUR_HYBRID )
+
+CP = CarInterface.live_tune( CP )
+
+print( 'CP={}'.format( CP ) )
+
+
 VM = VehicleModel(CP)
 
 v_ref = 32.00  # 45 mph
