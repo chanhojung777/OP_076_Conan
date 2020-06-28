@@ -10,7 +10,7 @@ from common.params import Params
 from common.numpy_fast import interp
 import cereal.messaging as messaging
 from cereal import log
-
+from selfdrive.car.hyundai.interface import CarInterface
 import common.log as trace1
 
 
@@ -109,7 +109,7 @@ class PathPlanner():
     if self.atom_timer_cnt > 1000:
       self.atom_timer_cnt = 0
 
-
+    CP = CarInterface.live_tune( CP, False )
 
     v_ego = sm['carState'].vEgo
     angle_steers = sm['carState'].steeringAngle
