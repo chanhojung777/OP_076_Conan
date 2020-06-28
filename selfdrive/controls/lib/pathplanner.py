@@ -10,7 +10,7 @@ from common.params import Params
 from common.numpy_fast import interp
 import cereal.messaging as messaging
 from cereal import log
-
+from selfdrive.car.hyundai.interface import CarInterface
 import common.log as trace1
 
 
@@ -73,6 +73,7 @@ class PathPlanner():
     self.trLearner = trace1.Loger("Learner")
     self.trpathPlan = trace1.Loger("pathPlan")
 
+    self.prev_cruise_buttons = 0
     self.atom_timer_cnt = 0
     self.atom_steer_ratio = None
     self.atom_sr_boost_bp = [0., 0.]
@@ -107,6 +108,15 @@ class PathPlanner():
     self.atom_timer_cnt += 1
     if self.atom_timer_cnt > 1000:
       self.atom_timer_cnt = 0
+
+    cruiseState_enable = sm['carState'].cruiseState.enabled
+    if self.prev_cruise_buttons != cruiseState_enable:
+      self.prev_cruise_buttons = cruiseState_enable
+      if self.prev_cruise_buttons:
+        self.CP = CarInterface.live_tune( self.CP, False )
+
+
+
 
     v_ego = sm['carState'].vEgo
     angle_steers = sm['carState'].steeringAngle

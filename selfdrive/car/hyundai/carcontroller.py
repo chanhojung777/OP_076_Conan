@@ -6,6 +6,7 @@ from opendbc.can.packer import CANPacker
 from selfdrive.config import Conversions as CV
 from common.numpy_fast import interp
 from selfdrive.car.hyundai.spdcontroller  import SpdController
+from selfdrive.car.hyundai.interface import CarInterface
 import common.log as trace1
 import common.CTime1000 as tm
 
@@ -26,7 +27,7 @@ class CarController():
     self.lkas11_cnt = 0
     self.last_resume_frame = 0
     self.last_lead_distance = 0
-
+    self.prev_cruise_buttons = 0
 
 
     self.nBlinker = 0
@@ -48,14 +49,7 @@ class CarController():
     self.hud_timer_left = 0
     self.hud_timer_right = 0
 
-    self.kBPV = CP.lateralPIDatom.kBPV
-    self.cVBPV = CP.lateralCVatom.cvBPV
-    self.cvSteerMaxV1  = CP.lateralCVatom.cvSteerMaxV1
-    self.cvSteerDeltaUpV1 = CP.lateralCVatom.cvSteerDeltaUpV1
-    self.cvSteerDeltaDnV1 = CP.lateralCVatom.cvSteerDeltaDnV1
-    self.cvSteerMaxV2 = CP.lateralCVatom.cvSteerMaxV2
-    self.cvSteerDeltaUpV2 = CP.lateralCVatom.cvSteerDeltaUpV2
-    self.cvSteerDeltaDnV2 = CP.lateralCVatom.cvSteerDeltaDnV2    
+
 
   def limit_ctrl(self, value, limit, offset ):
       p_limit = offset + limit
@@ -104,8 +98,17 @@ class CarController():
 
   def cV_tune( self, v_ego_kph, cv_value ):  # cV(곡률에 의한 변화)
     #cv_value = abs(self.angle_steers_des)
-    cv_BPV = self.cVBPV   # 곡률
 
+    self.kBPV = self.CP.lateralPIDatom.kBPV
+    self.cVBPV = self.CP.lateralCVatom.cvBPV
+    self.cvSteerMaxV1  = self.CP.lateralCVatom.cvSteerMaxV1
+    self.cvSteerDeltaUpV1 = self.CP.lateralCVatom.cvSteerDeltaUpV1
+    self.cvSteerDeltaDnV1 = self.CP.lateralCVatom.cvSteerDeltaDnV1
+    self.cvSteerMaxV2 = self.CP.lateralCVatom.cvSteerMaxV2
+    self.cvSteerDeltaUpV2 = self.CP.lateralCVatom.cvSteerDeltaUpV2
+    self.cvSteerDeltaDnV2 = self.CP.lateralCVatom.cvSteerDeltaDnV2        
+
+    cv_BPV = self.cVBPV   # 곡률
     # Max
     self.steerMax1 = interp( cv_value, cv_BPV, self.cvSteerMaxV1 )
     self.steerMax2 = interp( cv_value, cv_BPV, self.cvSteerMaxV2 )
@@ -127,6 +130,12 @@ class CarController():
 
 
   def steerParams_torque(self, CS, abs_angle_steers, path_plan, CC ):
+
+    if self.prev_cruise_buttons != CS.out.cruiseState.enabled:
+      self.prev_cruise_buttons = CS.out.cruiseState.enabled
+      if self.prev_cruise_buttons:
+        self.CP = CarInterface.live_tune( self.CP, False )
+
     param = SteerLimitParams()
     v_ego_kph = CS.out.vEgo * CV.MS_TO_KPH
 
@@ -134,14 +143,6 @@ class CarController():
     param.STEER_MAX = min( param.STEER_MAX, self.MAX)
     param.STEER_DELTA_UP = min( param.STEER_DELTA_UP, self.UP)
     param.STEER_DELTA_DOWN = min( param.STEER_DELTA_DOWN, self.DN )
-
-    # 직선 코스
-    #if abs_angle_steers < 1 or v_ego_kph < 5:
-    #    param.STEER_DELTA_UP  = 2
-    #    param.STEER_DELTA_DOWN = 3
-    #else:
-    #    param.STEER_DELTA_UP = 3
-    #    param.STEER_DELTA_DOWN = 5
 
 
     # streer over check

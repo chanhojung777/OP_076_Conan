@@ -250,9 +250,11 @@ class CarInterface(CarInterfaceBase):
     return ret
 
   @staticmethod
-  def live_tune(CP):
+  def live_tune(CP, read=True):
     global ATOMC 
-    ATOMC.read_tune()
+
+    if read:
+      ATOMC.read_tune()
 
     CP.steerRatio = ATOMC.steerRatio  #10.5  #12.5
     CP.steerRateCost = ATOMC.steerRateCost #0.4 #0.4
