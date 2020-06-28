@@ -6,7 +6,7 @@ from opendbc.can.packer import CANPacker
 from selfdrive.config import Conversions as CV
 from common.numpy_fast import interp
 from selfdrive.car.hyundai.spdcontroller  import SpdController
-from selfdrive.car.hyundai.interface import CarInterface
+#from selfdrive.car.hyundai.interface import CarInterface
 import common.log as trace1
 import common.CTime1000 as tm
 
@@ -131,8 +131,6 @@ class CarController():
 
   def steerParams_torque(self, CS, abs_angle_steers, path_plan, CC ):
 
-    self.CP = CarInterface.live_tune( self.CP, False )
-
     param = SteerLimitParams()
     v_ego_kph = CS.out.vEgo * CV.MS_TO_KPH
 
@@ -199,7 +197,11 @@ class CarController():
 
 
 
-  def update(self, CC, CS, frame, sm ):
+  def update(self, CC, CS, frame, sm, CP ):
+    if self.CP != CP:
+      self.CP = CP
+    #self.CP = CarInterface.live_tune( self.CP, False )
+
     enabled = CC.enabled
     actuators = CC.actuators
     pcm_cancel_cmd = CC.cruiseControl.cancel

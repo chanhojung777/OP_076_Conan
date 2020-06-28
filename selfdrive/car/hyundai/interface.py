@@ -374,8 +374,8 @@ class CarInterface(CarInterfaceBase):
     self.CS.out = ret.as_reader()
     return self.CS.out
 
-  def apply(self, c, sm ):
-    can_sends = self.CC.update(c, self.CS, self.frame, sm )
+  def apply(self, c, sm, CP ):
+    can_sends = self.CC.update(c, self.CS, self.frame, sm, CP )
 
     self.frame += 1
     return can_sends
