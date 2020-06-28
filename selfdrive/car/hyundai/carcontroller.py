@@ -27,7 +27,7 @@ class CarController():
     self.lkas11_cnt = 0
     self.last_resume_frame = 0
     self.last_lead_distance = 0
-    self.prev_cruise_buttons = 0
+
 
 
     self.nBlinker = 0
@@ -131,10 +131,7 @@ class CarController():
 
   def steerParams_torque(self, CS, abs_angle_steers, path_plan, CC ):
 
-    if self.prev_cruise_buttons != CS.out.cruiseState.enabled:
-      self.prev_cruise_buttons = CS.out.cruiseState.enabled
-      if self.prev_cruise_buttons:
-        self.CP = CarInterface.live_tune( self.CP, False )
+    self.CP = CarInterface.live_tune( self.CP, False )
 
     param = SteerLimitParams()
     v_ego_kph = CS.out.vEgo * CV.MS_TO_KPH
