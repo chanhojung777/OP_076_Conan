@@ -8,7 +8,6 @@ from selfdrive.swaglog import cloudlog
 from selfdrive.controls.lib.planner import Planner
 from selfdrive.controls.lib.vehicle_model import VehicleModel
 from selfdrive.controls.lib.pathplanner import PathPlanner
-from selfdrive.car.hyundai.interface import CarInterface
 import cereal.messaging as messaging
 
 
@@ -42,12 +41,6 @@ def plannerd_thread(sm=None, pm=None):
 
   while True:
     sm.update()
-
-    cruiseState_enable = sm['carState'].cruiseState.enabled
-    if prev_cruise_buttons != cruiseState_enable:
-      prev_cruise_buttons = cruiseState_enable
-      if prev_cruise_buttons:
-        CP = CarInterface.live_tune( CP, False )    
 
     if sm.updated['model']:
       PP.update(sm, pm, CP, VM)
