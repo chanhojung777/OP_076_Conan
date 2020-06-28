@@ -44,7 +44,7 @@ class Controls:
   def __init__(self, sm=None, pm=None, can_sock=None):
     gc.disable()
     set_realtime_priority(3)
-
+    self.init_flag = True
 
     # Setup sockets
     self.pm = pm
@@ -537,7 +537,7 @@ class Controls:
     self.events_prev = self.events.names.copy()
 
     # carParams - logged every 50 seconds (> 1 per segment)
-    if (self.sm.frame % int(50. / DT_CTRL) == 0):
+    if self.init_flag or (self.sm.frame % int(50. / DT_CTRL) == 0):
       cp_send = messaging.new_message('carParams')
       cp_send.carParams = self.CP
       self.pm.send('carParams', cp_send)
@@ -583,6 +583,7 @@ class Controls:
     self.publish_logs(CS, start_time, actuators, v_acc, a_acc, lac_log)
     self.prof.checkpoint("Sent")
 
+    self.init_flag = False
     if not CS.cruiseState.enabled and not self.hyundai_lkas:
       self.hyundai_lkas = True
           
