@@ -34,10 +34,10 @@ float  fFontSize = 0.8;
 static void ui_print(UIState *s, int x, int y,  const char* fmt, ... )
 {
   char speed_str[512];  
-  //char* msg_buf = NULL;
+  char* msg_buf = NULL;
   va_list args;
   va_start(args, fmt);
-  vasprintf( speed_str, fmt, args);
+  vasprintf( &speed_str, fmt, args);
   va_end(args);
 
   nvgText(s->vg, x, y, speed_str, NULL);
