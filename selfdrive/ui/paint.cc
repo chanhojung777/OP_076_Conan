@@ -985,7 +985,7 @@ static void ui_draw_debug(UIState *s)
   x_pos = ui_viz_rx + 900;
   ui_print( s, x_pos, y_pos+0, "sR:%.2f", scene.carParams.steerRatio );
   ui_print( s, x_pos, y_pos+50, "LP:%d", scene.carParams.lateralsRatom.learnerParams );
-  ui_print( s, x_pos, y_pos+100, "dZ:%d", scene.carParams.lateralsRatom.deadzone );
+  ui_print( s, x_pos, y_pos+100, "dZ:%.1f", scene.carParams.lateralsRatom.deadzone );
 
   ui_print( s, x_pos, y_pos+150, "sO:%.3f", scene.carParams.lateralsRatom.steerOffset );
   ui_print( s, x_pos, y_pos+200, "tS:%.3f", scene.carParams.lateralsRatom.tireStiffnessFactor );
