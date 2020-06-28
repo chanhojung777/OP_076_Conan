@@ -44,7 +44,7 @@ class Controls:
     gc.disable()
     set_realtime_priority(3)
 
-
+    print("start Controls messages...")
     # Setup sockets
     self.pm = pm
     if self.pm is None:
