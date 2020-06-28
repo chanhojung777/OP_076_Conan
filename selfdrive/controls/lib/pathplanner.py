@@ -109,7 +109,6 @@ class PathPlanner():
     if self.atom_timer_cnt > 1000:
       self.atom_timer_cnt = 0
 
-    CP = CarInterface.live_tune( CP, False )
 
     v_ego = sm['carState'].vEgo
     angle_steers = sm['carState'].steeringAngle
@@ -136,8 +135,8 @@ class PathPlanner():
       self.atom_sr_boost_bp = CP.lateralPIDatom.sRkBPV
       self.atom_sr_boost_range = CP.lateralPIDatom.sRBoostV
       boost_rate = interp(abs(angle_steers), self.atom_sr_boost_bp, self.atom_sr_boost_range)
-      self.atom_steer_ratio = CP.steerRatio + boost_rate
-      self.steer_rate_cost = CP.steerRateCost
+      self.atom_steer_ratio = sm['carParams'].steerRatio + boost_rate
+      self.steer_rate_cost = sm['carParams'].steerRateCost      
 
       str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format( CP.steerRatio, CP.steerRatio, self.atom_sr_boost_bp, self.atom_sr_boost_range )
       str_log2 = 'steerRateCost={:.2f}'.format( self.steer_rate_cost )
