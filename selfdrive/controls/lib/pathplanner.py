@@ -58,6 +58,7 @@ class PathPlanner():
 
     self.last_cloudlog_t = 0
     self.steer_rate_cost = CP.steerRateCost
+    self.steerRatio = CP.steerRatio    
 
     self.setup_mpc()
     self.solution_invalid_cnt = 0
@@ -135,10 +136,11 @@ class PathPlanner():
       self.atom_sr_boost_bp = CP.lateralPIDatom.sRkBPV
       self.atom_sr_boost_range = CP.lateralPIDatom.sRBoostV
       boost_rate = interp(abs(angle_steers), self.atom_sr_boost_bp, self.atom_sr_boost_range)
-      self.atom_steer_ratio = sm['carParams'].steerRatio + boost_rate
-      self.steer_rate_cost = sm['carParams'].steerRateCost      
+      self.atom_steer_ratio = self.steerRatio + boost_rate
+      self.steer_rate_cost = sm['carParams'].steerRateCost   
+      self.steerRatio = sm['carParams'].steerRatio
 
-      str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format( CP.steerRatio, CP.steerRatio, self.atom_sr_boost_bp, self.atom_sr_boost_range )
+      str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format( self.steerRatio, CP.steerRatio, self.atom_sr_boost_bp, self.atom_sr_boost_range )
       str_log2 = 'steerRateCost={:.2f}'.format( self.steer_rate_cost )
       self.trPATH.add( '{} {}'.format( str_log1, str_log2 ) )
       
