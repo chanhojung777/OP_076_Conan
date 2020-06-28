@@ -44,7 +44,7 @@ class Controls:
   def __init__(self, sm=None, pm=None, can_sock=None):
     gc.disable()
     set_realtime_priority(3)
-    self.init_flag = 10
+
 
     # Setup sockets
     self.pm = pm
@@ -164,7 +164,7 @@ class Controls:
     self.prof = Profiler(False)  # off by default
 
     self.hyundai_lkas = self.read_only  #read_only
-
+    self.init_flag = True
 
 
   def update_events(self, CS):
@@ -538,9 +538,7 @@ class Controls:
 
     # carParams - logged every 50 seconds (> 1 per segment)
     if self.init_flag or (self.sm.frame % int(50. / DT_CTRL) == 0):
-      if self.init_flag:
-        self.init_flag -= 1
-
+      self.init_flag = False 
       cp_send = messaging.new_message('carParams')
       cp_send.carParams = self.CP
       self.pm.send('carParams', cp_send)
