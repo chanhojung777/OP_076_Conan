@@ -44,7 +44,7 @@ class Controls:
     gc.disable()
     set_realtime_priority(3)
 
-    print(" start_Controls  messages...1")
+
     # Setup sockets
     self.pm = pm
     if self.pm is None:
@@ -59,13 +59,13 @@ class Controls:
       #self.sm = messaging.SubMaster(['thermal', 'health', 'model', 'liveCalibration', \
       #                               'dMonitoringState', 'plan', 'pathPlan', 'liveLocationKalman'])
 
-    print(" start_Controls  messages...2")
+    print(" start_Controls  messages...1")
     self.can_sock = can_sock
     if can_sock is None:
       can_timeout = None if os.environ.get('NO_CAN_TIMEOUT', False) else 100
       self.can_sock = messaging.sub_sock('can', timeout=can_timeout)
 
-
+    print(" start_Controls  messages...2")
     # wait for one health and one CAN packet
     hw_type = messaging.recv_one(self.sm.sock['health']).health.hwType
     has_relay = hw_type in [HwType.blackPanda, HwType.uno]
