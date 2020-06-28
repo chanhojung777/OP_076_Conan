@@ -1,5 +1,5 @@
 
-from  kegman_conf import kegman_conf
+from  selfdrive.kegman_conf import kegman_conf
 
 class AtomConf():
   def __init__(self, CP=None):
