@@ -6,7 +6,6 @@ from cereal import log
 
 from common.numpy_fast import interp
 
-from selfdrive.car.hyundai.interface import CarInterface
 import common.log as trace1
 
 ButtonType = car.CarState.ButtonEvent.Type
@@ -15,7 +14,7 @@ class LatControlPID():
   def __init__(self, CP):
     self.trPID = trace1.Loger("pid")
     self.angle_steers_des = 0.
-    self.prev_cruise_buttons = -1
+
 
     self.pid = PIController((CP.lateralTuning.pid.kpBP, CP.lateralTuning.pid.kpV),
                             (CP.lateralTuning.pid.kiBP, CP.lateralTuning.pid.kiV),
@@ -31,10 +30,6 @@ class LatControlPID():
   def linear2_tune( self, CS, CP ):  # angle(조향각에 의한 변화)
     v_ego = CS.vEgo
     
-    if self.prev_cruise_buttons != CS.cruiseState.enabled:
-      self.prev_cruise_buttons = CS.cruiseState.enabled
-      if self.prev_cruise_buttons:
-        CP = CarInterface.live_tune( CP, True )
 
     self.kBPV = CP.lateralPIDatom.kBPV
     self.sRkBPV = CP.lateralPIDatom.sRkBPV

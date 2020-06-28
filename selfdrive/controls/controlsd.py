@@ -563,7 +563,7 @@ class Controls:
     if self.read_only:
       self.hyundai_lkas = self.read_only
     elif CS.cruiseState.enabled and self.hyundai_lkas:
-      self.CP = CarInterface.live_tune( self.CP, False )      
+      self.CP = CarInterface.live_tune( self.CP, True )      
       self.hyundai_lkas = False
     
 
