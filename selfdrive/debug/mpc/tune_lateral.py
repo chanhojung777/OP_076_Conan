@@ -43,10 +43,10 @@ psis = []
 times = []
 
 CP = CarInterface.get_params( CAR.GRANDEUR_HYBRID )
-
+print( 'CP.steerRatio={}'.format( CP.steerRatio ) )
 CP = CarInterface.live_tune( CP )
 
-print( 'CP={}'.format( CP ) )
+print( 'CP.steerRatio={}'.format( CP.steerRatio ) )
 
 
 VM = VehicleModel(CP)
