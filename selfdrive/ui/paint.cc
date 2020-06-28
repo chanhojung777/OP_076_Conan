@@ -983,7 +983,7 @@ static void ui_draw_debug(UIState *s)
   nvgText(s->vg, x_pos, y_pos+200, speed_str, NULL);   
 
   x_pos = 500;
-  ui_print( s, x_pos, y_pos+0, "sR:%.5f", scene.carParams.steerRatio );
+  ui_print( s, x_pos, y_pos+0, "sR:%.2f", scene.carParams.steerRatio );
   ui_print( s, x_pos, y_pos+50, "LP:%d", scene.carParams.lateralsRatom.learnerParams );
   ui_print( s, x_pos, y_pos+100, "dZ:%d", scene.carParams.lateralsRatom.deadzone );
 
