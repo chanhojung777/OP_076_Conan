@@ -148,17 +148,16 @@ class CarInterface(CarInterfaceBase):
       #ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       #ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
 
-      # IQR
+      #lqr
       #ret.lateralTuning.init('lqr')
       #ret.lateralTuning.lqr.scale = 1500.0
       #ret.lateralTuning.lqr.ki = 0.05
-      #ret.lateralTuning.lqr.dcGain = 0.002237852961363602
-      # State space system
-      #ret.lateralTuning.lqr.a = [0.,1,-0.22619643, 1.2182268]
-      #ret.lateralTuning.lqr.b = [-0.000019, 0.0000039]
-      #ret.lateralTuning.lqr.c = [1,0]
-      #ret.lateralTuning.lqr.k = [-110.73,451.22]
+      #ret.lateralTuning.lqr.a = [0., 1., -0.22619643, 1.21822268]
+      #ret.lateralTuning.lqr.b = [-1.92006585e-04, 3.95603032e-05]
+      #ret.lateralTuning.lqr.c = [1., 0.]
+      #ret.lateralTuning.lqr.k = [-110.73572306, 451.22718255]
       #ret.lateralTuning.lqr.l = [0.3233671, 0.3185757]
+      #ret.lateralTuning.lqr.dcGain = 0.002237852961363602
 
       # indi
       ret.lateralTuning.init('indi')
@@ -200,13 +199,11 @@ class CarInterface(CarInterfaceBase):
 
 
 
-
-
     # 3번 atom param.
+    ret.lateralPIDatom.kBPV = [0.15, 0.20]  # 속도.
+
     ret.steerRatio = ATOMC.steerRatio  #10.5  #12.5
     ret.steerRateCost = ATOMC.steerRateCost #0.4 #0.4
-
-    ret.lateralPIDatom.kBPV = [0.15, 0.20]  # 속도.
   
     ret.lateralPIDatom.sRkBPV = ATOMC.sR_BPV   # 조향각.
     ret.lateralPIDatom.sRBoostV = ATOMC.sR_BoostV
@@ -233,6 +230,8 @@ class CarInterface(CarInterfaceBase):
     ret.lateralsRatom.deadzone = ATOMC.deadzone
     ret.lateralsRatom.steerOffset = ATOMC.steerOffset
     ret.lateralsRatom.tireStiffnessFactor = ATOMC.tire_stiffness_factor
+    tire_stiffness_factor = ATOMC.tire_stiffness_factor
+
 
     ret.centerToFront = ret.wheelbase * 0.4
 
@@ -248,6 +247,9 @@ class CarInterface(CarInterfaceBase):
     ret.enableCamera = is_ecu_disconnected(fingerprint[0], FINGERPRINTS, ECU_FINGERPRINT, candidate, Ecu.fwdCamera) or has_relay
 
     return ret
+
+  def live_tune(self):
+    ATOMC.read_tune()
 
   def update(self, c, can_strings):
     self.cp.update_strings(can_strings)

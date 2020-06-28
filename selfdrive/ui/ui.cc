@@ -214,9 +214,9 @@ static void ui_init(UIState *s) {
 
   pthread_mutex_init(&s->lock, NULL);
   s->sm = new SubMaster({"model", "controlsState", "carState", "uiLayoutState", "liveCalibration", "radarState", "thermal",
-                         "health", "ubloxGnss", "driverState", "dMonitoringState", "offroadLayout"
+                         "health", "ubloxGnss", "driverState", "dMonitoringState", "offroadLayout", "carParams"
 #ifdef SHOW_SPEEDLIMIT
-                                    , "liveMapData"
+                        , "liveMapData"
 #endif
   });
   s->pm = new PubMaster({"offroadLayout"});
@@ -511,7 +511,18 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.leftBlinker = data.getLeftBlinker();
     scene.rightBlinker = data.getRightBlinker();
     scene.getGearShifter = data.getGearShifter();
-  }  
+  }
+
+  if (sm.updated("carParams")) {
+    auto data = sm["carParams"].getCarState();
+    scene.carParams.steerRatio = data.getSteerRatio();
+
+    auto lateralsRatom = data.getLateralsRatom();
+    scene.carParams.lateralsRatom.learnerParams = lateralsRatom.getLearnerParams();
+    scene.carParams.lateralsRatom.deadzone  = lateralsRatom.getDeadzone();
+    scene.carParams.lateralsRatom.steerOffset  = lateralsRatom.getSteerOffset();
+    scene.carParams.lateralsRatom.tireStiffnessFactor  = lateralsRatom.getTireStiffnessFactor();
+  }
 
   s->started = s->thermal_started || s->preview_started ;
   // Handle onroad/offroad transition

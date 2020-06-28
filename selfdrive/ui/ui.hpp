@@ -187,7 +187,23 @@ typedef struct UIScene {
   {
       char text1[512];
       char text2[512];
-  } alert;  
+  } alert;
+
+
+
+
+  struct LateralsRatom {
+    int learnerParams;
+    float deadzone;
+    float steerOffset;
+    float tireStiffnessFactor;
+  }
+
+  struct _CAR_PARAMS
+  {
+      float steerRatio;
+      LateralsRatom  lateralsRatom;
+  } carParams;
 
 } UIScene;
 
