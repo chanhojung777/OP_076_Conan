@@ -6,7 +6,6 @@ from opendbc.can.packer import CANPacker
 from selfdrive.config import Conversions as CV
 from common.numpy_fast import interp
 from selfdrive.car.hyundai.spdcontroller  import SpdController
-#from selfdrive.car.hyundai.interface import CarInterface
 import common.log as trace1
 import common.CTime1000 as tm
 
@@ -41,7 +40,7 @@ class CarController():
     self.vRel = 0
 
     self.timer1 = tm.CTime1000("time")
-    self.SC = SpdController()    
+    self.SC = SpdController()
     self.model_speed = 0
     self.model_sum = 0
     

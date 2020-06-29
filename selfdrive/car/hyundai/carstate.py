@@ -3,7 +3,7 @@ from selfdrive.car.hyundai.values import DBC, STEER_THRESHOLD, FEATURES
 from selfdrive.car.interfaces import CarStateBase
 from opendbc.can.parser import CANParser
 from selfdrive.config import Conversions as CV
-
+from selfdrive.car.hyundai.spdcontroller  import SpdController
 from selfdrive.car.hyundai.values import Buttons
 
 
@@ -38,6 +38,8 @@ class CarState(CarStateBase):
 
     self.TSigLHSw = 0
     self.TSigRHSw = 0
+
+    self.SC = SpdController()
 
   def update(self, cp, cp_cam):
     self.prev_cruise_main_button = self.cruise_main_button
@@ -122,7 +124,10 @@ class CarState(CarStateBase):
     if self.acc_active:
       is_set_speed_in_mph = int(cp.vl["CLU11"]["CF_Clu_SPEED_UNIT"])
       speed_conv = CV.MPH_TO_MS if is_set_speed_in_mph else CV.KPH_TO_MS
-      ret.cruiseState.speed = self.VSetDis * speed_conv
+      #ret.cruiseState.speed = self.VSetDis * speed_conv
+      
+      speed_kph = self.SC.update_cruiseSW( self )
+      ret.cruiseState.speed = speed_kph * speed_conv
     else:
       ret.cruiseState.speed = 0
 

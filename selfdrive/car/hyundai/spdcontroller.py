@@ -198,6 +198,7 @@ class SpdController():
         if set_speed_kph < 30:
             set_speed_kph = 30
 
+        self.cruise_set_speed_kph = set_speed_kph
         return set_speed_kph
 
     def speed_control(self, CS, v_ego_kph, sm, actuators, dRel, yRel, vRel ):
