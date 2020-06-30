@@ -135,6 +135,9 @@ class PathPlanner():
       # atom
       self.steer_rate_cost = sm['carParams'].steerRateCost   
       self.steerRatio = sm['carParams'].steerRatio
+
+      if self.steerRatio <= 1:
+        self.steerRatio = CP.steerRatio
       
       self.atom_sr_boost_bp = CP.lateralPIDatom.sRkBPV
       self.atom_sr_boost_range = CP.lateralPIDatom.sRBoostV

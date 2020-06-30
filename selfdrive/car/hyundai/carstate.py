@@ -95,8 +95,6 @@ class CarState(CarStateBase):
     self.Mdps_ToiUnavail = cp.vl["MDPS12"]['CF_Mdps_ToiUnavail']
     ret.vEgo = self.clu_Vanz * CV.KPH_TO_MS
 
-
-    
     steerWarning = False
     if ret.vEgo < 5 or not self.Mdps_ToiUnavail:
       self.steerWarning = 0
