@@ -201,7 +201,8 @@ class SpdController():
         self.cruise_set_speed_kph = set_speed_kph
         return set_speed_kph
 
-    def speed_control(self, CS, v_ego_kph, sm, actuators, dRel, yRel, vRel ):
+    def speed_control(self, CS, sm, CC ):
+
         if CS.driverOverride == 2 or not CS.pcm_acc_status or CS.cruise_buttons == Buttons.RES_ACCEL or CS.cruise_buttons == Buttons.SET_DECEL:
             self.resume_cnt = 0
             self.btn_type = Buttons.NONE
@@ -210,7 +211,7 @@ class SpdController():
         elif self.wait_timer2:
             self.wait_timer2 -= 1
         else:
-            btn_type, clu_speed = self.update( v_ego_kph, CS, sm, actuators, dRel, yRel, vRel )   # speed controller spdcontroller.py
+            btn_type, clu_speed = self.update( CS, sm, CC )   # speed controller spdcontroller.py
 
             if CS.clu_Vanz < 5:
                 self.btn_type = Buttons.NONE
@@ -397,7 +398,11 @@ class SpdController():
 
         return wait_time_cmd, set_speed
 
-    def update(self, v_ego_kph, CS, sm, actuators, dRel, yRel, vRel):
+    def update(self, CS, sm, CC ):
+        dRel = CC.dRel
+        yRel = CC.yRel
+        vRel = CC.vRel
+
         btn_type = Buttons.NONE
         #lead_1 = sm['radarState'].leadOne
         long_wait_cmd = 500
@@ -413,7 +418,7 @@ class SpdController():
         lead_wait_cmd, lead_set_speed = self.update_lead( CS,  dRel, yRel, vRel)  
 
         # 커브 감속.
-        model_speed = self.calc_va( CS.out.vEgo )
+        model_speed = CC.model_speed   #calc_va( CS.out.vEgo )
         curv_wait_cmd, curv_set_speed = self.update_curv(CS, sm, model_speed)
 
         if curv_wait_cmd != 0:

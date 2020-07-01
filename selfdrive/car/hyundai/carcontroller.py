@@ -48,6 +48,8 @@ class CarController():
     self.hud_timer_left = 0
     self.hud_timer_right = 0
 
+    self.speed_control_enabled = False
+
 
 
   def limit_ctrl(self, value, limit, offset ):
@@ -199,7 +201,6 @@ class CarController():
   def update(self, CC, CS, frame, sm, CP ):
     if self.CP != CP:
       self.CP = CP
-    #self.CP = CarInterface.live_tune( self.CP, False )
 
     enabled = CC.enabled
     actuators = CC.actuators
@@ -215,7 +216,6 @@ class CarController():
 
 
     # Steering Torque
-    #param = SteerLimitParams()
     param = self.steerParams_torque( CS, abs_angle_steers, path_plan, CC )
 
 
@@ -259,8 +259,9 @@ class CarController():
     str_log2 = 'limit={:.0f} LC={} tm={:.1f}'.format( apply_steer_limit, path_plan.laneChangeState, self.timer1.sampleTime()  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
-    str_log2 = 'U={:.0f}  LK={:.0f} dir={} steer={:5.0f} '.format( CS.Mdps_ToiUnavail, CS.lkas_button_on, self.steer_torque_ratio_dir, CS.out.steeringTorque  )
-    trace1.printf2( '{}'.format( str_log2 ) )
+    if not self.speed_control_enabled:
+      str_log2 = 'U={:.0f}  LK={:.0f} dir={} steer={:5.0f} '.format( CS.Mdps_ToiUnavail, CS.lkas_button_on, self.steer_torque_ratio_dir, CS.out.steeringTorque  )
+      trace1.printf2( '{}'.format( str_log2 ) )
 
     if pcm_cancel_cmd:
       can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.CANCEL))
@@ -281,6 +282,8 @@ class CarController():
     # reset lead distnce after the car starts moving
     elif self.last_lead_distance != 0:
       self.last_lead_distance = 0
+    elif self.speed_control_enabled:
+      self.SC.speed_control(  CS, sm, self )
 
 
     # 20 Hz LFA MFA message
