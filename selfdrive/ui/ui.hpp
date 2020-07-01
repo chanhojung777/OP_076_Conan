@@ -205,6 +205,12 @@ typedef struct UIScene {
       struct LateralsRatom  lateralsRatom;
   } carParams;
 
+  struct _CRUISE_STATE
+  {
+    bool standstill;
+    int  modeSel;
+  } cruiseState;
+
 } UIScene;
 
 typedef struct {

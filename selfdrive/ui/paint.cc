@@ -969,18 +969,11 @@ static void ui_draw_debug(UIState *s)
   nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
   nvgFontSize(s->vg, 36*1.5*fFontSize);
 
-  snprintf(speed_str, sizeof(speed_str), "B:%d,%.5f", scene.steerOverride, scene.output_scale  );
-  nvgText(s->vg, x_pos, y_pos+0, speed_str, NULL);
-  snprintf(speed_str, sizeof(speed_str), "D:%d,%d", scene.leftBlinker, scene.rightBlinker  );
-  nvgText(s->vg, x_pos, y_pos+50, speed_str, NULL);   
-  snprintf(speed_str, sizeof(speed_str), "G:%d,%d,%d", (int)scene.getGearShifter, scene.engaged, scene.engageable  );
-  nvgText(s->vg, x_pos, y_pos+100, speed_str, NULL);   
+  ui_print( s, x_pos, y_pos+0, "B:%d,%.5f", scene.steerOverride, scene.output_scale );
+  ui_print( s, x_pos, y_pos+50, "G:%d", (int)scene.getGearShifter );
+  ui_print( s, x_pos, y_pos+100, "mS:%d,%d", scene.cruiseState.modeSel, (int)scene.cruiseState.standstill );
 
-  snprintf(speed_str, sizeof(speed_str), "L1:%d, %.1f,%.1f,%.1f", (int)scene.lead_status, scene.lead_d_rel, scene.lead_y_rel , scene.lead_v_rel  );
-  nvgText(s->vg, x_pos, y_pos+150, speed_str, NULL);   
 
-  snprintf(speed_str, sizeof(speed_str), "L2:%d, %.1f,%.1f,%.1f", (int)scene.lead_status2, scene.lead_d_rel2, scene.lead_y_rel2 , scene.lead_v_rel2  );
-  nvgText(s->vg, x_pos, y_pos+200, speed_str, NULL);   
 
   x_pos = viz_speed_x + 300;
   ui_print( s, x_pos, y_pos+0, "sR:%.2f", scene.carParams.steerRatio );

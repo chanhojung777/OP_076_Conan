@@ -511,6 +511,12 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.leftBlinker = data.getLeftBlinker();
     scene.rightBlinker = data.getRightBlinker();
     scene.getGearShifter = data.getGearShifter();
+
+
+    auto cruiseState = data.getCruiseState();
+
+    scene.cruiseState.standstill  cruiseState.getStandstill()
+    scene.cruiseState.modeSel = cruiseState.getModeSel();
   }
 
   if (sm.updated("carParams")) {
