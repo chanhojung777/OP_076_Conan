@@ -52,7 +52,7 @@ class CarController():
     self.hud_timer_right = 0
 
     # speed controller
-    self.SC = SpdctrlSlow(self.CP)
+    self.SC = SpdctrlSlow()
     self.speed_control_enabled = False
 
 

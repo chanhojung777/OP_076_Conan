@@ -7,7 +7,7 @@ from selfdrive.car.hyundai.spdcontroller  import SpdController
 
 
 class SpdctrlSlow(SpdController):
-    def __init__(self, CP):
+    def __init__(self, CP=None):
         super().__init__( CP )
         self.cv_Raio = 0.8
         self.cv_Dist = -4
