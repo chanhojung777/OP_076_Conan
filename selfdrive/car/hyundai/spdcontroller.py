@@ -65,7 +65,7 @@ def limit_accel_in_turns(v_ego, angle_steers, a_target, steerRatio, wheelbase):
 
 
 class SpdController():
-    def __init__(self):
+    def __init__(self, CP):
         self.long_control_state = 0  # initialized to off
 
         self.seq_step_debug = 0
@@ -89,8 +89,6 @@ class SpdController():
         self.movAvg = moveavg1.MoveAvg()
         self.Timer1 = tm.CTime1000("SPD")
         self.time_no_lean = 0
-
-        self.SC = trace1.Loger("spd")
 
         self.wait_timer2 = 0
 
@@ -266,6 +264,14 @@ class SpdController():
 
         return time, set_speed
 
+    # returns a 
+    def update_lead(self, c, can_strings):
+        raise NotImplementedError
+
+    def update_curv(self, CS, sm, model_speed):
+        raise NotImplementedError        
+
+    """
     def update_lead(self, CS,  dRel, yRel, vRel):
         lead_set_speed = self.cruise_set_speed_kph
         lead_wait_cmd = 600
@@ -397,6 +403,7 @@ class SpdController():
                 set_speed = model_speed
 
         return wait_time_cmd, set_speed
+    """
 
     def update(self, CS, sm, CC ):
         dRel = CC.dRel

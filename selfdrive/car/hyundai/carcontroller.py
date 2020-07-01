@@ -5,7 +5,11 @@ from selfdrive.car.hyundai.values import Buttons, SteerLimitParams, CAR
 from opendbc.can.packer import CANPacker
 from selfdrive.config import Conversions as CV
 from common.numpy_fast import interp
+
+# speed controller
 from selfdrive.car.hyundai.spdcontroller  import SpdController
+from selfdrive.car.hyundai.spdctrlSlow  import SpdctrlSlow
+
 import common.log as trace1
 import common.CTime1000 as tm
 
@@ -40,7 +44,6 @@ class CarController():
     self.vRel = 0
 
     self.timer1 = tm.CTime1000("time")
-    self.SC = SpdController()
     self.model_speed = 0
     self.model_sum = 0
     
@@ -48,6 +51,8 @@ class CarController():
     self.hud_timer_left = 0
     self.hud_timer_right = 0
 
+    # speed controller
+    self.SC = SpdctrlSlow(self.CP)
     self.speed_control_enabled = False
 
 
@@ -98,8 +103,6 @@ class CarController():
 
 
   def cV_tune( self, v_ego_kph, cv_value ):  # cV(곡률에 의한 변화)
-    #cv_value = abs(self.angle_steers_des)
-
     self.kBPV = self.CP.lateralPIDatom.kBPV
     self.cVBPV = self.CP.lateralCVatom.cvBPV
     self.cvSteerMaxV1  = self.CP.lateralCVatom.cvSteerMaxV1
@@ -131,7 +134,6 @@ class CarController():
 
 
   def steerParams_torque(self, CS, abs_angle_steers, path_plan, CC ):
-
     param = SteerLimitParams()
     v_ego_kph = CS.out.vEgo * CV.MS_TO_KPH
 
