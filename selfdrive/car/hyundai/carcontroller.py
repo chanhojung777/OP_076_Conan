@@ -285,7 +285,7 @@ class CarController():
     elif self.last_lead_distance != 0:
       self.last_lead_distance = 0
     elif self.speed_control_enabled:
-      self.SC.speed_control(  CS, sm, self )
+      self.SC.update(  CS, sm, self )
 
 
     # 20 Hz LFA MFA message

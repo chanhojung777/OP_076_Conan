@@ -124,10 +124,11 @@ class CarState(CarStateBase):
       speed_conv = CV.MPH_TO_MS if is_set_speed_in_mph else CV.KPH_TO_MS
       #ret.cruiseState.speed = self.VSetDis * speed_conv
       
-      speed_kph = self.SC.update_cruiseSW( self )
+      ret.cruiseState.modeSel, speed_kph = self.SC.update_cruiseSW( self )
       ret.cruiseState.speed = speed_kph * speed_conv
     else:
       ret.cruiseState.speed = 0
+      ret.cruiseState.modeSel = 0
 
     # TODO: Find brake pressure
     ret.brake = 0
