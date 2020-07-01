@@ -117,18 +117,15 @@ class CarState(CarStateBase):
     ret.cruiseState.standstill = cp.vl["SCC11"]['SCCInfoDisplay'] == 4.
 
     # most HKG cars has no long control, it is safer and easier to engage by main on
-
-    #if ret.cruiseState.enabled:
+    ret.cruiseState.modeSel, speed_kph = self.SC.update_cruiseSW( self )
     if self.acc_active:
       is_set_speed_in_mph = int(cp.vl["CLU11"]["CF_Clu_SPEED_UNIT"])
       speed_conv = CV.MPH_TO_MS if is_set_speed_in_mph else CV.KPH_TO_MS
-      #ret.cruiseState.speed = self.VSetDis * speed_conv
-      
-      ret.cruiseState.modeSel, speed_kph = self.SC.update_cruiseSW( self )
+      #ret.cruiseState.speed = self.VSetDis * speed_conv    
       ret.cruiseState.speed = speed_kph * speed_conv
     else:
       ret.cruiseState.speed = 0
-      ret.cruiseState.modeSel = 0
+
 
     # TODO: Find brake pressure
     ret.brake = 0

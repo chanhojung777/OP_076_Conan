@@ -92,8 +92,6 @@ class SpdController():
 
         self.wait_timer2 = 0
 
-
-
         self.cruise_set_speed_kph = 0
         self.curise_set_first = 0
         self.curise_sw_check = 0
@@ -191,7 +189,6 @@ class SpdController():
                     self.cruise_set_mode = 0
                 self.prev_clu_CruiseSwState = CS.cruise_buttons
             
-        #trace1.cruise_set_mode = self.cruise_set_mode
 
         if set_speed_kph < 30:
             set_speed_kph = 30
