@@ -515,7 +515,7 @@ void handle_message(UIState *s, SubMaster &sm) {
 
     auto cruiseState = data.getCruiseState();
 
-    scene.cruiseState.standstill  cruiseState.getStandstill();
+    scene.cruiseState.standstill = cruiseState.getStandstill();
     scene.cruiseState.modeSel = cruiseState.getModeSel();
   }
 
