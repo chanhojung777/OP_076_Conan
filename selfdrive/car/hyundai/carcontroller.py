@@ -53,7 +53,7 @@ class CarController():
 
     # speed controller
     self.SC = SpdctrlSlow()
-    self.speed_control_enabled = False
+    self.speed_control_enabled = 1
 
 
 
