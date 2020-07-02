@@ -946,8 +946,7 @@ int main(int argc, char* argv[]) {
         LOGW("nOpkrAutoScreenOff %d",nAwakeTime);
     }
     
-    if( nAwakeTime == 0 )   nTimeOff = 30;
-    
+    if( nAwakeTime == 0 )  nTimeOff = 30;
 
     // light sensor is only exposed on EONs
     float clipped_brightness = (s->light_sensor*brightness_m) + brightness_b;
@@ -965,7 +964,8 @@ int main(int argc, char* argv[]) {
     // poll for touch events
     int touch_x = -1, touch_y = -1;
     int touched = touch_poll(&touch, &touch_x, &touch_y, 0);
-    if (touched == 1) {
+    if (touched == 1) 
+    {
       set_awake(s, true, nTimeOff);
 
       if( touch_x  < 1660 || touch_y < 885 )
@@ -1009,10 +1009,13 @@ int main(int argc, char* argv[]) {
     }
 
     // manage wakefulness
-    if (s->awake_timeout > 0) {
-      s->awake_timeout--;
-    } else if( nAwakeTime) {
-      set_awake(s, false, 30);
+    if( nAwakeTime)
+    {
+      if (s->awake_timeout > 0) {
+        s->awake_timeout--;
+      } else  {
+        set_awake(s, false, 30);
+      }
     }
 
     // manage hardware disconnect
