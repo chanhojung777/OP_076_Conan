@@ -101,6 +101,9 @@ class SpdController():
 
         self.cruise_set_mode = 0
 
+        self.btn_type = Buttons.NONE
+        self.active_time = 0        
+
     def reset(self):
         self.v_model = 0
         self.a_model = 0
@@ -241,7 +244,7 @@ class SpdController():
         dRel = CC.dRel
         yRel = CC.yRel
         vRel = CC.vRel
-
+        active_time = 10
         btn_type = Buttons.NONE
         #lead_1 = sm['radarState'].leadOne
         long_wait_cmd = 500
@@ -322,11 +325,12 @@ class SpdController():
         str5 = str3 +  str4
         trace1.printf2( str5 )
 
-        return btn_type, set_speed
+        return btn_type, active_time
 
 
 
     def update(self, CS, sm, CC ):
+        self.cruise_set_speed_kph = CS.out.cruiseState.speed * CV.MS_TO_KPH
         if CS.driverOverride == 2 or not CS.pcm_acc_status or CS.cruise_buttons == Buttons.RES_ACCEL or CS.cruise_buttons == Buttons.SET_DECEL:
             self.resume_cnt = 0
             self.btn_type = Buttons.NONE
@@ -335,7 +339,7 @@ class SpdController():
         elif self.wait_timer2:
             self.wait_timer2 -= 1
         else:
-            btn_type, clu_speed = self.lead_control( CS, sm, CC )   # speed controller spdcontroller.py
+            btn_type, active_time = self.lead_control( CS, sm, CC )   # speed controller spdcontroller.py
 
             if CS.clu_Vanz < 5:
                 self.btn_type = Buttons.NONE
@@ -345,11 +349,11 @@ class SpdController():
                 self.resume_cnt = 0
                 self.active_timer2 = 0
                 self.btn_type = btn_type
-                self.clu_speed = clu_speed
+                self.active_time = max( 10, active_time )
 
             if self.btn_type != Buttons.NONE:
                 self.active_timer2 += 1
-                if self.active_timer2 > 10:
+                if self.active_timer2 > self.active_time:
                     self.wait_timer2 = 5
                     self.resume_cnt = 0
                     self.active_timer2 = 0
