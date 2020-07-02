@@ -66,10 +66,12 @@ class PowerMonitoring:
     self.ts_last_charging_ctrl = None
 
   # Calculation tick
-  def calculate(self, health):
+  def calculate(self, health, msg ):
     try:
       now = time.time()
 
+
+      
       # Check that time is valid
       if datetime.datetime.fromtimestamp(now).year < 2019:
         return
@@ -129,7 +131,12 @@ class PowerMonitoring:
             cloudlog.exception("Pulsed power measurement failed")
 
         # Start pulsed measurement and return
-        threading.Thread(target=perform_pulse_measurement, args=(now,)).start()
+        if msg.thermal.batteryPercent > 30: 
+            threading.Thread(target=perform_pulse_measurement, args=(now,)).start()
+            print( 'pulse = msg.thermal.batteryPercent={:.1f}'.format( msg.thermal.batteryPercent ) )
+        else:
+            print( 'skip = msg.thermal.batteryPercent={:.1f}'.format( msg.thermal.batteryPercent ) )
+
         self.next_pulsed_measurement_time = None
         return
 
