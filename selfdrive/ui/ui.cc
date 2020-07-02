@@ -934,7 +934,8 @@ int main(int argc, char* argv[]) {
       default: nParamRead = 0; break;
     }
     nAwakeTime = scene.params.nOpkrAutoScreenOff * 60;
-
+    if( nAwakeTime <= 0 )
+       nAwakeTime = 30;
 
     // light sensor is only exposed on EONs
     float clipped_brightness = (s->light_sensor*brightness_m) + brightness_b;
