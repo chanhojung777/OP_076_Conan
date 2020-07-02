@@ -32,7 +32,7 @@ int delete_db_value(const char* key, bool persistent_param = false);
 // Inputs are the same as read_db_value.
 void read_db_value_blocking(const char* key, char** value, size_t* value_sz, bool persistent_param = false);
 
-int get_params(const char* param_name, int *pValue = NULL);
+int ui_get_params(const char* param_name, int *pValue = NULL);
 
 #ifdef __cplusplus
 }  // extern "C"

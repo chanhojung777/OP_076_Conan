@@ -357,7 +357,7 @@ int read_db_all(std::map<std::string, std::string> *params, bool persistent_para
 
 
 
-int get_params(  const char* param_name, int *pValue )
+int ui_get_params(  const char* param_name, int *pValue )
 {
   char speed_str[512];
   char *string;

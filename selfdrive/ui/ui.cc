@@ -924,7 +924,7 @@ int main(int argc, char* argv[]) {
     pthread_mutex_lock(&s->lock);
     double u1 = millis_since_boot();
 
-    nAwakeTime = get_params( "OpkrAutoScreenOff", nAwakeTime ) * 60;
+    nAwakeTime = ui_get_params( "OpkrAutoScreenOff", nAwakeTime ) * 60;
 
     // light sensor is only exposed on EONs
     float clipped_brightness = (s->light_sensor*brightness_m) + brightness_b;
