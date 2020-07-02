@@ -9,7 +9,7 @@ from common.numpy_fast import interp
 # speed controller
 from selfdrive.car.hyundai.spdcontroller  import SpdController
 from selfdrive.car.hyundai.spdctrlSlow  import SpdctrlSlow
-
+from common.params import Params
 import common.log as trace1
 import common.CTime1000 as tm
 
@@ -54,6 +54,8 @@ class CarController():
     # speed controller
     self.SC = SpdctrlSlow()
     self.speed_control_enabled = 0
+
+    self.params = Params()
 
 
 
@@ -204,6 +206,10 @@ class CarController():
     if self.CP != CP:
       self.CP = CP
 
+    self.speed_control_enabled = int(self.params.get('OpkrDevelMode1')) # == b'1'
+    
+
+
     enabled = CC.enabled
     actuators = CC.actuators
     pcm_cancel_cmd = CC.cruiseControl.cancel
@@ -258,7 +264,7 @@ class CarController():
     can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
 
     str_log1 = 'torg:{:5.0f} C={:.1f}/{:.1f} V={:.1f}/{:.1f} CV={:.1f}/{:.3f}'.format(  apply_steer, CS.lead_objspd, CS.lead_distance, self.dRel, self.vRel, self.model_speed, self.model_sum )
-    str_log2 = 'limit={:.0f} LC={} tm={:.1f}'.format( apply_steer_limit, path_plan.laneChangeState, self.timer1.sampleTime()  )
+    str_log2 = 'limit={:.0f} tm={:.1f} {:.0f}'.format( apply_steer_limit, self.timer1.sampleTime(), self.speed_control_enabled  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
     if not self.speed_control_enabled:

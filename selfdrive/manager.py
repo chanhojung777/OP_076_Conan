@@ -562,7 +562,21 @@ def main():
     ("OpenpilotEnabledToggle", "1"),
     ("LaneChangeEnabled", "1"),
     ("IsDriverViewEnabled", "0"),
+    ("OpkrAutoScreenOff", "0"),
+    ("OpkrEnableDriverMonitoring", "1"),
+    ("OpkrEnableLogger", "1"),
+    ("OpkrEnableLearner", "0"),
+    ("OpkrAutoResume", "1"),
+    ("OpkrTraceSet", "0"),
+    ("OpkrWhoisDriver", "0"),
+    ("OpkrTuneProfile", "0"),
+    ("OpkrTuneStartAt", "0"),
+    ("OpkrAccelProfile", "0"),   #악셀프로파일 0:미사용, 1:브드럽게,2:보통,3:빠르게
+    ("OpkrDevelMode1", "0"),
+    ("OpkrDevelMode2", "0"),    
   ]
+
+
 
   # set unset params
   for k, v in default_params:
