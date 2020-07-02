@@ -952,7 +952,7 @@ int main(int argc, char* argv[]) {
     if( nAwakeTime != nTimeOff )
     {
         nAwakeTime = nTimeOff;
-        LOGW("nOpkrAutoScreenOff %d",nAwakeTime);
+        //LOGW("nOpkrAutoScreenOff %d",nAwakeTime);
     }
     
     if( nAwakeTime == 0 )  nTimeOff = 30;
