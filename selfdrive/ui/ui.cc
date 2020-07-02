@@ -938,7 +938,14 @@ int main(int argc, char* argv[]) {
       case 2: ui_get_params( "OpkrAutoScreenOff", &scene.params.nOpkrAutoScreenOff ); break;
       default: nParamRead = 0; break;
     }
-    nAwakeTime = scene.params.nOpkrAutoScreenOff * 60;
+
+    int nTimeOff = scene.params.nOpkrAutoScreenOff * 60;
+    if( nAwakeTime != nTimeOff )
+    {
+        nAwakeTime = nTimeOff;
+        LOGW("nOpkrAutoScreenOff %d",nAwakeTime);
+    }
+    
 
 
     // light sensor is only exposed on EONs
