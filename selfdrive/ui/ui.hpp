@@ -214,7 +214,7 @@ typedef struct UIScene {
 
   struct  _PARAMS
   {
-    int nAwakeTime;  // OpkrDevelMode1
+    int nOpkrDevelMode1;
     int nOpkrAutoScreenOff;
 
   } params;
