@@ -15,6 +15,8 @@
 #include "ui.hpp"
 #include "dashcam.h"
 
+int  is_awake_command = false
+
 static int last_brightness = -1;
 static void set_brightness(UIState *s, int brightness) {
   if (last_brightness != brightness && (s->awake || brightness == 0)) {
@@ -360,6 +362,7 @@ void handle_message(UIState *s, SubMaster &sm) {
     auto alert_sound = data.getAlertSound();
     const auto sound_none = cereal::CarControl::HUDControl::AudibleAlert::NONE;
     if (alert_sound != s->alert_sound){
+      is_awake_command = true;
       if (s->alert_sound != sound_none){
         stop_alert_sound(s->alert_sound);
       }
@@ -375,8 +378,10 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.alert_size = data.getAlertSize();
     auto alertStatus = data.getAlertStatus();
     if (alertStatus == cereal::ControlsState::AlertStatus::USER_PROMPT) {
+      is_awake_command = true;
       update_status(s, STATUS_WARNING);
     } else if (alertStatus == cereal::ControlsState::AlertStatus::CRITICAL) {
+      is_awake_command = true;
       update_status(s, STATUS_ALERT);
     } else{
       update_status(s, scene.engaged ? STATUS_ENGAGED : STATUS_DISENGAGED);
@@ -997,8 +1002,9 @@ int main(int argc, char* argv[]) {
         nAwakeTime = 0;
       }
 
-      if( nAwakeTime == 0 || scene.cruiseState.standstill  )
+      if( is_awake_command || nAwakeTime == 0 || scene.cruiseState.standstill  )
       {
+        is_awake_command = false;
         set_awake(s, true, 30);
       }
         

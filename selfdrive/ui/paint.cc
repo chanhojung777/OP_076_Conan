@@ -30,7 +30,7 @@ const uint8_t alert_colors[][4] = {
 };
 
 float  fFontSize = 0.8;
-
+extern  int  is_awake_command;
 
 static void ui_print(UIState *s, int x, int y,  const char* fmt, ... )
 {
@@ -873,6 +873,15 @@ static void ui_draw_vision_maxspeed(UIState *s) {
   const int text_x = viz_maxspeed_x + (viz_maxspeed_xo / 2) + (viz_maxspeed_w / 2);
   ui_draw_text(s->vg, text_x, 148, "MAX", 26 * 2.5, COLOR_WHITE_ALPHA(is_cruise_set ? 200 : 100), s->font_sans_regular);
 
+  static int _maxspeed_calc;
+  if( maxspeed_calc != _maxspeed_calc)
+  {
+    _maxspeed_calc = maxspeed_calc
+    is_awake_command = true
+  }
+   
+
+
   if (is_cruise_set) {
     snprintf(maxspeed_str, sizeof(maxspeed_str), "%d", maxspeed_calc);
     ui_draw_text(s->vg, text_x, 242, maxspeed_str, 42 * 2.3, COLOR_WHITE, s->font_sans_bold);
@@ -1004,6 +1013,7 @@ static void ui_draw_debug(UIState *s)
 static void ui_draw_vision_speed(UIState *s) {
   const UIScene *scene = &s->scene;
   float speed = s->scene.v_ego * 2.2369363 + 0.5;
+
 
   if (s->is_metric){
     speed = s->scene.v_ego * 3.6 + 0.5;
