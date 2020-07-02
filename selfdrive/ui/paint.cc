@@ -976,14 +976,18 @@ static void ui_draw_debug(UIState *s)
   const int viz_speed_w = 280;
   const int viz_speed_x = ui_viz_rx+((ui_viz_rw/2)-(viz_speed_w/2));
 
+  nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
+  nvgFontSize(s->vg, 36*1.5*fFontSize);
 
   int  y_pos = 0;
   int  x_pos = 0;
 
   x_pos = ui_viz_rx + 300;
 
-  char speed_str[512];
+  int nDevelModel = get_params( "OpkrDevelMode1" );
+  ui_print( s, x_pos, 100, "S:%d", nDevelModel );
 
+/*
   char *string;
   const int result = read_db_value("OpkrDevelMode1", &string, NULL);
   if (result == 0) {
@@ -993,15 +997,14 @@ static void ui_draw_debug(UIState *s)
   }
 
   ui_print( s, x_pos, 100, "S:%s", speed_str );
+*/
 
-  nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
-  nvgFontSize(s->vg, 36*1.5*fFontSize);
   y_pos = 150; 
   ui_print( s, x_pos, y_pos+0, "B:%d,%.5f", scene.steerOverride, scene.output_scale );
   ui_print( s, x_pos, y_pos+50, "G:%d", (int)scene.getGearShifter );
   ui_print( s, x_pos, y_pos+100, "mS:%d,%d", scene.cruiseState.modeSel, (int)scene.cruiseState.standstill );
 
-
+  char speed_str[512];
   snprintf(speed_str, sizeof(speed_str), "L1:%d, %.1f,%.1f,%.1f", (int)scene.lead_status, scene.lead_d_rel, scene.lead_y_rel , scene.lead_v_rel  );
   nvgText(s->vg, x_pos, y_pos+150, speed_str, NULL);   
 
