@@ -53,9 +53,14 @@ class CarController():
 
     # speed controller
     self.SC = SpdctrlSlow()
-    self.speed_control_enabled = 0
 
+    self.command_cnt = 0
+    self.command_load = 0
     self.params = Params()
+
+    # param
+    self.param_OpkrAccelProfile = 0
+    self.param_OpkrAutoResume = 0
 
 
 
@@ -200,14 +205,30 @@ class CarController():
 
     return  param
 
+  def param_load(self ):
+    self.command_cnt += 1
+    if self.command_cnt > 100:
+      self.command_cnt = 0
+
+    if self.command_cnt % 10:
+      return
+
+    self.command_load += 1
+    if self.command_load == 0:
+      self.param_OpkrAccelProfile = int(self.params.get('OpkrAccelProfile')) 
+    elif self.command_load == 1:
+      self.param_OpkrAutoResume = int(self.params.get('OpkrAutoResume')) 
+    else:
+      self.command_load = 0
+
 
 
   def update(self, CC, CS, frame, sm, CP ):
     if self.CP != CP:
       self.CP = CP
 
-    self.speed_control_enabled = int(self.params.get('OpkrDevelMode1')) # == b'1'
-    
+    self.param_load()
+
 
 
     enabled = CC.enabled
@@ -264,10 +285,10 @@ class CarController():
     can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
 
     str_log1 = 'torg:{:5.0f} C={:.1f}/{:.1f} V={:.1f}/{:.1f} CV={:.1f}/{:.3f}'.format(  apply_steer, CS.lead_objspd, CS.lead_distance, self.dRel, self.vRel, self.model_speed, self.model_sum )
-    str_log2 = 'limit={:.0f} tm={:.1f} {:.0f}'.format( apply_steer_limit, self.timer1.sampleTime(), self.speed_control_enabled  )
+    str_log2 = 'limit={:.0f} tm={:.1f} {:.0f}'.format( apply_steer_limit, self.timer1.sampleTime(), self.param_OpkrAccelProfile  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
-    if not self.speed_control_enabled:
+    if not self.param_OpkrAccelProfile:
       str_log2 = 'U={:.0f}  LK={:.0f} dir={} steer={:5.0f} '.format( CS.Mdps_ToiUnavail, CS.lkas_button_on, self.steer_torque_ratio_dir, CS.out.steeringTorque  )
       trace1.printf2( '{}'.format( str_log2 ) )
 
@@ -276,7 +297,7 @@ class CarController():
 
     elif CS.out.cruiseState.standstill:
       # run only first time when the car stopped
-      if self.last_lead_distance == 0:
+      if self.last_lead_distance == 0 or not self.param_OpkrAutoResume:
         # get the lead distance from the Radar
         self.last_lead_distance = CS.lead_distance
         self.resume_cnt = 0
@@ -290,7 +311,7 @@ class CarController():
     # reset lead distnce after the car starts moving
     elif self.last_lead_distance != 0:
       self.last_lead_distance = 0
-    elif self.speed_control_enabled:
+    elif self.param_OpkrAccelProfile:
       if self.SC.update( CS, sm, self ):
         can_sends.append(create_clu11(self.packer, frame, CS.clu11, self.SC.btn_type ))
 
