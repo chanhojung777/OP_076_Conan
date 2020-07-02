@@ -68,6 +68,7 @@ keys = {
   "HasAcceptedTerms": [TxType.PERSISTENT],
   "HasCompletedSetup": [TxType.PERSISTENT],
   "IsDriverViewEnabled": [TxType.CLEAR_ON_MANAGER_START],
+  "IsOpenpilotViewEnabled": [TxType.CLEAR_ON_MANAGER_START],
   "IsLdwEnabled": [TxType.PERSISTENT],
   "IsGeofenceEnabled": [TxType.PERSISTENT],
   "IsMetric": [TxType.PERSISTENT],

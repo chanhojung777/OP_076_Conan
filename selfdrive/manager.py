@@ -580,6 +580,7 @@ def main():
     ("OpenpilotEnabledToggle", "1"),
     ("LaneChangeEnabled", "1"),
     ("IsDriverViewEnabled", "0"),
+    ("IsOpenpilotViewEnabled", "0"),
     ("OpkrAutoScreenOff", "0"),
     ("OpkrEnableDriverMonitoring", "1"),
     ("OpkrEnableLogger", "1"),

@@ -188,7 +188,7 @@ def thermald_thread():
   pm = PowerMonitoring()
   no_panda_cnt = 0
 
-  IsDriverViewEnabled = 0
+  IsOpenpilotViewEnabled = 0
 
   while 1:
     ts = sec_since_boot()
@@ -230,10 +230,10 @@ def thermald_thread():
           health_prev.health.hwType != log.HealthData.HwType.unknown:
           params.panda_disconnect()
       health_prev = health
-    elif ignition == False or IsDriverViewEnabled:
-      IsDriverViewEnabled = params.get("IsDriverViewEnabled") == b"1"
-      ignition = IsDriverViewEnabled
-      #print( 'ignition={} IsDriverViewEnabled ={} '.format( ignition,  IsDriverViewEnabled ) )
+    elif ignition == False or IsOpenpilotViewEnabled:
+      IsOpenpilotViewEnabled = params.get("IsOpenpilotViewEnabled") == b"1"
+      ignition = IsOpenpilotViewEnabled
+
 
 
 
@@ -365,7 +365,7 @@ def thermald_thread():
 
     # don't start while taking snapshot
     if not should_start_prev:
-      is_viewing_driver = False  #params.get("IsDriverViewEnabled") == b"1"
+      is_viewing_driver = params.get("IsDriverViewEnabled") == b"1"
       is_taking_snapshot = params.get("IsTakingSnapshot") == b"1"
       should_start = should_start and (not is_taking_snapshot) and (not is_viewing_driver)
 
