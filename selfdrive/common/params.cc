@@ -357,15 +357,11 @@ int read_db_all(std::map<std::string, std::string> *params, bool persistent_para
 
 
 
-int ui_get_params(  const char* param_name, int *pValue )
+int ui_get_params( const char* param_name, int *pValue )
 {
   char speed_str[512];
   char *string;
-  int   ret_code;
-
-  if( pValue )
-    ret_code = *pValue;
-
+  int   ret_code = 0;
 
   const int result = read_db_value( param_name, &string, NULL);
   if (result == 0) {
@@ -374,7 +370,9 @@ int ui_get_params(  const char* param_name, int *pValue )
     free(string);
 
     ret_code = atol( speed_str );
+    if( pValue )
+      *pValue = ret_code;
   }
 
-  return ret_code;
+  return result;
 }

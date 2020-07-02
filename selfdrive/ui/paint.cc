@@ -967,9 +967,8 @@ static void ui_draw_debug(UIState *s)
 
   x_pos = ui_viz_rx + 300;
 
-  int nDevelModel = ui_get_params( "OpkrDevelMode1" );
-  ui_print( s, x_pos, 100, "S:%d", nDevelModel );
 
+  ui_print( s, x_pos, 100, "S:%d", scene.params.OpkrDevelMode1 );
 
 
   y_pos = 150; 

@@ -909,11 +909,12 @@ int main(int argc, char* argv[]) {
   s->volume_timeout = 5 * UI_FREQ;
   int draws = 0;
 
+  UIScene &scene = s->scene;
   s->scene.satelliteCount = -1;
   s->started = false;
   s->vision_seen = false;
   int nAwakeTime = 0;
-
+  int nParamRead = 0;
   while (!do_exit) {
     bool should_swap = false;
     if (!s->started) {
@@ -924,8 +925,15 @@ int main(int argc, char* argv[]) {
     pthread_mutex_lock(&s->lock);
     double u1 = millis_since_boot();
 
-    nAwakeTime = ui_get_params( "OpkrAutoScreenOff", nAwakeTime ) * 60;
+    nParamRead++;
+    switch( nParamRead )
+    {
+      case 1: ui_get_params( "OpkrDevelMode1", &scene.params.OpkrDevelMode1 ); break;
+      case 2: ui_get_params( "OpkrAutoScreenOff", &scene.params.nOpkrAutoScreenOff ); break;
+      default: nParamRead = 0; break;
+    }
 
+    nAwakeTime = scene.params.nOpkrAutoScreenOff * 60;
     // light sensor is only exposed on EONs
     float clipped_brightness = (s->light_sensor*brightness_m) + brightness_b;
     if (clipped_brightness > 512) clipped_brightness = 512;
