@@ -428,8 +428,6 @@ def manager_thread():
   cloudlog.info("manager start")
   cloudlog.info({"environ": os.environ})
 
-  # save boot log
-  subprocess.call(["./loggerd", "--bootlog"], cwd=os.path.join(BASEDIR, "selfdrive/loggerd"))
 
   params = Params()
 
@@ -448,11 +446,11 @@ def manager_thread():
     persistent_processes.remove( 'logcatd' )
     persistent_processes.remove( 'updated' )
     persistent_processes.remove( 'deleter' )
+  else:
+    # save boot log
+    subprocess.call(["./loggerd", "--bootlog"], cwd=os.path.join(BASEDIR, "selfdrive/loggerd"))
 
 
-
-  #car_started_processes
-  #checks.remove(("TCS13", 50))
   # start daemon processes
   for p in daemon_processes:
     start_daemon_process(p)
