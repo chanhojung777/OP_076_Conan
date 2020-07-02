@@ -989,7 +989,15 @@ int main(int argc, char* argv[]) {
       // always process events offroad
       check_messages(s);
     } else {
-      if( nAwakeTime == 0 )
+      static int modelSel;
+
+      if( modelSel != scene.cruiseState.modeSel )
+      {
+        modelSel = scene.cruiseState.modeSel;
+        nAwakeTime = 0;
+      }
+
+      if( nAwakeTime == 0 || scene.cruiseState.standstill  )
       {
         set_awake(s, true, 30);
       }
