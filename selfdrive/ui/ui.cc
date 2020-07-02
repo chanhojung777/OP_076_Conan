@@ -40,6 +40,8 @@ static void enable_event_processing(bool yes) {
 
 static void set_awake(UIState *s, bool awake, int nTime ) 
 {
+  if( nTime <= 0 )
+    nTime = 30;
 #ifdef QCOM
   if (awake) {
     // 30 second timeout at 30 fps
@@ -934,8 +936,7 @@ int main(int argc, char* argv[]) {
       default: nParamRead = 0; break;
     }
     nAwakeTime = scene.params.nOpkrAutoScreenOff * 60;
-    if( nAwakeTime <= 0 )
-       nAwakeTime = 30;
+
 
     // light sensor is only exposed on EONs
     float clipped_brightness = (s->light_sensor*brightness_m) + brightness_b;
@@ -954,7 +955,7 @@ int main(int argc, char* argv[]) {
     int touch_x = -1, touch_y = -1;
     int touched = touch_poll(&touch, &touch_x, &touch_y, 0);
     if (touched == 1) {
-      set_awake(s, true, nAwakeTime);
+      set_awake(s, true, 30);
 
       if( touch_x  < 1660 || touch_y < 885 )
       {
@@ -996,7 +997,7 @@ int main(int argc, char* argv[]) {
     // manage wakefulness
     if (s->awake_timeout > 0) {
       s->awake_timeout--;
-    } else {
+    } else if( nAwakeTime) {
       set_awake(s, false, 30);
     }
 
