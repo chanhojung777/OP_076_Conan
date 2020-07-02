@@ -970,17 +970,7 @@ static void ui_draw_debug(UIState *s)
   int nDevelModel = ui_get_params( "OpkrDevelMode1" );
   ui_print( s, x_pos, 100, "S:%d", nDevelModel );
 
-/*
-  char *string;
-  const int result = read_db_value("OpkrDevelMode1", &string, NULL);
-  if (result == 0) {
-    bool is_rhd = string[0] == '1';
-    strcpy( speed_str, string  );
-    free(string);
-  }
 
-  ui_print( s, x_pos, 100, "S:%s", speed_str );
-*/
 
   y_pos = 150; 
   ui_print( s, x_pos, y_pos+0, "B:%d,%.5f", scene.steerOverride, scene.output_scale );
