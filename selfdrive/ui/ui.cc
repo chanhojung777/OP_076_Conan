@@ -947,8 +947,6 @@ int main(int argc, char* argv[]) {
     }
     
     if( nAwakeTime == 0 )   nTimeOff = 30;
-    else  nTimeOff = nAwakeTime;
-
     
 
     // light sensor is only exposed on EONs
