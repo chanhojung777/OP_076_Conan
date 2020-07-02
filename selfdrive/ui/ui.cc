@@ -1001,6 +1001,10 @@ int main(int argc, char* argv[]) {
         modelSel = scene.cruiseState.modeSel;
         nAwakeTime = 0;
       }
+      else if( scene.engaged && scene.v_ego < 1 )
+      {
+        nAwakeTime = 0;
+      }
 
       if( is_awake_command || nAwakeTime == 0 || scene.cruiseState.standstill  )
       {

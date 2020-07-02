@@ -878,6 +878,7 @@ static void ui_draw_vision_maxspeed(UIState *s) {
   {
     _maxspeed_calc = maxspeed_calc;
     is_awake_command = true;
+    LOGW("is_awake_command = true" );
   }
    
 
