@@ -38,6 +38,7 @@ class CarState(CarStateBase):
 
     self.TSigLHSw = 0
     self.TSigRHSw = 0
+    self.pcm_acc_status = 0
 
     self.SC = SpdController()
 
