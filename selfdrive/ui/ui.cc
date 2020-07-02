@@ -946,8 +946,10 @@ int main(int argc, char* argv[]) {
         LOGW("nOpkrAutoScreenOff %d",nAwakeTime);
     }
     
-    if( nAwakeTime == 0 )
-       nTimeOff = 30;
+    if( nAwakeTime == 0 )   nTimeOff = 30;
+    else  nTimeOff = nAwakeTime;
+
+    
 
     // light sensor is only exposed on EONs
     float clipped_brightness = (s->light_sensor*brightness_m) + brightness_b;
