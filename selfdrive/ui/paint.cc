@@ -3,6 +3,7 @@
 #include <map>
 #include <cmath>
 #include "common/util.h"
+#include "common/params.h"
 
 #define NANOVG_GLES3_IMPLEMENTATION
 
@@ -962,13 +963,22 @@ static void ui_draw_debug(UIState *s)
   int  x_pos = 0;
 
   x_pos = ui_viz_rx + 300;
-  y_pos = 150; 
-
 
   char speed_str[512];
+
+  char *string;
+  const int result = read_db_value("OpkrDevelMode1", &string, NULL);
+  if (result == 0) {
+    bool is_rhd = string[0] == '1';
+    strcpy( speed_str, string  );
+    free(string);
+    ui_print( s, x_pos, 100, "S:%s", speed_str );
+  }
+
+
   nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
   nvgFontSize(s->vg, 36*1.5*fFontSize);
-
+  y_pos = 150; 
   ui_print( s, x_pos, y_pos+0, "B:%d,%.5f", scene.steerOverride, scene.output_scale );
   ui_print( s, x_pos, y_pos+50, "G:%d", (int)scene.getGearShifter );
   ui_print( s, x_pos, y_pos+100, "mS:%d,%d", scene.cruiseState.modeSel, (int)scene.cruiseState.standstill );

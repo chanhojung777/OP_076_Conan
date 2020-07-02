@@ -572,8 +572,8 @@ def main():
     ("OpkrTuneProfile", "0"),
     ("OpkrTuneStartAt", "0"),
     ("OpkrAccelProfile", "0"),   #악셀프로파일 0:미사용, 1:브드럽게,2:보통,3:빠르게
-    ("OpkrDevelMode1", "0"),
-    ("OpkrDevelMode2", "0"),    
+    ("OpkrDevelMode1", "1"),
+    ("OpkrDevelMode2", "1"),    
   ]
 
 
