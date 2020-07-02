@@ -41,7 +41,10 @@ static void enable_event_processing(bool yes) {
 static void set_awake(UIState *s, bool awake, int nTime ) 
 {
   if( nTime <= 0 )
+  {
     nTime = 30;
+  }
+    
 #ifdef QCOM
   if (awake) {
     // 30 second timeout at 30 fps
@@ -975,7 +978,10 @@ int main(int argc, char* argv[]) {
       check_messages(s);
     } else {
       if( nAwakeTime )
+      {
         set_awake(s, true, nAwakeTime);
+      }
+        
 
       // Car started, fetch a new rgb image from ipc
       if (s->vision_connected){
