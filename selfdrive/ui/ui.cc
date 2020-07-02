@@ -947,7 +947,7 @@ int main(int argc, char* argv[]) {
     }
     
     if( nAwakeTime == 0 )
-       nTimeOff = 30
+       nTimeOff = 30;
 
     // light sensor is only exposed on EONs
     float clipped_brightness = (s->light_sensor*brightness_m) + brightness_b;
