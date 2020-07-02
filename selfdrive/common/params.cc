@@ -361,7 +361,7 @@ int get_params(  const char* param_name, int *pValue )
 {
   char speed_str[512];
   char *string;
-  int   ret_code = nValue;
+  int   ret_code;
 
   if( pValue )
     ret_code = *pValue;
