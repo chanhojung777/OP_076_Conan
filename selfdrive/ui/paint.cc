@@ -44,23 +44,6 @@ static void ui_print(UIState *s, int x, int y,  const char* fmt, ... )
   nvgText(s->vg, x, y, msg_buf, NULL);
 }
 
-static int get_params(  const char* param_name )
-{
-  char speed_str[512];
-  char *string;
-  int   ret_code = 0;
-
-  const int result = read_db_value( param_name, &string, NULL);
-  if (result == 0) {
-    bool is_rhd = string[0] == '1';
-    strcpy( speed_str, string  );
-    free(string);
-
-    ret_code = atol( speed_str );
-  }
-
-  return ret_code;
-}
 
 // Projects a point in car to space to the corresponding point in full frame
 // image space.

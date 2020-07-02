@@ -38,11 +38,12 @@ static void enable_event_processing(bool yes) {
   }
 }
 
-static void set_awake(UIState *s, bool awake) {
+static void set_awake(UIState *s, bool awake, int nTime ) 
+{
 #ifdef QCOM
   if (awake) {
     // 30 second timeout at 30 fps
-    s->awake_timeout = 30*30;
+    s->awake_timeout = 30*nTime;
   }
   if (s->awake != awake) {
     s->awake = awake;
@@ -227,7 +228,7 @@ static void ui_init(UIState *s) {
   s->fb = framebuffer_init("ui", 0, true, &s->fb_w, &s->fb_h);
   assert(s->fb);
 
-  set_awake(s, true);
+  set_awake(s, true, 30);
 
   s->model_changed = false;
   s->livempc_or_radarstate_changed = false;
@@ -911,6 +912,7 @@ int main(int argc, char* argv[]) {
   s->scene.satelliteCount = -1;
   s->started = false;
   s->vision_seen = false;
+  int nAwakeTime = 0;
 
   while (!do_exit) {
     bool should_swap = false;
@@ -921,6 +923,8 @@ int main(int argc, char* argv[]) {
     }
     pthread_mutex_lock(&s->lock);
     double u1 = millis_since_boot();
+
+    nAwakeTime = get_params( "OpkrAutoScreenOff", nAwakeTime ) * 60;
 
     // light sensor is only exposed on EONs
     float clipped_brightness = (s->light_sensor*brightness_m) + brightness_b;
@@ -939,7 +943,7 @@ int main(int argc, char* argv[]) {
     int touch_x = -1, touch_y = -1;
     int touched = touch_poll(&touch, &touch_x, &touch_y, 0);
     if (touched == 1) {
-      set_awake(s, true);
+      set_awake(s, true, nAwakeTime);
 
       if( touch_x  < 1660 || touch_y < 885 )
       {
@@ -958,7 +962,9 @@ int main(int argc, char* argv[]) {
       // always process events offroad
       check_messages(s);
     } else {
-      set_awake(s, true);
+      if( nAwakeTime )
+        set_awake(s, true, nAwakeTime);
+
       // Car started, fetch a new rgb image from ipc
       if (s->vision_connected){
         ui_update(s);
@@ -980,7 +986,7 @@ int main(int argc, char* argv[]) {
     if (s->awake_timeout > 0) {
       s->awake_timeout--;
     } else {
-      set_awake(s, false);
+      set_awake(s, false, 30);
     }
 
     // manage hardware disconnect
@@ -1069,7 +1075,7 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  set_awake(s, true);
+  set_awake(s, true, 30);
   ui_sound_destroy();
 
   // wake up bg thread to exit
