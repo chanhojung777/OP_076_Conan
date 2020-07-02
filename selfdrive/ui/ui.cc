@@ -15,7 +15,7 @@
 #include "ui.hpp"
 #include "dashcam.h"
 
-int  is_awake_command = false
+int  is_awake_command = false;
 
 static int last_brightness = -1;
 static void set_brightness(UIState *s, int brightness) {
