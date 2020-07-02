@@ -946,7 +946,8 @@ int main(int argc, char* argv[]) {
         LOGW("nOpkrAutoScreenOff %d",nAwakeTime);
     }
     
-
+    if( nAwakeTime == 0 )
+       nTimeOff = 30
 
     // light sensor is only exposed on EONs
     float clipped_brightness = (s->light_sensor*brightness_m) + brightness_b;
@@ -965,7 +966,7 @@ int main(int argc, char* argv[]) {
     int touch_x = -1, touch_y = -1;
     int touched = touch_poll(&touch, &touch_x, &touch_y, 0);
     if (touched == 1) {
-      set_awake(s, true, 30);
+      set_awake(s, true, nTimeOff);
 
       if( touch_x  < 1660 || touch_y < 885 )
       {
@@ -984,9 +985,9 @@ int main(int argc, char* argv[]) {
       // always process events offroad
       check_messages(s);
     } else {
-      if( nAwakeTime )
+      if( nAwakeTime == 0 )
       {
-        set_awake(s, true, nAwakeTime);
+        set_awake(s, true, 30);
       }
         
 
