@@ -925,6 +925,7 @@ int main(int argc, char* argv[]) {
     pthread_mutex_lock(&s->lock);
     double u1 = millis_since_boot();
 
+    // parameter Read.
     nParamRead++;
     switch( nParamRead )
     {
@@ -932,8 +933,9 @@ int main(int argc, char* argv[]) {
       case 2: ui_get_params( "OpkrAutoScreenOff", &scene.params.nOpkrAutoScreenOff ); break;
       default: nParamRead = 0; break;
     }
-
     nAwakeTime = scene.params.nOpkrAutoScreenOff * 60;
+
+
     // light sensor is only exposed on EONs
     float clipped_brightness = (s->light_sensor*brightness_m) + brightness_b;
     if (clipped_brightness > 512) clipped_brightness = 512;
