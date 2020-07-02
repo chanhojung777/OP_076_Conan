@@ -39,6 +39,7 @@ def get_battery_charging():
 
 
 def set_battery_charging(on):
+  print( 'set_battery_charging={}'.format( on ) )
   with open('/sys/class/power_supply/battery/charging_enabled', 'w') as f:
     f.write(f"{1 if on else 0}\n")
 
