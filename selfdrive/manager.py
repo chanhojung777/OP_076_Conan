@@ -189,7 +189,7 @@ managed_processes = {
   "updated": "selfdrive.updated",   # delete able
   "dmonitoringmodeld": ("selfdrive/modeld", ["./dmonitoringmodeld"]),
   "modeld": ("selfdrive/modeld", ["./modeld"]),
-  #"driverview": "selfdrive.controls.lib.driverview",  # delete able
+  "driverview": "selfdrive.controls.lib.driverview",  # delete able
 }
 
 daemon_processes = {
