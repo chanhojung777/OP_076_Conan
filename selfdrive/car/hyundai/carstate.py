@@ -39,6 +39,7 @@ class CarState(CarStateBase):
     self.TSigLHSw = 0
     self.TSigRHSw = 0
     self.pcm_acc_status = 0
+    self.driverAcc_time = 0
 
     self.SC = SpdController()
 
@@ -201,6 +202,10 @@ class CarState(CarStateBase):
     if not self.lkas_error:
       self.lkas_button_on = self.Lkas_LdwsSysState 
 
+    if self.driverOverride == 1:
+      self.driverAcc_time = 100
+    elif self.driverAcc_time:
+      self.driverAcc_time -= 1
 
     # save the entire LKAS11 and CLU11
     self.lkas11 = cp_cam.vl["LKAS11"]
