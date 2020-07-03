@@ -976,11 +976,11 @@ static void ui_draw_debug(UIState *s)
   int  y_pos = 0;
   int  x_pos = 0;
 
+
+
+  ui_print( s, ui_viz_rx+50, 50, "S:%d",  s->awake_timeout );
+
   x_pos = ui_viz_rx + 300;
-
-  ui_print( s, x_pos, 50, "S:%d",  s->awake_timeout );
-
-
   y_pos = 150; 
   ui_print( s, x_pos, y_pos+0, "B:%d,%.5f", scene.steerOverride, scene.output_scale );
   ui_print( s, x_pos, y_pos+50, "G:%d", (int)scene.getGearShifter );
