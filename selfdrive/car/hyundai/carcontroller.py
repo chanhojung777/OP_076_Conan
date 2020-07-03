@@ -216,9 +216,9 @@ class CarController():
       return
 
     self.command_load += 1
-    if self.command_load == 0:
+    if self.command_load == 1:
       self.param_OpkrAccelProfile = int(self.params.get('OpkrAccelProfile')) 
-    elif self.command_load == 1:
+    elif self.command_load == 2:
       self.param_OpkrAutoResume = int(self.params.get('OpkrAutoResume')) 
     else:
       self.command_load = 0
