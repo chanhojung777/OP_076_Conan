@@ -967,11 +967,12 @@ static void ui_draw_debug(UIState *s)
   const int viz_speed_w = 280;
   const int viz_speed_x = ui_viz_rx+((ui_viz_rw/2)-(viz_speed_w/2));
 
+  int  y_pos = 0;
+  int  x_pos = 0; 
+
+
   nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
   nvgFontSize(s->vg, 36*1.5*fFontSize);
-
-  int  y_pos = 0;
-  int  x_pos = 0;
 
 
   ui_print( s, ui_viz_rx+10, 50, "S:%d",  s->awake_timeout );
@@ -989,7 +990,6 @@ static void ui_draw_debug(UIState *s)
   ui_print( s, x_pos, y_pos+0, "sR:%.2f", scene.carParams.steerRatio );
   ui_print( s, x_pos, y_pos+50, "LP:%d", scene.carParams.lateralsRatom.learnerParams );
   ui_print( s, x_pos, y_pos+100, "dZ:%.1f", scene.carParams.lateralsRatom.deadzone );
-
   ui_print( s, x_pos, y_pos+150, "sO:%.3f", scene.carParams.lateralsRatom.steerOffset );
   ui_print( s, x_pos, y_pos+200, "tS:%.3f", scene.carParams.lateralsRatom.tireStiffnessFactor );
 */
