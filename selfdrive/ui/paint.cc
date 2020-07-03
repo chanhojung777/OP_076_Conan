@@ -1001,9 +1001,9 @@ static void ui_draw_debug(UIState *s)
   if( scene.params.nOpkrAccelProfile == 0 )  return;
   NVGcolor nColor = COLOR_WHITE;
   x_pos = viz_speed_x + 260;
-  y_pos = 150;
+  y_pos = 130;
 
-  nvgFontSize(s->vg, 40);
+  nvgFontSize(s->vg, 30);
   switch( scene.params.nOpkrAccelProfile  )
   {
     case 1: strcpy( str_msg, "1.부드럽게" ); nColor = nvgRGBA(100, 100, 255, 255); break;
@@ -1012,7 +1012,7 @@ static void ui_draw_debug(UIState *s)
     default :  sprintf( str_msg, "%d", scene.params.nOpkrAccelProfile ); nColor = COLOR_WHITE;  break;
   }
   nvgFillColor(s->vg, nColor);
-  ui_print( s, x_pos, y_pos+0, "%s", str_msg );
+  ui_print( s, x_pos+50, y_pos+0, "%s", str_msg );
 
   nvgFontSize(s->vg, 90);
   switch( scene.cruiseState.modeSel  )
@@ -1024,7 +1024,7 @@ static void ui_draw_debug(UIState *s)
   }
   
   nvgFillColor(s->vg, nColor);  
-  ui_print( s, x_pos, y_pos+100, str_msg );  
+  ui_print( s, x_pos, y_pos+80, str_msg );  
 }
 
 
