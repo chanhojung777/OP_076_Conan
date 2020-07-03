@@ -974,7 +974,7 @@ static void ui_draw_debug(UIState *s)
   int  x_pos = 0;
 
 
-  ui_print( s, ui_viz_rx+50, 50, "S:%d",  s->awake_timeout );
+  ui_print( s, ui_viz_rx+10, 50, "S:%d",  s->awake_timeout );
 
   x_pos = ui_viz_rx + 300;
   y_pos = 150; 
