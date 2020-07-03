@@ -1014,10 +1014,9 @@ static void ui_draw_debug(UIState *s)
   eco @8;
 */
 
-  nvgFontSize(s->vg, 36*2.5*fFontSize);
-
-  x_pos = 1800;
-  y_pos = 50;
+  nvgFontSize(s->vg, 100 );
+  x_pos = 1700;
+  y_pos = 150;
   int ngetGearShifter = int(scene.getGearShifter);
   switch( ngetGearShifter )
   {
