@@ -1022,8 +1022,8 @@ static void ui_draw_gear( UIState *s )
   NVGcolor nColor = COLOR_WHITE;
 
   int  ngetGearShifter = int(scene.getGearShifter);
-  int  x_pos = 1700;
-  int  y_pos = 150;
+  int  x_pos = 1750;
+  int  y_pos = 200;
   char str_msg[512];
 
   nvgFontSize(s->vg, 100 );
