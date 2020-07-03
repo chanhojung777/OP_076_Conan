@@ -998,8 +998,8 @@ static void ui_draw_debug(UIState *s)
   ui_print( s, 0, 1020, "%s", scene.alert.text1 );
   ui_print( s, 0, 1078, "%s", scene.alert.text2 );
 
-  nvgFontSize(s->vg, 36*2.5*fFontSize);
-  x_pos = 1024;
+
+  x_pos = viz_speed_x + 300;
   y_pos = 50;
   ui_print( s, x_pos, y_pos+0, "S:%d,%d", scene.params.nOpkrAccelProfile, scene.cruiseState.modeSel );
 
@@ -1014,6 +1014,10 @@ static void ui_draw_debug(UIState *s)
   eco @8;
 */
 
+  nvgFontSize(s->vg, 36*2.5*fFontSize);
+
+  x_pos = 2000;
+  y_pos = 50;
   int ngetGearShifter = int(scene.getGearShifter);
   switch( ngetGearShifter )
   {
