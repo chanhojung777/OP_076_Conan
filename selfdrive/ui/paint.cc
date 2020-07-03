@@ -977,21 +977,18 @@ static void ui_draw_debug(UIState *s)
   int  x_pos = 0;
 
 
-
   ui_print( s, ui_viz_rx+50, 50, "S:%d",  s->awake_timeout );
 
   x_pos = ui_viz_rx + 300;
   y_pos = 150; 
   ui_print( s, x_pos, y_pos+0, "B:%d,%.5f", scene.steerOverride, scene.output_scale );
-  ui_print( s, x_pos, y_pos+50, "G:%d", (int)scene.getGearShifter );
+ // ui_print( s, x_pos, y_pos+50, "G:%d", (int)scene.getGearShifter );
 
 
   ui_print( s, x_pos, y_pos+150, "L1:%d, %.1f,%.1f,%.1f", (int)scene.lead_status, scene.lead_d_rel, scene.lead_y_rel , scene.lead_v_rel  );
   ui_print( s, x_pos, y_pos+200, "L2:%d, %.1f,%.1f,%.1f", (int)scene.lead_status2, scene.lead_d_rel2, scene.lead_y_rel2 , scene.lead_v_rel2  );
   
 
-  x_pos = viz_speed_x + 300;
-  ui_print( s, x_pos, y_pos+0, "S:%d,%d", scene.params.nOpkrAccelProfile, scene.cruiseState.modeSel );
 
 /*
   ui_print( s, x_pos, y_pos+0, "sR:%.2f", scene.carParams.steerRatio );
@@ -1004,6 +1001,22 @@ static void ui_draw_debug(UIState *s)
 
   ui_print( s, 0, 1020, "%s", scene.alert.text1 );
   ui_print( s, 0, 1078, "%s", scene.alert.text2 );
+
+  nvgFontSize(s->vg, 36*2.5*fFontSize);
+  x_pos = 1024;
+  y_pos = 50;
+  ui_print( s, x_pos, y_pos+0, "S:%d,%d", scene.params.nOpkrAccelProfile, scene.cruiseState.modeSel );
+
+
+
+  switch( scene.getGearShifter )
+  {
+    case 1 : ui_print( s, x_pos, y_pos, "P" ); break;    
+    case 2 : ui_print( s, x_pos, y_pos, "D" ); break;
+    case 4 : ui_print( s, x_pos, y_pos, "R" ); break;
+    case 7 : ui_print( s, x_pos, y_pos, "B" ); break;
+    default: ui_print( s, x_pos, y_pos, "%d", scene.getGearShifter ); break;
+  }
 }
 
 
