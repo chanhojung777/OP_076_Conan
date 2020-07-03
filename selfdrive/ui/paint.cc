@@ -971,7 +971,7 @@ static void ui_draw_debug(UIState *s)
 
   int  y_pos = 0;
   int  x_pos = 0;
-  char str_msg[512];
+
 
   ui_print( s, ui_viz_rx+50, 50, "S:%d",  s->awake_timeout );
 
@@ -1024,7 +1024,8 @@ static void ui_draw_gear( UIState *s )
   int  ngetGearShifter = int(scene.getGearShifter);
   int  x_pos = 1700;
   int  y_pos = 150;
-
+  char str_msg[512];
+  
   nvgFontSize(s->vg, 100 );
   switch( ngetGearShifter )
   {
