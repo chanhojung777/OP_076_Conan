@@ -1026,7 +1026,7 @@ static void ui_draw_debug(UIState *s)
   }
   
   nvgFillColor(s->vg, nColor);  
-  ui_print( s, x_pos, y_pos+50, str_msg );  
+  ui_print( s, x_pos, y_pos+150, str_msg );  
 }
 
 
