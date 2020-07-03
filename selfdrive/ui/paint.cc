@@ -999,6 +999,7 @@ static void ui_draw_debug(UIState *s)
   ui_print( s, 0, 1078, "%s", scene.alert.text2 );
 
 
+  nvgFontSize(s->vg, 70);
   x_pos = viz_speed_x + 300;
   y_pos = 150;
   ui_print( s, x_pos, y_pos+0, "S:%d,%d", scene.params.nOpkrAccelProfile, scene.cruiseState.modeSel );
