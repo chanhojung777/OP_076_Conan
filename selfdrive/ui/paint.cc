@@ -1000,7 +1000,7 @@ static void ui_draw_debug(UIState *s)
 
 
   x_pos = viz_speed_x + 300;
-  y_pos = 50;
+  y_pos = 150;
   ui_print( s, x_pos, y_pos+0, "S:%d,%d", scene.params.nOpkrAccelProfile, scene.cruiseState.modeSel );
 
 /*
