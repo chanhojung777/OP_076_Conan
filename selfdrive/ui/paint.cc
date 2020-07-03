@@ -1010,7 +1010,7 @@ static void ui_draw_debug(UIState *s)
     case 1: strcpy( str_msg, "1.브드럽게" ); nColor = nvgRGBA(100, 100, 255, 255); break;
     case 2: strcpy( str_msg, "2.보통" );    nColor = COLOR_WHITE;  break;
     case 3: strcpy( str_msg, "3.빠르게" );  nColor = nvgRGBA(255, 100, 100, 255);  break;
-    default :  sprintf( str_msg, "%d", scene.params.nOpkrAccelProfile ); break;
+    default :  sprintf( str_msg, "%d", scene.params.nOpkrAccelProfile ); nColor = COLOR_WHITE;  break;
   }
 
   nvgFillColor(s->vg, nColor);
@@ -1022,7 +1022,7 @@ static void ui_draw_debug(UIState *s)
     case 0: strcpy( str_msg, "0.순정모드" ); nColor = COLOR_WHITE; break;
     case 1: strcpy( str_msg, "1.커브모드" );    nColor = COLOR_YELLOW;  break;
     case 2: strcpy( str_msg, "2.선행차" );  nColor = COLOR_RED;  break;
-    default :  sprintf( str_msg, "%d", scene.cruiseState.modeSel ); break;
+    default :  sprintf( str_msg, "%d", scene.cruiseState.modeSel ); nColor = COLOR_WHITE;  break;
   }
   
   nvgFillColor(s->vg, nColor);  
