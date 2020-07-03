@@ -1025,7 +1025,7 @@ static void ui_draw_gear( UIState *s )
   int  x_pos = 1700;
   int  y_pos = 150;
   char str_msg[512];
-  
+
   nvgFontSize(s->vg, 100 );
   switch( ngetGearShifter )
   {
@@ -1033,7 +1033,7 @@ static void ui_draw_gear( UIState *s )
     case 2 : strcpy( str_msg, "D" ); nColor = nvgRGBA(100, 100, 255, 255); break;
     case 4 : strcpy( str_msg, "R" ); nColor = nvgRGBA(255, 100, 100, 255); break;
     case 7 : strcpy( str_msg, "B" ); break;
-    default: strcpy( str_msg, "%d", ngetGearShifter ); break;
+    default: sprintf( str_msg, "%d", ngetGearShifter ); break;
   }
 
   nvgFillColor(s->vg, nColor);
