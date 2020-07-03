@@ -1003,7 +1003,7 @@ static void ui_draw_debug(UIState *s)
   x_pos = viz_speed_x + 200;
   y_pos = 150;
 
-  nvgFontSize(s->vg, 80);
+  nvgFontSize(s->vg, 70);
   switch( scene.params.nOpkrAccelProfile  )
   {
     case 1: strcpy( str_msg, "1.부드럽게" ); nColor = nvgRGBA(100, 100, 255, 255); break;
@@ -1015,7 +1015,7 @@ static void ui_draw_debug(UIState *s)
   nvgFillColor(s->vg, nColor);
   ui_print( s, x_pos, y_pos+0, "%s", str_msg );
 
-  nvgFontSize(s->vg, 100);
+  nvgFontSize(s->vg, 90);
   switch( scene.cruiseState.modeSel  )
   {
     case 0: strcpy( str_msg, "0.순정모드" ); nColor = COLOR_WHITE; break;
