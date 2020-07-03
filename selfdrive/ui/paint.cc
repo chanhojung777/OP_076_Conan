@@ -1003,14 +1003,24 @@ static void ui_draw_debug(UIState *s)
   y_pos = 50;
   ui_print( s, x_pos, y_pos+0, "S:%d,%d", scene.params.nOpkrAccelProfile, scene.cruiseState.modeSel );
 
+/*
+   park @1;
+    drive @2;
+    neutral @3;
+    reverse @4;
+    sport @5;
+    low @6;
+    brake @7;
+    eco @8;
+*/
 
-
-  switch( scene.getGearShifter )
+  int ngetGearShifter = int(scene.getGearShifter);
+  switch( ngetGearShifter )
   {
-    case cereal::CarState::GearShifter.park : ui_print( s, x_pos, y_pos, "P" ); break;    
-    case cereal::CarState::GearShifter.drive : ui_print( s, x_pos, y_pos, "D" ); break;
-    case cereal::CarState::GearShifter.reverse : ui_print( s, x_pos, y_pos, "R" ); break;
-    case cereal::CarState::GearShifter.brake : ui_print( s, x_pos, y_pos, "B" ); break;
+    case 1 : ui_print( s, x_pos, y_pos, "P" ); break;    
+    case 2 : ui_print( s, x_pos, y_pos, "D" ); break;
+    case 4 : ui_print( s, x_pos, y_pos, "R" ); break;
+    case 7 : ui_print( s, x_pos, y_pos, "B" ); break;
     default: ui_print( s, x_pos, y_pos, "%d", scene.getGearShifter ); break;
   }
 }
