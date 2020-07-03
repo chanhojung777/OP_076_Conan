@@ -956,10 +956,6 @@ static void ui_draw_vision_speedlimit(UIState *s) {
 
 
 
-
-
-
-
 static void ui_draw_debug(UIState *s) 
 {
   UIScene &scene = s->scene;
@@ -1011,10 +1007,10 @@ static void ui_draw_debug(UIState *s)
 
   switch( scene.getGearShifter )
   {
-    case 1 : ui_print( s, x_pos, y_pos, "P" ); break;    
-    case 2 : ui_print( s, x_pos, y_pos, "D" ); break;
-    case 4 : ui_print( s, x_pos, y_pos, "R" ); break;
-    case 7 : ui_print( s, x_pos, y_pos, "B" ); break;
+    case cereal::CarState::GearShifter.park : ui_print( s, x_pos, y_pos, "P" ); break;    
+    case cereal::CarState::GearShifter.drive : ui_print( s, x_pos, y_pos, "D" ); break;
+    case cereal::CarState::GearShifter.reverse : ui_print( s, x_pos, y_pos, "R" ); break;
+    case cereal::CarState::GearShifter.brake : ui_print( s, x_pos, y_pos, "B" ); break;
     default: ui_print( s, x_pos, y_pos, "%d", scene.getGearShifter ); break;
   }
 }
