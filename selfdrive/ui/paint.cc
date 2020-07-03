@@ -1004,14 +1004,14 @@ static void ui_draw_debug(UIState *s)
   ui_print( s, x_pos, y_pos+0, "S:%d,%d", scene.params.nOpkrAccelProfile, scene.cruiseState.modeSel );
 
 /*
-   park @1;
-    drive @2;
-    neutral @3;
-    reverse @4;
-    sport @5;
-    low @6;
-    brake @7;
-    eco @8;
+  park @1;
+  drive @2;
+  neutral @3;
+  reverse @4;
+  sport @5;
+  low @6;
+  brake @7;
+  eco @8;
 */
 
   int ngetGearShifter = int(scene.getGearShifter);
@@ -1021,7 +1021,7 @@ static void ui_draw_debug(UIState *s)
     case 2 : ui_print( s, x_pos, y_pos, "D" ); break;
     case 4 : ui_print( s, x_pos, y_pos, "R" ); break;
     case 7 : ui_print( s, x_pos, y_pos, "B" ); break;
-    default: ui_print( s, x_pos, y_pos, "%d", scene.getGearShifter ); break;
+    default: ui_print( s, x_pos, y_pos, "%d", ngetGearShifter ); break;
   }
 }
 
