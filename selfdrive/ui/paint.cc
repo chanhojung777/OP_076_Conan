@@ -1000,7 +1000,7 @@ static void ui_draw_debug(UIState *s)
 
   if( scene.params.nOpkrAccelProfile == 0 )  return;
   NVGcolor nColor = COLOR_WHITE;
-  x_pos = viz_speed_x + 200;
+  x_pos = viz_speed_x + 250;
   y_pos = 150;
 
   nvgFontSize(s->vg, 70);
