@@ -971,7 +971,7 @@ static void ui_draw_debug(UIState *s)
 
   int  y_pos = 0;
   int  x_pos = 0;
-
+  char str_msg[512];
 
   ui_print( s, ui_viz_rx+50, 50, "S:%d",  s->awake_timeout );
 
@@ -1003,6 +1003,9 @@ static void ui_draw_debug(UIState *s)
   y_pos = 150;
   ui_print( s, x_pos, y_pos+0, "S:%d,%d", scene.params.nOpkrAccelProfile, scene.cruiseState.modeSel );
 
+}
+
+
 /*
   park @1;
   drive @2;
@@ -1013,21 +1016,28 @@ static void ui_draw_debug(UIState *s)
   brake @7;
   eco @8;
 */
+static void ui_draw_gear( UIState *s )
+{
+  UIScene &scene = s->scene;  
+  NVGcolor nColor = COLOR_WHITE;
+
+  int  ngetGearShifter = int(scene.getGearShifter);
+  int  x_pos = 1700;
+  int  y_pos = 150;
 
   nvgFontSize(s->vg, 100 );
-  x_pos = 1700;
-  y_pos = 150;
-  int ngetGearShifter = int(scene.getGearShifter);
   switch( ngetGearShifter )
   {
-    case 1 : ui_print( s, x_pos, y_pos, "P" ); break;    
-    case 2 : ui_print( s, x_pos, y_pos, "D" ); break;
-    case 4 : ui_print( s, x_pos, y_pos, "R" ); break;
-    case 7 : ui_print( s, x_pos, y_pos, "B" ); break;
-    default: ui_print( s, x_pos, y_pos, "%d", ngetGearShifter ); break;
+    case 1 : strcpy( str_msg, "P" ); nColor = nvgRGBA(255, 255, 255, 255); break;
+    case 2 : strcpy( str_msg, "D" ); nColor = nvgRGBA(100, 100, 255, 255); break;
+    case 4 : strcpy( str_msg, "R" ); nColor = nvgRGBA(255, 100, 100, 255); break;
+    case 7 : strcpy( str_msg, "B" ); break;
+    default: strcpy( str_msg, "%d", ngetGearShifter ); break;
   }
-}
 
+  nvgFillColor(s->vg, nColor);
+  ui_print( s, x_pos, y_pos, str_msg );
+}
 
 static void ui_draw_vision_speed(UIState *s) {
   const UIScene *scene = &s->scene;
@@ -1092,6 +1102,11 @@ static void ui_draw_vision_event(UIState *s) {
     {
       ui_draw_circle_image(s->vg, bg_wheel_x, bg_wheel_y, bg_wheel_size, s->img_wheel, color, 1.0f, bg_wheel_y - 25);
     }
+    else  // debug
+    {
+      ui_draw_gear( s );
+    }
+    
   }
 }
 
