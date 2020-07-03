@@ -1022,7 +1022,6 @@ static void ui_draw_debug(UIState *s)
     case 2: strcpy( str_msg, "2.선행차" );  nColor = COLOR_RED;  break;
     default :  sprintf( str_msg, "%d", scene.cruiseState.modeSel ); nColor = COLOR_WHITE;  break;
   }
-  
   nvgFillColor(s->vg, nColor);  
   ui_print( s, x_pos, y_pos+80, str_msg );  
 }
