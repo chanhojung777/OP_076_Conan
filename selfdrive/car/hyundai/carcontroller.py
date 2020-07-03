@@ -62,6 +62,8 @@ class CarController():
     self.param_OpkrAccelProfile = 0
     self.param_OpkrAutoResume = 0
 
+    self.traceCC = trace1.Loger("CarController")
+
 
 
   def limit_ctrl(self, value, limit, offset ):
@@ -222,7 +224,7 @@ class CarController():
       self.command_load = 0
 
 
-
+#  CC:car.CarControl(car.capnp), CS:CarState  CP:CarInterface.get_params
   def update(self, CC, CS, frame, sm, CP ):
     if self.CP != CP:
       self.CP = CP
@@ -288,7 +290,8 @@ class CarController():
     str_log2 = 'limit={:.0f} tm={:.1f} {:.0f}'.format( apply_steer_limit, self.timer1.sampleTime(), self.param_OpkrAccelProfile  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
-    if not self.param_OpkrAccelProfile:
+    run_speed_ctrl = self.param_OpkrAccelProfile and CS.acc_active
+    if not run_speed_ctrl:
       str_log2 = 'U={:.0f}  LK={:.0f} dir={} steer={:5.0f} '.format( CS.Mdps_ToiUnavail, CS.lkas_button_on, self.steer_torque_ratio_dir, CS.out.steeringTorque  )
       trace1.printf2( '{}'.format( str_log2 ) )
 
@@ -311,10 +314,11 @@ class CarController():
     # reset lead distnce after the car starts moving
     elif self.last_lead_distance != 0:
       self.last_lead_distance = 0
-    elif self.param_OpkrAccelProfile:
+    elif run_speed_ctrl:
       if self.SC.update( CS, sm, self ):
         can_sends.append(create_clu11(self.packer, frame, CS.clu11, self.SC.btn_type ))
-
+        str_log = 'param_OpkrAccelProfile={}  btn_type={}'.formaT( self.param_OpkrAccelProfile, self.SC.btn_type )
+        self.traceCC.add( str_log )
 
     # 20 Hz LFA MFA message
     if frame % 5 == 0 and self.car_fingerprint in [CAR.SONATA, CAR.PALISADE]:

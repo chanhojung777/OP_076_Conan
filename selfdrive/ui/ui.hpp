@@ -216,7 +216,7 @@ typedef struct UIScene {
   {
     int nOpkrDevelMode1;
     int nOpkrAutoScreenOff;
-
+    int nOpkrAccelProfile;
   } params;
 
 } UIScene;

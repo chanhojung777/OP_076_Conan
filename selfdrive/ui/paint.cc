@@ -978,37 +978,32 @@ static void ui_draw_debug(UIState *s)
 
   x_pos = ui_viz_rx + 300;
 
-  ui_print( s, x_pos, 100, "S:%d,%d,%d", scene.params.nOpkrDevelMode1, scene.params.nOpkrAutoScreenOff, s->awake_timeout );
+  ui_print( s, x_pos, 50, "S:%d",  s->awake_timeout );
 
 
   y_pos = 150; 
   ui_print( s, x_pos, y_pos+0, "B:%d,%.5f", scene.steerOverride, scene.output_scale );
   ui_print( s, x_pos, y_pos+50, "G:%d", (int)scene.getGearShifter );
-  ui_print( s, x_pos, y_pos+100, "mS:%d,%d", scene.cruiseState.modeSel, (int)scene.cruiseState.standstill );
 
-  char speed_str[512];
-  snprintf(speed_str, sizeof(speed_str), "L1:%d, %.1f,%.1f,%.1f", (int)scene.lead_status, scene.lead_d_rel, scene.lead_y_rel , scene.lead_v_rel  );
-  nvgText(s->vg, x_pos, y_pos+150, speed_str, NULL);   
 
-  snprintf(speed_str, sizeof(speed_str), "L2:%d, %.1f,%.1f,%.1f", (int)scene.lead_status2, scene.lead_d_rel2, scene.lead_y_rel2 , scene.lead_v_rel2  );
-  nvgText(s->vg, x_pos, y_pos+200, speed_str, NULL); 
+  ui_print( s, x_pos, y_pos+150, "L1:%d, %.1f,%.1f,%.1f", (int)scene.lead_status, scene.lead_d_rel, scene.lead_y_rel , scene.lead_v_rel  );
+  ui_print( s, x_pos, y_pos+200, "L2:%d, %.1f,%.1f,%.1f", (int)scene.lead_status2, scene.lead_d_rel2, scene.lead_y_rel2 , scene.lead_v_rel2  );
   
 
   x_pos = viz_speed_x + 300;
+  ui_print( s, x_pos, y_pos+0, "S:%d,%d", scene.params.nOpkrAccelProfile, scene.cruiseState.modeSel );
+
+/*
   ui_print( s, x_pos, y_pos+0, "sR:%.2f", scene.carParams.steerRatio );
   ui_print( s, x_pos, y_pos+50, "LP:%d", scene.carParams.lateralsRatom.learnerParams );
   ui_print( s, x_pos, y_pos+100, "dZ:%.1f", scene.carParams.lateralsRatom.deadzone );
 
   ui_print( s, x_pos, y_pos+150, "sO:%.3f", scene.carParams.lateralsRatom.steerOffset );
   ui_print( s, x_pos, y_pos+200, "tS:%.3f", scene.carParams.lateralsRatom.tireStiffnessFactor );
+*/
 
-
-  snprintf(speed_str, sizeof(speed_str), "%s", scene.alert.text1 );
-  nvgText(s->vg, 0, 1020, speed_str, NULL);  
-
-  snprintf(speed_str, sizeof(speed_str), "%s", scene.alert.text2 );
-  nvgText(s->vg, 0, 1078, speed_str, NULL);
-
+  ui_print( s, 0, 1020, "%s", scene.alert.text1 );
+  ui_print( s, 0, 1078, "%s", scene.alert.text2 );
 }
 
 
