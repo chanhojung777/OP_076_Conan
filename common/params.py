@@ -106,6 +106,7 @@ keys = {
   "Offroad_PandaFirmwareMismatch": [TxType.CLEAR_ON_MANAGER_START, TxType.CLEAR_ON_PANDA_DISCONNECT],
   "Offroad_InvalidTime": [TxType.CLEAR_ON_MANAGER_START],
   "Offroad_IsTakingSnapshot": [TxType.CLEAR_ON_MANAGER_START],
+  "OpkrAutoShutdown": [TxType.PERSISTENT],  
   "OpkrAutoScreenOff": [TxType.PERSISTENT],
   "OpkrEnableDriverMonitoring": [TxType.PERSISTENT],
   "OpkrEnableLogger": [TxType.PERSISTENT],
@@ -116,8 +117,13 @@ keys = {
   "OpkrTuneProfile": [TxType.PERSISTENT],
   "OpkrTuneStartAt": [TxType.PERSISTENT],
   "OpkrAccelProfile": [TxType.PERSISTENT],
+  "OpkrAutoLanechangedelay": [TxType.PERSISTENT],  
   "OpkrDevelMode1": [TxType.PERSISTENT],
   "OpkrDevelMode2": [TxType.PERSISTENT],
+  "OpkrRunMixplorer": [TxType.PERSISTENT],
+  "OpkrRunQuickedit": [TxType.PERSISTENT],
+  "OpkrRunAtlanmap": [TxType.PERSISTENT],
+  "OpkrRunSoftkey": [TxType.PERSISTENT],  
 }
 
 
