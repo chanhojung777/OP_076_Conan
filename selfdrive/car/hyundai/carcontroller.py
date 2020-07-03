@@ -317,7 +317,7 @@ class CarController():
     elif run_speed_ctrl:
       if self.SC.update( CS, sm, self ):
         can_sends.append(create_clu11(self.packer, frame, CS.clu11, self.SC.btn_type ))
-        str_log = 'param_OpkrAccelProfile={}  btn_type={}'.formaT( self.param_OpkrAccelProfile, self.SC.btn_type )
+        str_log = 'param_OpkrAccelProfile={}  btn_type={}'.format( self.param_OpkrAccelProfile, self.SC.btn_type )
         self.traceCC.add( str_log )
 
     # 20 Hz LFA MFA message

@@ -188,7 +188,7 @@ class SpdController():
             if self.prev_clu_CruiseSwState != CS.cruise_buttons:  # MODE 전환.
                 if CS.cruise_buttons == Buttons.CANCEL: 
                     self.cruise_set_mode += 1
-                if self.cruise_set_mode > 3:
+                if self.cruise_set_mode > 2:
                     self.cruise_set_mode = 0
                 self.prev_clu_CruiseSwState = CS.cruise_buttons
             
