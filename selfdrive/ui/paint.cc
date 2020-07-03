@@ -1000,7 +1000,7 @@ static void ui_draw_debug(UIState *s)
 
   if( scene.params.nOpkrAccelProfile == 0 )  return;
   NVGcolor nColor = COLOR_WHITE;
-  x_pos = viz_speed_x + 250;
+  x_pos = viz_speed_x + 260;
   y_pos = 150;
 
   nvgFontSize(s->vg, 40);
@@ -1011,7 +1011,6 @@ static void ui_draw_debug(UIState *s)
     case 3: strcpy( str_msg, "3.빠르게" );  nColor = nvgRGBA(255, 100, 100, 255);  break;
     default :  sprintf( str_msg, "%d", scene.params.nOpkrAccelProfile ); nColor = COLOR_WHITE;  break;
   }
-
   nvgFillColor(s->vg, nColor);
   ui_print( s, x_pos, y_pos+0, "%s", str_msg );
 
