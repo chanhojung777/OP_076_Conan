@@ -1003,7 +1003,7 @@ static void ui_draw_debug(UIState *s)
   x_pos = viz_speed_x + 250;
   y_pos = 150;
 
-  nvgFontSize(s->vg, 70);
+  nvgFontSize(s->vg, 40);
   switch( scene.params.nOpkrAccelProfile  )
   {
     case 1: strcpy( str_msg, "1.부드럽게" ); nColor = nvgRGBA(100, 100, 255, 255); break;
@@ -1025,7 +1025,7 @@ static void ui_draw_debug(UIState *s)
   }
   
   nvgFillColor(s->vg, nColor);  
-  ui_print( s, x_pos, y_pos+150, str_msg );  
+  ui_print( s, x_pos, y_pos+100, str_msg );  
 }
 
 
