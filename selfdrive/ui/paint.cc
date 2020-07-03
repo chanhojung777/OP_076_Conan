@@ -1018,8 +1018,8 @@ static void ui_draw_debug(UIState *s)
   switch( scene.cruiseState.modeSel  )
   {
     case 0: strcpy( str_msg, "0.순정모드" ); nColor = COLOR_WHITE; break;
-    case 1: strcpy( str_msg, "1.커브모드" );    nColor = nvgRGBA(255, 200, 200, 255);  break;
-    case 2: strcpy( str_msg, "2.선행차" );  nColor = nvgRGBA(255, 200, 200, 255);  break;
+    case 1: strcpy( str_msg, "1.커브모드" );    nColor = nvgRGBA(200, 200, 255, 255);  break;
+    case 2: strcpy( str_msg, "2.선행차" );  nColor = nvgRGBA(200, 255, 255, 255);  break;
     default :  sprintf( str_msg, "%d", scene.cruiseState.modeSel ); nColor = COLOR_WHITE;  break;
   }
   nvgFillColor(s->vg, nColor);  
