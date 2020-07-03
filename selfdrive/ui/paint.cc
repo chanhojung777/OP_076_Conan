@@ -962,6 +962,7 @@ static void ui_draw_debug(UIState *s)
   int ui_viz_rx = scene.ui_viz_rx;
   int ui_viz_rw = scene.ui_viz_rw;
 
+  char str_msg[512];
 
   const int viz_speed_w = 280;
   const int viz_speed_x = ui_viz_rx+((ui_viz_rw/2)-(viz_speed_w/2));
@@ -978,8 +979,6 @@ static void ui_draw_debug(UIState *s)
   x_pos = ui_viz_rx + 300;
   y_pos = 150; 
   ui_print( s, x_pos, y_pos+0, "B:%d,%.5f", scene.steerOverride, scene.output_scale );
- // ui_print( s, x_pos, y_pos+50, "G:%d", (int)scene.getGearShifter );
-
 
   ui_print( s, x_pos, y_pos+150, "L1:%d, %.1f,%.1f,%.1f", (int)scene.lead_status, scene.lead_d_rel, scene.lead_y_rel , scene.lead_v_rel  );
   ui_print( s, x_pos, y_pos+200, "L2:%d, %.1f,%.1f,%.1f", (int)scene.lead_status2, scene.lead_d_rel2, scene.lead_y_rel2 , scene.lead_v_rel2  );
@@ -999,11 +998,35 @@ static void ui_draw_debug(UIState *s)
   ui_print( s, 0, 1078, "%s", scene.alert.text2 );
 
 
-  nvgFontSize(s->vg, 100);
+  if( scene.params.nOpkrAccelProfile == 0 )  return;
+  NVGcolor nColor = COLOR_WHITE;
   x_pos = viz_speed_x + 300;
   y_pos = 150;
-  ui_print( s, x_pos, y_pos+0, "S:%d,%d", scene.params.nOpkrAccelProfile, scene.cruiseState.modeSel );
 
+  nvgFontSize(s->vg, 100);
+
+  switch( scene.params.nOpkrAccelProfile  )
+  {
+    case 1: strcpy( str_msg, "1.브드럽게" ); nColor = nvgRGBA(100, 100, 255, 255); break;
+    case 2: strcpy( str_msg, "2.보통" );    nColor = COLOR_WHITE;  break;
+    case 3: strcpy( str_msg, "3.빠르게" );  nColor = nvgRGBA(255, 100, 100, 255);  break;
+    default :  sprintf( str_msg, "%d", scene.params.nOpkrAccelProfile ); break;
+  }
+
+  nvgFillColor(s->vg, nColor);
+  ui_print( s, x_pos, y_pos+0, "%s", str_msg );
+
+
+  switch( scene.cruiseState.modeSel  )
+  {
+    case 0: strcpy( str_msg, "0.순정모드" ); nColor = COLOR_WHITE; break;
+    case 1: strcpy( str_msg, "1.커브모드" );    nColor = COLOR_YELLOW;  break;
+    case 2: strcpy( str_msg, "2.선행차" );  nColor = COLOR_RED;  break;
+    default :  sprintf( str_msg, "%d", scene.cruiseState.modeSel ); break;
+  }
+  
+  nvgFillColor(s->vg, nColor);  
+  ui_print( s, x_pos, y_pos+50, str_msg );  
 }
 
 
