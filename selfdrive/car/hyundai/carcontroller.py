@@ -60,6 +60,7 @@ class CarController():
     self.params = Params()
 
     # param
+    self.param_preOpkrAccelProfile = 0
     self.param_OpkrAccelProfile = 0
     self.param_OpkrAutoResume = 0
 
@@ -234,12 +235,14 @@ class CarController():
     self.param_load()
 
     # speed controller
-    if self.param_OpkrAccelProfile == 1:
-      self.SC = SpdctrlSlow()
-    elif self.param_OpkrAccelProfile == 2:
-      self.SC = SpdctrlNormal()
-    else:
-      self.SC = SpdctrlSlow()
+    if self.param_preOpkrAccelProfile != self.param_OpkrAccelProfile:
+      self.param_preOpkrAccelProfile = self.param_OpkrAccelProfile
+      if self.param_OpkrAccelProfile == 1:
+        self.SC = SpdctrlSlow()
+      elif self.param_OpkrAccelProfile == 2:
+        self.SC = SpdctrlNormal()
+      else:
+        self.SC = SpdctrlSlow()
 
     
 
