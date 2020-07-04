@@ -1,5 +1,8 @@
 [![](https://i.imgur.com/UelUjKAh.png)](#)
 
+
+am start -n com.gmd.hidesoftkeys/com.gmd.hidesoftkeys.MainActivity
+
 Table of Contents
 =======================
 
