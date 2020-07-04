@@ -317,8 +317,8 @@ class SpdController():
 
 
 
-        str3 = 'SET={:3.0f} DST={:3.0f}  SD={:.0f} DA={:.0f}/{:.0f}/{:.0f} DG={}/{:.0f}'.format(
-            set_speed, target_set_speed, CS.VSetDis, CS.driverAcc_time, long_wait_cmd, self.long_curv_timer, self.seq_step_debug, dec_step_cmd )
+        str3 = 'SET={:3.0f} DST={:3.0f}  SD={:.0f} DA={:.0f}/{:.0f}/{:.0f} DG={}/{:.0f} DO={:.0f}'.format(
+            set_speed, target_set_speed, CS.VSetDis, CS.driverAcc_time, long_wait_cmd, self.long_curv_timer, self.seq_step_debug, dec_step_cmd, CS.driverOverride )
 
         str4 = ' CS={:.1f}/{:.1f} '.format(  CS.lead_distance, CS.lead_objspd )
 
