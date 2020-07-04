@@ -195,13 +195,8 @@ def thermald_thread():
   do_uninstall = 0
   accepted_terms = 0
   completed_training = 0
+  panda_signature = 0
   while 1:
-    ts = sec_since_boot()
-    health = messaging.recv_sock(health_sock, wait=True)
-    location = messaging.recv_sock(location_sock)
-    location = location.gpsLocation if location else None
-    msg = read_thermal()
-
     OpkrLoadStep += 1
     if OpkrLoadStep == 1:
       OpkrAutoShutdown = int( params.get("OpkrAutoShutdown") )
@@ -213,8 +208,17 @@ def thermald_thread():
       accepted_terms = params.get("HasAcceptedTerms") == terms_version 
     elif OpkrLoadStep == 5:
       completed_training = params.get("CompletedTrainingVersion") == training_version
+    elif OpkrLoadStep == 6:      
+      panda_signature = params.get("PandaFirmware")
     else:
       OpkrLoadStep = 0
+
+
+    ts = sec_since_boot()
+    health = messaging.recv_sock(health_sock, wait=True)
+    location = messaging.recv_sock(location_sock)
+    location = location.gpsLocation if location else None
+    msg = read_thermal()
 
     if health is not None:
       usb_power = health.health.usbPowerMode != log.HealthData.UsbPowerMode.client
@@ -359,8 +363,8 @@ def thermald_thread():
 
     #accepted_terms = params.get("HasAcceptedTerms") == terms_version
     #completed_training = params.get("CompletedTrainingVersion") == training_version
+    #panda_signature = params.get("PandaFirmware")
 
-    panda_signature = params.get("PandaFirmware")
     fw_version_match = (panda_signature is None) or (panda_signature == FW_SIGNATURE)   # don't show alert is no panda is connected (None)
 
     #ignition = True  #  영상보기.
@@ -424,17 +428,20 @@ def thermald_thread():
       power_shutdown = False
       if msg.thermal.batteryStatus == "Discharging":
         delta_ts = current_ts - off_ts
+        
         if started_seen:
           if msg.thermal.batteryPercent < BATT_PERC_OFF and delta_ts > 30:
             power_shutdown = True
         elif  delta_ts > 240 and msg.thermal.batteryPercent < 10:
           power_shutdown = True
 
-      if power_shutdown:
-        os.system('LD_LIBRARY_PATH="" svc power shutdown')
-        print( 'power_shutdown batterypercent={} should_start={}'.format(msg.thermal.batteryPercent, should_start) )
+
+        if power_shutdown:
+          os.system('LD_LIBRARY_PATH="" svc power shutdown')
+          print( 'power_shutdown batterypercent={} should_start={}'.format(msg.thermal.batteryPercent, should_start) )
 
 
+    print( 'OpkrAutoShutdown = {}'.format( OpkrAutoShutdown ) )
       #if msg.thermal.batteryPercent < BATT_PERC_OFF and msg.thermal.batteryStatus == "Discharging" and \
       #   started_seen and (current_ts - off_ts) > 60:
       #  os.system('LD_LIBRARY_PATH="" svc power shutdown')
