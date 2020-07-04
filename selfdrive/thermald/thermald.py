@@ -201,14 +201,12 @@ def thermald_thread():
     if OpkrLoadStep == 1:
       OpkrAutoShutdown = int( params.get("OpkrAutoShutdown") )
     elif OpkrLoadStep == 2:
-      IsOpenpilotViewEnabled = int( params.get("IsOpenpilotViewEnabled") )
-    elif OpkrLoadStep == 3:
       do_uninstall = params.get("DoUninstall") == b"1"
-    elif OpkrLoadStep == 4:
+    elif OpkrLoadStep == 3:
       accepted_terms = params.get("HasAcceptedTerms") == terms_version 
-    elif OpkrLoadStep == 5:
+    elif OpkrLoadStep == 4:
       completed_training = params.get("CompletedTrainingVersion") == training_version
-    elif OpkrLoadStep == 6:      
+    elif OpkrLoadStep == 5:      
       panda_signature = params.get("PandaFirmware")
     else:
       OpkrLoadStep = 0
@@ -254,6 +252,7 @@ def thermald_thread():
           params.panda_disconnect()
       health_prev = health
     elif ignition == False or IsOpenpilotViewEnabled:
+      IsOpenpilotViewEnabled = int( params.get("IsOpenpilotViewEnabled") )      
       ignition = IsOpenpilotViewEnabled
 
 
