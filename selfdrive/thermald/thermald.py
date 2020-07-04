@@ -430,7 +430,7 @@ def thermald_thread():
         delta_ts = current_ts - off_ts
         
         if started_seen:
-          if msg.thermal.batteryPercent < BATT_PERC_OFF and delta_ts > 30:
+          if msg.thermal.batteryPercent <= BATT_PERC_OFF and (OpkrAutoShutdown and  delta_ts > OpkrAutoShutdown):
             power_shutdown = True
         elif  delta_ts > 240 and msg.thermal.batteryPercent < 10:
           power_shutdown = True
@@ -440,8 +440,11 @@ def thermald_thread():
           os.system('LD_LIBRARY_PATH="" svc power shutdown')
           print( 'power_shutdown batterypercent={} should_start={}'.format(msg.thermal.batteryPercent, should_start) )
 
+      else:
+        off_ts = current_ts
 
-    print( 'OpkrAutoShutdown = {}'.format( OpkrAutoShutdown ) )
+
+      #print( 'OpkrAutoShutdown = {}'.format( OpkrAutoShutdown ) )
       #if msg.thermal.batteryPercent < BATT_PERC_OFF and msg.thermal.batteryStatus == "Discharging" and \
       #   started_seen and (current_ts - off_ts) > 60:
       #  os.system('LD_LIBRARY_PATH="" svc power shutdown')
