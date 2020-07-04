@@ -75,12 +75,12 @@ class CarState(CarStateBase):
     ret.steeringPressed = abs(ret.steeringTorque) > STEER_THRESHOLD
 
     if leftBlinker:
-      self.left_blinker_flash = 60
+      self.left_blinker_flash = 150
     elif  self.left_blinker_flash:
       self.left_blinker_flash -= 1
 
     if rightBlinker:
-      self.right_blinker_flash = 60
+      self.right_blinker_flash = 150
     elif  self.right_blinker_flash:
       self.right_blinker_flash -= 1
 
