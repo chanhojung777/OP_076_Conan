@@ -190,12 +190,31 @@ def thermald_thread():
 
   IsOpenpilotViewEnabled = 0
 
+  OpkrLoadStep = 0
+  OpkrAutoShutdown = 0
+  do_uninstall = 0
+  accepted_terms = 0
+  completed_training = 0
   while 1:
     ts = sec_since_boot()
     health = messaging.recv_sock(health_sock, wait=True)
     location = messaging.recv_sock(location_sock)
     location = location.gpsLocation if location else None
     msg = read_thermal()
+
+    OpkrLoadStep += 1
+    if OpkrLoadStep == 1:
+      OpkrAutoShutdown = int( params.get("OpkrAutoShutdown") )
+    elif OpkrLoadStep == 2:
+      IsOpenpilotViewEnabled = int( params.get("IsOpenpilotViewEnabled") )
+    elif OpkrLoadStep == 3:
+      do_uninstall = params.get("DoUninstall") == b"1"
+    elif OpkrLoadStep == 4:
+      accepted_terms = params.get("HasAcceptedTerms") == terms_version 
+    elif OpkrLoadStep == 5:
+      completed_training = params.get("CompletedTrainingVersion") == training_version
+    else:
+      OpkrLoadStep = 0
 
     if health is not None:
       usb_power = health.health.usbPowerMode != log.HealthData.UsbPowerMode.client
@@ -231,13 +250,10 @@ def thermald_thread():
           params.panda_disconnect()
       health_prev = health
     elif ignition == False or IsOpenpilotViewEnabled:
-      IsOpenpilotViewEnabled = params.get("IsOpenpilotViewEnabled") == b"1"
       ignition = IsOpenpilotViewEnabled
 
 
 
-
-    
     # get_network_type is an expensive call. update every 10s
     if (count % int(10. / DT_TRML)) == 0:
       try:
@@ -340,9 +356,9 @@ def thermald_thread():
       params.delete("Offroad_ConnectivityNeeded")
       params.delete("Offroad_ConnectivityNeededPrompt")
     """
-    do_uninstall = params.get("DoUninstall") == b"1"
-    accepted_terms = params.get("HasAcceptedTerms") == terms_version
-    completed_training = params.get("CompletedTrainingVersion") == training_version
+
+    #accepted_terms = params.get("HasAcceptedTerms") == terms_version
+    #completed_training = params.get("CompletedTrainingVersion") == training_version
 
     panda_signature = params.get("PandaFirmware")
     fw_version_match = (panda_signature is None) or (panda_signature == FW_SIGNATURE)   # don't show alert is no panda is connected (None)
