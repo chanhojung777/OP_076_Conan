@@ -1008,6 +1008,16 @@ int main(int argc, char* argv[]) {
         nAwakeTime = 0;
       }
 
+      float maxspeed = scene.v_cruise;
+      int  maxspeed_calc = maxspeed;
+      static int _maxspeed_calc;
+      if( maxspeed_calc != _maxspeed_calc)
+      {
+        _maxspeed_calc = maxspeed_calc;
+        is_awake_command = true;
+      //  LOGW("is_awake_command = true  speed = %d", maxspeed_calc );
+      }         
+
       if( is_awake_command || nAwakeTime == 0 || scene.cruiseState.standstill  )
       {
         is_awake_command = false;

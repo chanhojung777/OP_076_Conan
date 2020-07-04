@@ -877,14 +877,9 @@ static void ui_draw_vision_maxspeed(UIState *s) {
 
    
 
-  static int _maxspeed_calc;
+
   if (is_cruise_set) {
-    if( maxspeed_calc != _maxspeed_calc)
-    {
-      _maxspeed_calc = maxspeed_calc;
-      is_awake_command = true;
-      LOGW("is_awake_command = true  speed = %d", maxspeed_calc );
-    }    
+ 
     snprintf(maxspeed_str, sizeof(maxspeed_str), "%d", maxspeed_calc);
     ui_draw_text(s->vg, text_x, 242, maxspeed_str, 42 * 2.3, COLOR_WHITE, s->font_sans_bold);
   } else {
@@ -1000,15 +995,15 @@ static void ui_draw_debug(UIState *s)
 
   if( scene.params.nOpkrAccelProfile == 0 )  return;
   NVGcolor nColor = COLOR_WHITE;
-  x_pos = viz_speed_x + 280;
+  x_pos = viz_speed_x + 320;
   y_pos = 120;
 
   nvgFontSize(s->vg, 30);
   switch( scene.params.nOpkrAccelProfile  )
   {
-    case 1: strcpy( str_msg, "1.부드럽게" ); nColor = nvgRGBA(100, 100, 255, 255); break;
+    case 1: strcpy( str_msg, "1.느림" ); nColor = nvgRGBA(100, 100, 255, 255); break;
     case 2: strcpy( str_msg, "2.보통" );    nColor = COLOR_WHITE;  break;
-    case 3: strcpy( str_msg, "3.빠르게" );  nColor = nvgRGBA(255, 100, 100, 255);  break;
+    case 3: strcpy( str_msg, "3.빠름" );  nColor = nvgRGBA(255, 100, 100, 255);  break;
     default :  sprintf( str_msg, "%d", scene.params.nOpkrAccelProfile ); nColor = COLOR_WHITE;  break;
   }
   nvgFillColor(s->vg, nColor);
