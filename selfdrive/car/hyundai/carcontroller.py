@@ -9,6 +9,8 @@ from common.numpy_fast import interp
 # speed controller
 from selfdrive.car.hyundai.spdcontroller  import SpdController
 from selfdrive.car.hyundai.spdctrlSlow  import SpdctrlSlow
+from selfdrive.car.hyundai.spdctrlNormal  import SpdctrlNormal
+
 from common.params import Params
 import common.log as trace1
 import common.CTime1000 as tm
@@ -51,8 +53,7 @@ class CarController():
     self.hud_timer_left = 0
     self.hud_timer_right = 0
 
-    # speed controller
-    self.SC = SpdctrlSlow()
+
 
     self.command_cnt = 0
     self.command_load = 0
@@ -62,6 +63,7 @@ class CarController():
     self.param_OpkrAccelProfile = 0
     self.param_OpkrAutoResume = 0
 
+    self.SC = None
     self.traceCC = trace1.Loger("CarController")
 
 
@@ -231,7 +233,15 @@ class CarController():
 
     self.param_load()
 
+    # speed controller
+    if self.param_OpkrAccelProfile == 1:
+      self.SC = SpdctrlSlow()
+    elif self.param_OpkrAccelProfile == 2:
+      self.SC = SpdctrlNormal()
+    else:
+      self.SC = SpdctrlSlow()
 
+    
 
     enabled = CC.enabled
     actuators = CC.actuators
@@ -290,7 +300,7 @@ class CarController():
     str_log2 = 'limit={:.0f} tm={:.1f} {:.0f}'.format( apply_steer_limit, self.timer1.sampleTime(), self.param_OpkrAccelProfile  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
-    run_speed_ctrl = self.param_OpkrAccelProfile and CS.acc_active
+    run_speed_ctrl = self.param_OpkrAccelProfile and CS.acc_active and self.SC != None
     if not run_speed_ctrl:
       str_log2 = 'U={:.0f}  LK={:.0f} dir={} steer={:5.0f} '.format( CS.Mdps_ToiUnavail, CS.lkas_button_on, self.steer_torque_ratio_dir, CS.out.steeringTorque  )
       trace1.printf2( '{}'.format( str_log2 ) )
@@ -314,7 +324,7 @@ class CarController():
     # reset lead distnce after the car starts moving
     elif self.last_lead_distance != 0:
       self.last_lead_distance = 0
-    elif run_speed_ctrl:
+    elif run_speed_ctrl and self.SC != None:
       if self.SC.update( CS, sm, self ):
         can_sends.append(create_clu11(self.packer, frame, CS.clu11, self.SC.btn_type ))
         str_log = 'param_OpkrAccelProfile={}  btn_type={}'.format( self.param_OpkrAccelProfile, self.SC.btn_type )

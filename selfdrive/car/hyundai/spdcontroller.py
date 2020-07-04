@@ -24,8 +24,6 @@ import common.MoveAvg as moveavg1
 
 
 
-cv_Raio = 0.8
-cv_Dist = -5
 
 MAX_SPEED = 255.0
 
@@ -239,6 +237,12 @@ class SpdController():
     def update_curv(self, CS, sm, model_speed):
         raise NotImplementedError
 
+    def update_log(self, CS, set_speed, target_set_speed, long_wait_cmd ):
+        str3 = 'SET={:3.0f} DST={:3.0f}  SD={:.0f} DA={:.0f}/{:.0f}/{:.0f} DG={} DO={:.0f}'.format(
+            set_speed, target_set_speed, CS.VSetDis, CS.driverAcc_time, long_wait_cmd, self.long_curv_timer, self.seq_step_debug, CS.driverOverride )
+        str4 = ' CS={:.1f}/{:.1f} '.format(  CS.lead_distance, CS.lead_objspd )
+        str5 = str3 +  str4
+        trace1.printf2( str5 )
 
     def lead_control(self, CS, sm, CC ):
         dRel = CC.dRel
@@ -249,8 +253,6 @@ class SpdController():
         #lead_1 = sm['radarState'].leadOne
         long_wait_cmd = 500
         set_speed = self.cruise_set_speed_kph
-
-        dec_step_cmd = 0
 
         if self.long_curv_timer < 600:
             self.long_curv_timer += 1
@@ -265,7 +267,6 @@ class SpdController():
 
         if curv_wait_cmd != 0:
             if lead_set_speed > curv_set_speed:
-                dec_step_cmd = 1
                 set_speed = curv_set_speed
                 long_wait_cmd = curv_wait_cmd
             else:
@@ -283,15 +284,7 @@ class SpdController():
         # control process
         target_set_speed = set_speed
         delta = int(set_speed) - int(CS.VSetDis)
-        if dec_step_cmd == 0 and delta < -1:
-            if delta < -3:
-                dec_step_cmd = 4
-            elif delta < -2:
-                dec_step_cmd = 3
-            else:
-                dec_step_cmd = 2
-        else:
-            dec_step_cmd = 1
+        dec_step_cmd = 1
 
 
         if self.long_curv_timer < long_wait_cmd:
@@ -316,14 +309,8 @@ class SpdController():
             btn_type = Buttons.NONE
 
 
+        self.update_log( CS, set_speed, target_set_speed, long_wait_cmd )
 
-        str3 = 'SET={:3.0f} DST={:3.0f}  SD={:.0f} DA={:.0f}/{:.0f}/{:.0f} DG={}/{:.0f} DO={:.0f}'.format(
-            set_speed, target_set_speed, CS.VSetDis, CS.driverAcc_time, long_wait_cmd, self.long_curv_timer, self.seq_step_debug, dec_step_cmd, CS.driverOverride )
-
-        str4 = ' CS={:.1f}/{:.1f} '.format(  CS.lead_distance, CS.lead_objspd )
-
-        str5 = str3 +  str4
-        trace1.printf2( str5 )
 
         return btn_type, active_time
 
