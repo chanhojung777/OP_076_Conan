@@ -198,20 +198,23 @@ class CarController():
     self.lane_change_torque_lower =  lane_change_torque_lower
     # smoth torque enable or disable
 
-    ratio_val = 0.001  # 10 sec
+    ratio_pval = 0.001  # 10 sec
+    ratio_mval = 0.001  # 10 sec
     if self.param_OpkrWhoisDriver == 1: # 민감
-      ratio_val = 0.01  # 1 sec
+      ratio_pval = 0.005  # 2 sec
+      ratio_mval = 0.01   # 1 sec
     else:  # 보통.
-      ratio_val = 0.002   # 5 sec    
+      ratio_pval = 0.002   # 5 sec    
+      ratio_mval = 0.005   # 2 sec   
 
     if self.param_OpkrWhoisDriver == 0:
      self.steer_torque_ratio = 1
     elif self.steer_torque_ratio_dir >= 1:
       if self.steer_torque_ratio < 1:
-        self.steer_torque_ratio += ratio_val   
+        self.steer_torque_ratio += ratio_pval   
     elif self.steer_torque_ratio_dir <= -1:
       if self.steer_torque_ratio > 0:
-        self.steer_torque_ratio -= ratio_val   
+        self.steer_torque_ratio -= ratio_mval   
 
     if self.steer_torque_ratio < 0:
       self.steer_torque_ratio = 0
