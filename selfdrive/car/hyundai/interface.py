@@ -5,8 +5,10 @@ from selfdrive.car.hyundai.values import Ecu, ECU_FINGERPRINT, CAR, FINGERPRINTS
 from selfdrive.car import STD_CARGO_KG, scale_rot_inertia, scale_tire_stiffness, is_ecu_disconnected, gen_empty_fingerprint
 from selfdrive.car.interfaces import CarInterfaceBase, MAX_CTRL_SPEED
 from selfdrive.atom_conf import AtomConf
+from common.params import Params
 
 ATOMC = AtomConf()
+params = Params()
 
 EventName = car.CarEvent.EventName
 ButtonType = car.CarState.ButtonEvent.Type
@@ -30,7 +32,12 @@ class CarInterface(CarInterfaceBase):
 
     ret.carName = "hyundai"
     ret.safetyModel = car.CarParams.SafetyModel.hyundai
-    ret.radarOffCan = False  #False(선행차우선)  #True(차선우선)    #선행차량 인식 마크 유무.
+    #ret.radarOffCan = False  #False(선행차우선)  #True(차선우선)    #선행차량 인식 마크 유무.
+
+    ret.radarOffCan = int( params.get('OpkrTraceSet') ) 
+    ret.lateralsRatom.learnerParams = int( params.get('OpkrEnableLearner') ) 
+    
+
 
     # Hyundai port is a community feature for now
     ret.communityFeature = False  #True
@@ -256,7 +263,6 @@ class CarInterface(CarInterfaceBase):
     if read:
       ATOMC.read_tune()
 
-
     CP.steerRatio = ATOMC.steerRatio  #10.5  #12.5
     CP.steerRateCost = ATOMC.steerRateCost #0.4 #0.4
   
@@ -280,7 +286,7 @@ class CarInterface(CarInterfaceBase):
     CP.lateralCVatom.cvSteerDeltaUpV2 = ATOMC.cvSteerDeltaUpV2
     CP.lateralCVatom.cvSteerDeltaDnV2 = ATOMC.cvSteerDeltaDnV2
 
-    CP.lateralsRatom.learnerParams = ATOMC.learnerParams
+    #CP.lateralsRatom.learnerParams = ATOMC.learnerParams
     CP.lateralsRatom.deadzone = ATOMC.deadzone
     CP.lateralsRatom.steerOffset = ATOMC.steerOffset
     CP.lateralsRatom.tireStiffnessFactor = ATOMC.tire_stiffness_factor    

@@ -60,9 +60,10 @@ class CarController():
     self.params = Params()
 
     # param
-    self.param_preOpkrAccelProfile = 0
+    self.param_preOpkrAccelProfile = -1
     self.param_OpkrAccelProfile = 0
     self.param_OpkrAutoResume = 0
+    self.param_OpkrWhoisDriver = 0
 
     self.SC = None
     self.traceCC = trace1.Loger("CarController")
@@ -196,12 +197,21 @@ class CarController():
 
     self.lane_change_torque_lower =  lane_change_torque_lower
     # smoth torque enable or disable
-    if self.steer_torque_ratio_dir >= 1:
+
+    ratio_val = 0.001  # 10 sec
+    if self.param_OpkrWhoisDriver == 1: # 민감
+      ratio_val = 0.01  # 1 sec
+    else:  # 보통.
+      ratio_val = 0.002   # 5 sec    
+
+    if self.param_OpkrWhoisDriver == 0:
+     self.steer_torque_ratio = 1
+    elif self.steer_torque_ratio_dir >= 1:
       if self.steer_torque_ratio < 1:
-        self.steer_torque_ratio += 0.002  # 5 sec
+        self.steer_torque_ratio += ratio_val   
     elif self.steer_torque_ratio_dir <= -1:
       if self.steer_torque_ratio > 0:
-        self.steer_torque_ratio -= 0.005  # 2 sec
+        self.steer_torque_ratio -= ratio_val   
 
     if self.steer_torque_ratio < 0:
       self.steer_torque_ratio = 0
@@ -222,7 +232,10 @@ class CarController():
     if self.command_load == 1:
       self.param_OpkrAccelProfile = int(self.params.get('OpkrAccelProfile')) 
     elif self.command_load == 2:
-      self.param_OpkrAutoResume = int(self.params.get('OpkrAutoResume')) 
+      self.param_OpkrAutoResume = int(self.params.get('OpkrAutoResume'))
+    elif self.command_load == 3:
+      self.param_OpkrWhoisDriver = int(self.params.get('OpkrWhoisDriver'))
+      
     else:
       self.command_load = 0
 
@@ -256,8 +269,10 @@ class CarController():
     abs_angle_steers =  abs(actuators.steerAngle)
 
     self.dRel, self.yRel, self.vRel = SpdController.get_lead( sm )
-    self.model_speed, self.model_sum = self.SC.calc_va(  sm, CS.out.vEgo  )
-
+    if self.SC is not None:
+      self.model_speed, self.model_sum = self.SC.calc_va(  sm, CS.out.vEgo  )
+    else:
+      self.model_speed = self.model_sum = 0
 
     # Steering Torque
     param = self.steerParams_torque( CS, abs_angle_steers, path_plan, CC )
