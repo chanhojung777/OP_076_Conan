@@ -34,7 +34,7 @@ class CarInterface(CarInterfaceBase):
     ret.safetyModel = car.CarParams.SafetyModel.hyundai
     ret.radarOffCan = False  #False(선행차우선)  #True(차선우선)    #선행차량 인식 마크 유무.
 
-    ret.radarOffCan = bool( params.get('OpkrTraceSet') == b'1' ) 
+    ret.radarOffCan = bool( params.get('OpkrTraceSet') != b'1' ) 
     ret.lateralsRatom.learnerParams = int( params.get('OpkrEnableLearner') ) 
     
 
