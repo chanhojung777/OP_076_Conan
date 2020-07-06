@@ -191,8 +191,7 @@ class CarController():
     lane_change_torque_lower = 0
     if self.nBlinker > 10:
       lane_change_torque_lower = int(CS.out.leftBlinker) + int(CS.out.rightBlinker) * 2
-      #self.steer_torque_ratio_dir = 1
-      if CS.out.steeringPressed:
+      if CS.out.steeringPressed and self.param_OpkrWhoisDriver:
         self.steer_torque_ratio = 0.05      
 
     self.lane_change_torque_lower =  lane_change_torque_lower
@@ -208,7 +207,7 @@ class CarController():
       ratio_mval = 0.005   # 2 sec   
 
     if self.param_OpkrWhoisDriver == 0:
-     self.steer_torque_ratio = 1
+      self.steer_torque_ratio = 1
     elif self.steer_torque_ratio_dir >= 1:
       if self.steer_torque_ratio < 1:
         self.steer_torque_ratio += ratio_pval   
@@ -257,7 +256,7 @@ class CarController():
       elif self.param_OpkrAccelProfile == 2:
         self.SC = SpdctrlNormal()
       else:
-        self.SC = SpdctrlSlow()
+        self.SC = SpdctrlNormal()
 
     
 
