@@ -351,6 +351,14 @@ void handle_message(UIState *s, SubMaster &sm) {
     }
     scene.v_cruise = data.getVCruise();
     scene.v_ego = data.getVEgo();
+
+    auto getWheelSpeeds = data.getWheelSpeeds();
+    scene.wheel.fl = getWheelSpeeds.getFl();
+    scene.wheel.fr = getWheelSpeeds.getFr();
+    scene.wheel.rl = getWheelSpeeds.getRl();
+    scene.wheel.rr = getWheelSpeeds.getRr();
+
+
     scene.angleSteers = data.getAngleSteers();
     scene.angleSteersDes = data.getAngleSteersDes();
     scene.curvature = data.getCurvature();

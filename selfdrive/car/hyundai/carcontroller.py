@@ -347,7 +347,7 @@ class CarController():
       if self.SC.update( CS, sm, self ):
         can_sends.append(create_clu11(self.packer, frame, CS.clu11, self.SC.btn_type, self.SC.sc_clu_speed ))
         self.resume_cnt += 1
-        str_log = 'cruise_set_mode={} kph={}  btn_type={} speed={}'.format( self.SC.cruise_set_mode, self.SC.cruise_set_speed_kph, self.SC.btn_type, self.SC.sc_clu_speed )
+        str_log = 'cruise_set_mode={} kph={:.1f}/{:.1f} DO={:.0f} btn_type={} speed={}'.format( self.SC.cruise_set_mode, self.SC.cruise_set_speed_kph, CS.VSetDis, CS.driverOverride, self.SC.btn_type, self.SC.sc_clu_speed )
         self.traceCC.add( str_log )
       else:
         self.resume_cnt = 0

@@ -111,6 +111,14 @@ typedef struct UIScene {
   float v_ego;
   bool decel_for_model;
 
+  struct _WHEEL_VEGO
+  {
+    float fl;
+    float fr;
+    float rl;
+    float rr;
+  } wheel;
+
   float speedlimit;
   bool speedlimit_valid;
   bool map_valid;
