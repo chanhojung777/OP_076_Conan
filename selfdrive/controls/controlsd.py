@@ -408,7 +408,9 @@ class Controls:
       right_deviation = actuators.steer < 0 and path_plan.dPoly[3] < -0.1
 
       if left_deviation or right_deviation:
-        self.events.add(EventName.steerSaturated)
+        if not self.events.__len__():
+          self.events.add(EventName.steerSaturated)
+
         str_log1 = 'dPoly[3]={:.5f} actuators.steer={:.5f} L:{:.0f} R:{:.0f}'.format( path_plan.dPoly[3], actuators.steer, left_deviation, right_deviation )
         trace_log.add( str_log1 )
 

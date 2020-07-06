@@ -453,7 +453,7 @@ EVENTS = {
       "운전자 핸들 조향",
       "자동 조향 일시 중지",
       AlertStatus.userPrompt, AlertSize.mid,
-      Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimePrompt, 0., 0., .1),
+      Priority.LOW, VisualAlert.steerRequired, AudibleAlert.chimePrompt, 1., 2., .3),
   },
   
   EventName.steerTorqueLow: {
