@@ -26,7 +26,7 @@ from selfdrive.locationd.calibration_helpers import Calibration
 
 import common.log as  trace1
 
-trace_log = trace1.Loger("controlsd")
+
 
 LDW_MIN_SPEED = 31 * CV.MPH_TO_MS
 LANE_DEPARTURE_THRESHOLD = 0.1
@@ -47,7 +47,7 @@ class Controls:
     gc.disable()
     set_realtime_priority(3)
 
-
+    self.trace_log = trace1.Loger("controlsd")
     # Setup sockets
     self.pm = pm
     if self.pm is None:
@@ -408,11 +408,12 @@ class Controls:
       right_deviation = actuators.steer < 0 and path_plan.dPoly[3] < -0.1
 
       if left_deviation or right_deviation:
-        if not self.events.__len__():
-          self.events.add(EventName.steerSaturated)
+        event_len = self.events.__len__()
+        #if not event_len:
+        self.events.add(EventName.steerSaturated)
 
-        str_log1 = 'dPoly[3]={:.5f} actuators.steer={:.5f} L:{:.0f} R:{:.0f}'.format( path_plan.dPoly[3], actuators.steer, left_deviation, right_deviation )
-        trace_log.add( str_log1 )
+        str_log1 = 'dPoly[3]={:.5f} actuators.steer={:.5f} L:{:.0f} R:{:.0f} event_len={}'.format( path_plan.dPoly[3], actuators.steer, left_deviation, right_deviation, event_len )
+        self.trace_log.add( str_log1 )
 
     return actuators, v_acc_sol, a_acc_sol, lac_log
 
