@@ -24,6 +24,7 @@ extern float  fFontSize;
 int captureState = CAPTURE_STATE_NOT_CAPTURING;
 int captureNum = 0;
 int start_time = 0;
+int stop_time = 0;
 int elapsed_time = 0; // Time of current recording
 int click_elapsed_time = 0;
 int click_time = 0;
@@ -354,12 +355,7 @@ void dashcam(UIState *s, int touch_x, int touch_y)
     }
   }
 
- // if (screen_lock_button_clicked(touch_x, touch_y, lock_button))
- // {
- //  screen_toggle_lock();
- // }
-  
-  
+ 
   if (!s->vision_connected )
   {
     // Assume car is not in drive so stop recording
@@ -369,9 +365,10 @@ void dashcam(UIState *s, int touch_x, int touch_y)
   }
   else if( lock_current_video == true  )
   {
-    if(  (s->scene.v_ego < 2.9 || !s->scene.engaged) )
+    if(  (s->scene.v_ego < 0.1 || !s->scene.engaged) )
     {
-      if( captureState == CAPTURE_STATE_CAPTURING )
+      elapsed_time = get_time() - stop_time;
+      if( captureState == CAPTURE_STATE_CAPTURING && elapsed_time > 2 )
       {
         capture_cnt = 0;
         stop_capture();
@@ -382,6 +379,11 @@ void dashcam(UIState *s, int touch_x, int touch_y)
       capture_cnt = 0;
       start_capture();
     }
+    else
+    {
+      stop_time = get_time();
+    }
+    
   }
   else  if( captureState == CAPTURE_STATE_CAPTURING )
   {
