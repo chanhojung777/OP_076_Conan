@@ -98,7 +98,7 @@ class SpdController():
         self.prev_VSetDis  = 0
 
         self.cruise_set_mode = 0
-
+        self.sc_clu_speed = 0
         self.btn_type = Buttons.NONE
         self.active_time = 0        
 
@@ -312,7 +312,7 @@ class SpdController():
         self.update_log( CS, set_speed, target_set_speed, long_wait_cmd )
 
 
-        return btn_type, active_time
+        return btn_type, set_speed, active_time
 
 
 
@@ -327,7 +327,7 @@ class SpdController():
         elif self.wait_timer2:
             self.wait_timer2 -= 1
         else:
-            btn_type, active_time = self.lead_control( CS, sm, CC )   # speed controller spdcontroller.py
+            btn_type, clu_speed, active_time = self.lead_control( CS, sm, CC )   # speed controller spdcontroller.py
 
             if CS.clu_Vanz < 5:
                 self.btn_type = Buttons.NONE
@@ -337,6 +337,7 @@ class SpdController():
                 self.resume_cnt = 0
                 self.active_timer2 = 0
                 self.btn_type = btn_type
+                self.sc_clu_speed = clu_speed                
                 self.active_time = max( 10, active_time )
 
             if self.btn_type != Buttons.NONE:

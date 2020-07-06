@@ -326,7 +326,7 @@ class CarController():
       str_log2 = 'U={:.0f}  LK={:.0f} dir={} steer={:5.0f} '.format( CS.Mdps_ToiUnavail, CS.lkas_button_on, self.steer_torque_ratio_dir, CS.out.steeringTorque  )
       trace1.printf2( '{}'.format( str_log2 ) )
 
-    if pcm_cancel_cmd:
+    if pcm_cancel_cmd and self.CP.longcontrolEnabled:
       can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.CANCEL))
 
     elif CS.out.cruiseState.standstill:
@@ -347,9 +347,13 @@ class CarController():
       self.last_lead_distance = 0
     elif run_speed_ctrl and self.SC != None:
       if self.SC.update( CS, sm, self ):
-        can_sends.append(create_clu11(self.packer, frame, CS.clu11, self.SC.btn_type ))
-        str_log = 'param_OpkrAccelProfile={}  btn_type={}'.format( self.param_OpkrAccelProfile, self.SC.btn_type )
+        can_sends.append(create_clu11(self.packer, frame, CS.clu11, self.SC.btn_type, self.SC.sc_clu_speed ))
+        self.resume_cnt += 1
+        str_log = 'cruise_set_mode={} kph={}  btn_type={} speed={}'.format( self.SC.cruise_set_mode, self.SC.cruise_set_speed_kph, self.SC.btn_type, self.SC.sc_clu_speed )
         self.traceCC.add( str_log )
+      else:
+        self.resume_cnt = 0
+
 
     # 20 Hz LFA MFA message
     if frame % 5 == 0 and self.car_fingerprint in [CAR.SONATA, CAR.PALISADE]:
