@@ -26,6 +26,8 @@ from selfdrive.locationd.calibration_helpers import Calibration
 
 import common.log as  trace1
 
+trace_log = trace1.Loger("controlsd")
+
 LDW_MIN_SPEED = 31 * CV.MPH_TO_MS
 LANE_DEPARTURE_THRESHOLD = 0.1
 STEER_ANGLE_SATURATION_TIMEOUT = 1.0 / DT_CTRL
@@ -390,20 +392,26 @@ class Controls:
     angle_control_saturated = self.CP.steerControlType == car.CarParams.SteerControlType.angle and \
       abs(actuators.steerAngle - CS.steeringAngle) > STEER_ANGLE_SATURATION_THRESHOLD
 
-    if angle_control_saturated and not CS.steeringPressed and self.active:
+
+    if (lac_log.saturated and not CS.steeringPressed) and self.active:
+      self.saturated_count += 1
+    elif angle_control_saturated and not CS.steeringPressed and self.active:
       self.saturated_count += 1
     else:
       self.saturated_count = 0
 
     # Send a "steering required alert" if saturation count has reached the limit
-    if (lac_log.saturated and not CS.steeringPressed) or \
-       (self.saturated_count > STEER_ANGLE_SATURATION_TIMEOUT):
+    #if (lac_log.saturated and not CS.steeringPressed) or \
+    #   (self.saturated_count > STEER_ANGLE_SATURATION_TIMEOUT):
+    if (self.saturated_count > STEER_ANGLE_SATURATION_TIMEOUT):
       # Check if we deviated from the path
       left_deviation = actuators.steer > 0 and path_plan.dPoly[3] > 0.1
       right_deviation = actuators.steer < 0 and path_plan.dPoly[3] < -0.1
 
       if left_deviation or right_deviation:
         self.events.add(EventName.steerSaturated)
+        str_log1 = 'dPoly[3]={:.5f} actuators.steer={:.5f} L:{:.0f} R:{:.0f}'.format( path_plan.dPoly[3], actuators.steer, left_deviation, right_deviation )
+        trace_log.add( str_log1 )
 
     return actuators, v_acc_sol, a_acc_sol, lac_log
 
