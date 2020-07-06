@@ -392,10 +392,9 @@ class Controls:
     angle_control_saturated = self.CP.steerControlType == car.CarParams.SteerControlType.angle and \
       abs(actuators.steerAngle - CS.steeringAngle) > STEER_ANGLE_SATURATION_THRESHOLD
 
-
-    if (lac_log.saturated and not CS.steeringPressed) and self.active:
-      self.saturated_count += 1
-    elif angle_control_saturated and not CS.steeringPressed and self.active:
+    if CS.leftBlinker or CS.rightBlinker or CS.steeringPressed or not self.active:
+      self.saturated_count = 0
+    elif lac_log.saturated or angle_control_saturated:
       self.saturated_count += 1
     else:
       self.saturated_count = 0
