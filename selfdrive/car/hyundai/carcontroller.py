@@ -238,7 +238,6 @@ class CarController():
       self.param_OpkrAutoResume = int(self.params.get('OpkrAutoResume'))
     elif self.command_load == 3:
       self.param_OpkrWhoisDriver = int(self.params.get('OpkrWhoisDriver'))
-      
     else:
       self.command_load = 0
 
