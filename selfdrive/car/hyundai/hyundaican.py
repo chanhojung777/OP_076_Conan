@@ -1,4 +1,5 @@
 import crcmod
+import copy
 from selfdrive.car.hyundai.values import CAR, CHECKSUM
 
 hyundai_checksum = crcmod.mkCrcFun(0x11D, initCrc=0xFD, rev=False, xorOut=0xdf)
@@ -6,8 +7,8 @@ hyundai_checksum = crcmod.mkCrcFun(0x11D, initCrc=0xFD, rev=False, xorOut=0xdf)
 
 def create_lkas11(packer, frame, car_fingerprint, apply_steer, steer_req,
                   lkas11, sys_warning, sys_state, CC  ):
-
-  values = lkas11
+  values = copy.deepcopy( lkas11 )
+  #values = lkas11
   values["CF_Lkas_LdwsSysState"] = sys_state
   values["CF_Lkas_SysWarning"] = 3 if sys_warning else 0
   values["CR_Lkas_StrToqReq"] = apply_steer
@@ -63,12 +64,11 @@ def create_lkas11(packer, frame, car_fingerprint, apply_steer, steer_req,
 
 
 def create_clu11(packer, frame, clu11, button, speed = None ):
-  values = clu11
+  values = copy.deepcopy( clu11 )
+
   if speed != None:
     values["CF_Clu_Vanz"] = speed
 
-  values["CF_Clu_CruiseSwState"] = button
-  values["CF_Clu_AliveCnt1"] = frame % 0x10
   return packer.make_can_msg("CLU11", 0, values)
 
 
@@ -95,7 +95,8 @@ def create_lfa_mfa(packer, frame, enabled):
 
 
 def create_scc12(packer, apply_accel, enabled, cnt, scc12):
-  values = scc12
+  values = copy.deepcopy( scc12 )
+  #values = scc12
   if enabled and scc12["ACCMode"] == 1:
     values["aReqMax"] = apply_accel
     values["aReqMin"] = apply_accel
@@ -111,7 +112,8 @@ def create_scc12(packer, apply_accel, enabled, cnt, scc12):
 
   
 def create_mdps12(packer, frame, mdps12):
-  values = mdps12
+  values = copy.deepcopy( mdps12 )
+  #values = mdps12
   values["CF_Mdps_ToiActive"] = 0
   values["CF_Mdps_ToiUnavail"] = 1
   values["CF_Mdps_MsgCount2"] = frame % 0x100
