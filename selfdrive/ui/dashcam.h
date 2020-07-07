@@ -271,6 +271,7 @@ static void screen_draw_button(UIState *s, int touch_x, int touch_y)
 {
   // Set button to bottom left of screen
   //  if (s->vision_connected && s->plus_state == 0) {
+  nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
   if (s->vision_connected)
   {
     int btn_w = 150;
