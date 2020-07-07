@@ -237,7 +237,6 @@ class CarInterface(CarInterfaceBase):
     ret.lateralCVatom.cvSteerDeltaUpV2 = ATOMC.cvSteerDeltaUpV2
     ret.lateralCVatom.cvSteerDeltaDnV2 = ATOMC.cvSteerDeltaDnV2
 
-    ret.lateralsRatom.learnerParams = ATOMC.learnerParams
     ret.lateralsRatom.deadzone = ATOMC.deadzone
     ret.lateralsRatom.steerOffset = ATOMC.steerOffset
     ret.lateralsRatom.tireStiffnessFactor = ATOMC.tire_stiffness_factor
@@ -293,7 +292,6 @@ class CarInterface(CarInterfaceBase):
     CP.lateralCVatom.cvSteerDeltaUpV2 = ATOMC.cvSteerDeltaUpV2
     CP.lateralCVatom.cvSteerDeltaDnV2 = ATOMC.cvSteerDeltaDnV2
 
-    #CP.lateralsRatom.learnerParams = ATOMC.learnerParams
     CP.lateralsRatom.deadzone = ATOMC.deadzone
     CP.lateralsRatom.steerOffset = ATOMC.steerOffset
     CP.lateralsRatom.tireStiffnessFactor = ATOMC.tire_stiffness_factor    
