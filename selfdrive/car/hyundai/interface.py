@@ -212,6 +212,9 @@ class CarInterface(CarInterfaceBase):
 
     ret.steerRatio = ATOMC.steerRatio  #10.5  #12.5
     ret.steerRateCost = ATOMC.steerRateCost #0.4 #0.4
+    ret.steerActuatorDelay = ATOMC.steerActuatorDelay
+    ret.steerLimitTimer = ATOMC.steerLimitTimer
+    
   
     ret.lateralPIDatom.sRkBPV = ATOMC.sR_BPV   # 조향각.
     ret.lateralPIDatom.sRBoostV = ATOMC.sR_BoostV
@@ -260,11 +263,15 @@ class CarInterface(CarInterfaceBase):
   def live_tune(CP, read=False):
     global ATOMC 
 
-    if read:
+    nOpkrTuneStartAt = int( params.get('OpkrTuneStartAt') ) 
+
+    if read and nOpkrTuneStartAt:
       ATOMC.read_tune()
 
     CP.steerRatio = ATOMC.steerRatio  #10.5  #12.5
     CP.steerRateCost = ATOMC.steerRateCost #0.4 #0.4
+    CP.steerActuatorDelay = ATOMC.steerActuatorDelay
+    CP.steerLimitTimer = ATOMC.steerLimitTimer
   
     CP.lateralPIDatom.sRkBPV = ATOMC.sR_BPV   # 조향각.
     CP.lateralPIDatom.sRBoostV = ATOMC.sR_BoostV

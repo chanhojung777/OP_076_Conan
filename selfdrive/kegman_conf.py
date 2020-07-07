@@ -15,7 +15,8 @@ class kegman_conf():
                   "steerRatio":11.5, "steerRateCost":0.4, \
                   "tire_stiffness_factor":1.0, \
                   "deadzone":0.0, "steerOffset":0.0, \
-                  "learnerParams":1 }
+                  "steerLimitTimer":0.4,
+                  "steerActuatorDelay":0.1 }
 
 
 
