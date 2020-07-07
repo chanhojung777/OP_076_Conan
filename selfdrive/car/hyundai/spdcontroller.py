@@ -150,7 +150,7 @@ class SpdController():
     def update_cruiseSW(self, CS ):
         set_speed_kph = self.cruise_set_speed_kph
         delta_vsetdis = 0
-        if CS.pcm_acc_status:
+        if CS.acc_active:
             delta_vsetdis = abs(CS.VSetDis - self.prev_VSetDis)
             if self.prev_clu_CruiseSwState != CS.cruise_buttons:
                 if CS.cruise_buttons:
@@ -238,7 +238,7 @@ class SpdController():
         raise NotImplementedError
 
     def update_log(self, CS, set_speed, target_set_speed, long_wait_cmd ):
-        str3 = 'SET={:3.0f} DST={:3.0f}  SD={:.0f} DA={:.0f}/{:.0f}/{:.0f} DG={} DO={:.0f}'.format(
+        str3 = 'SET={:3.0f} DST={:3.0f} VSD={:.0f} DA={:.0f}/{:.0f}/{:.0f} DG={} DO={:.0f}'.format(
             set_speed, target_set_speed, CS.VSetDis, CS.driverAcc_time, long_wait_cmd, self.long_curv_timer, self.seq_step_debug, CS.driverOverride )
         str4 = ' CS={:.1f}/{:.1f} '.format(  CS.lead_distance, CS.lead_objspd )
         str5 = str3 +  str4
@@ -319,7 +319,7 @@ class SpdController():
     def update(self, CS, sm, CC ):
         self.cruise_set_mode = CS.out.cruiseState.modeSel
         self.cruise_set_speed_kph = CS.out.cruiseState.speed * CV.MS_TO_KPH
-        if CS.driverOverride == 2 or not CS.pcm_acc_status or CS.cruise_buttons == Buttons.RES_ACCEL or CS.cruise_buttons == Buttons.SET_DECEL:
+        if CS.driverOverride == 2 or not CS.acc_active or CS.cruise_buttons == Buttons.RES_ACCEL or CS.cruise_buttons == Buttons.SET_DECEL:
             self.resume_cnt = 0
             self.btn_type = Buttons.NONE
             self.wait_timer2 = 10
@@ -329,7 +329,7 @@ class SpdController():
         else:
             btn_type, clu_speed, active_time = self.lead_control( CS, sm, CC )   # speed controller spdcontroller.py
 
-            if CS.clu_Vanz < 5:
+            if CS.clu_Vanz < 20:
                 self.btn_type = Buttons.NONE
             elif self.btn_type != Buttons.NONE:
                 pass
@@ -338,7 +338,7 @@ class SpdController():
                 self.active_timer2 = 0
                 self.btn_type = btn_type
                 self.sc_clu_speed = clu_speed                
-                self.active_time = max( 10, active_time )
+                self.active_time = max( 5, active_time )
 
             if self.btn_type != Buttons.NONE:
                 self.active_timer2 += 1

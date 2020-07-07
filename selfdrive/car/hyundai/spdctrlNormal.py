@@ -28,8 +28,8 @@ class SpdctrlNormal(SpdController):
         
         if dst_lead_distance > 100:
             dst_lead_distance = 100
-        elif dst_lead_distance < 50:
-            dst_lead_distance = 50
+        elif dst_lead_distance < 30:
+            dst_lead_distance = 30
 
         if dRel < 150:
             self.time_no_lean = 0

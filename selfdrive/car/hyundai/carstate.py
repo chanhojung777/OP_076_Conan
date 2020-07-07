@@ -38,14 +38,13 @@ class CarState(CarStateBase):
 
     self.TSigLHSw = 0
     self.TSigRHSw = 0
-    self.pcm_acc_status = 0
     self.driverAcc_time = 0
 
     self.SC = SpdController()
 
   def update(self, cp, cp_cam):
     self.prev_cruise_main_button = self.cruise_main_button
-    self.prev_cruise_buttons  = self.cruise_buttons
+    self.prev_cruise_buttons = self.cruise_buttons
 
     ret = car.CarState.new_message()
 
@@ -113,6 +112,7 @@ class CarState(CarStateBase):
     #ret.cruiseState.enabled = cp.vl["SCC12"]['ACCMode'] != 0
     self.main_on = (cp.vl["SCC11"]["MainMode_ACC"] != 0)
     self.acc_active = (cp.vl["SCC12"]['ACCMode'] != 0)
+    self.update_atom( cp, cp_cam )
 
     ret.cruiseState.available = self.main_on
     ret.cruiseState.enabled =  ret.cruiseState.available  #if not self.CP.longcontrolEnabled else ret.cruiseState.enabled
@@ -191,9 +191,19 @@ class CarState(CarStateBase):
       else:
         ret.gearShifter = GearShifter.unknown
 
+    # save the entire LKAS11 and CLU11
+    self.lkas11 = cp_cam.vl["LKAS11"]
+    self.clu11 = cp.vl["CLU11"]
+    self.mdps12 = cp.vl["MDPS12"]
+    
+    self.park_brake = cp.vl["CGW1"]['CF_Gway_ParkBrakeSw']
+    self.steer_state = cp.vl["MDPS12"]['CF_Mdps_ToiActive'] # 0 NOT ACTIVE, 1 ACTIVE
+    self.lead_distance = cp.vl["SCC11"]['ACC_ObjDist']
 
+    return ret
+
+  def update_atom(self, cp, cp_cam):
     # atom append
-    self.pcm_acc_status = int(self.acc_active)
     self.driverOverride = cp.vl["TCS13"]["DriverOverride"]     # 1 Acc,  2 bracking, 0 Normal
     self.cruise_main_button = cp.vl["CLU11"]["CF_Clu_CruiseSwMain"]
     self.cruise_buttons = cp.vl["CLU11"]["CF_Clu_CruiseSwState"]         # clu_CruiseSwState
@@ -207,18 +217,6 @@ class CarState(CarStateBase):
     elif self.driverAcc_time:
       self.driverAcc_time -= 1
 
-    # save the entire LKAS11 and CLU11
-    self.lkas11 = cp_cam.vl["LKAS11"]
-    self.clu11 = cp.vl["CLU11"]
-    self.mdps12 = cp.vl["MDPS12"]
-    
-    self.park_brake = cp.vl["CGW1"]['CF_Gway_ParkBrakeSw']
-    self.steer_state = cp.vl["MDPS12"]['CF_Mdps_ToiActive'] # 0 NOT ACTIVE, 1 ACTIVE
-    self.lead_distance = cp.vl["SCC11"]['ACC_ObjDist']
-
-
-
-    return ret
 
   @staticmethod
   def get_can_parser(CP):

@@ -344,13 +344,17 @@ class CarController():
     elif self.last_lead_distance != 0:
       self.last_lead_distance = 0
     elif run_speed_ctrl and self.SC != None:
-      if self.SC.update( CS, sm, self ):
+      is_sc_run = self.SC.update( CS, sm, self )
+      if is_sc_run:
         can_sends.append(create_clu11(self.packer, self.resume_cnt, CS.clu11, self.SC.btn_type, self.SC.sc_clu_speed ))
         self.resume_cnt += 1
-        str_log = 'cruise_set_mode={} kph={:.1f}/{:.1f} DO={:.0f} btn_type={} speed={}'.format( self.SC.cruise_set_mode, self.SC.cruise_set_speed_kph, CS.VSetDis, CS.driverOverride, self.SC.btn_type, self.SC.sc_clu_speed )
-        self.traceCC.add( str_log )
       else:
         self.resume_cnt = 0
+
+      str1 = 'run={} cruise_set_mode={} kph={:.1f}/{:.1f} DO={:.0f}/{:.0f} '.format( is_sc_run, self.SC.cruise_set_mode, self.SC.cruise_set_speed_kph, CS.VSetDis, CS.driverOverride, CS.cruise_buttons)
+      str2 = 'btn_type={:.0f} speed={:.1f} cnt={:.0f}'.format( self.SC.btn_type, self.SC.sc_clu_speed, self.resume_cnt )
+      str_log  = str1 + str2
+      self.traceCC.add( str_log )        
 
 
     # 20 Hz LFA MFA message
