@@ -208,7 +208,7 @@ class CarInterface(CarInterfaceBase):
 
 
     # 3번 atom param.
-    ret.lateralPIDatom.kBPV = [0.15, 0.20]  # 속도.
+    ret.lateralPIDatom.kBPV = [9., 22.] #0.15, 0.20]  # 속도.
 
     ret.steerRatio = ATOMC.steerRatio  #10.5  #12.5
     ret.steerRateCost = ATOMC.steerRateCost #0.4 #0.4
