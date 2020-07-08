@@ -38,9 +38,13 @@ State = log.ControlsState.OpenpilotState
 HwType = log.HealthData.HwType
 LongitudinalPlanSource = log.Plan.LongitudinalPlanSource
 Desire = log.PathPlan.Desire
+
 LaneChangeState = log.PathPlan.LaneChangeState
 LaneChangeDirection = log.PathPlan.LaneChangeDirection
+LaneChangeBSM = log.PathPlan.LaneChangeBSM
+
 EventName = car.CarEvent.EventName
+
 
 class Controls:
   def __init__(self, sm=None, pm=None, can_sock=None):
@@ -203,7 +207,12 @@ class Controls:
     
 
     # Handle lane change
-    if self.sm['pathPlan'].laneChangeState == LaneChangeState.preLaneChange:
+    # lane change bsm alerts 
+    if self.sm['pathPlan'].laneChangeBSM == LaneChangeBSM.right:
+      self.events.add(EventName.rightBlindspot)
+    elif self.sm['pathPlan'].laneChangeBSM == LaneChangeBSM.left:
+      self.events.add(EventName.leftBlindspot)
+    elif self.sm['pathPlan'].laneChangeState == LaneChangeState.preLaneChange:
       if self.sm['pathPlan'].laneChangeDirection == LaneChangeDirection.left:
         self.events.add(EventName.preLaneChangeLeft)
       else:

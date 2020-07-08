@@ -240,14 +240,6 @@ class CarController():
     else:
       self.command_load = 0
 
-
-#  CC:car.CarControl(car.capnp), CS:CarState  CP:CarInterface.get_params
-  def update(self, CC, CS, frame, sm, CP ):
-    if self.CP != CP:
-      self.CP = CP
-
-    self.param_load()
-
     # speed controller
     if self.param_preOpkrAccelProfile != self.param_OpkrAccelProfile:
       self.param_preOpkrAccelProfile = self.param_OpkrAccelProfile
@@ -256,9 +248,16 @@ class CarController():
       elif self.param_OpkrAccelProfile == 2:
         self.SC = SpdctrlNormal()
       else:
-        self.SC = SpdctrlNormal()
+        self.SC = SpdctrlNormal()      
 
-    
+
+#  CC:car.CarControl(car.capnp), CS:CarState  CP:CarInterface.get_params
+  def update(self, CC, CS, frame, sm, CP ):
+    if self.CP != CP:
+      self.CP = CP
+
+    self.param_load()
+
 
     enabled = CC.enabled
     actuators = CC.actuators

@@ -955,6 +955,7 @@ int main(int argc, char* argv[]) {
       case 3: ui_get_params( "OpkrAccelProfile", &scene.params.nOpkrAccelProfile ); break;
       case 4: ui_get_params( "OpkrUIBrightness", &scene.params.nOpkrUIBrightness ); break;
       case 5: ui_get_params( "OpkrUIVolumeBoost", &scene.params.nOpkrUIVolumeBoost ); break;
+      case 6: ui_get_params( "OpkrAutoLanechangedelay", &scene.params.nOpkrAutoLanechangedelay ); break;
       default: nParamRead = 0; break;
     }
 

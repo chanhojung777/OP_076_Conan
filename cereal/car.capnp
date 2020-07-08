@@ -115,6 +115,8 @@ struct CarEvent @0x9b1657f34caf3ad3 {
     steerTorqueLow @90;
     laneChangeManual @91;
     emgButtonManual @92;
+    leftBlindspot @93;
+    rightBlindspot @94;    
   }
 }
 

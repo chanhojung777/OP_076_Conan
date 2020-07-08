@@ -983,6 +983,7 @@ static void ui_draw_debug(UIState *s)
   int  y_pos = 0;
   int  x_pos = 0; 
 
+  
 
   nvgTextAlign(s->vg, NVG_ALIGN_LEFT | NVG_ALIGN_BASELINE);
   nvgFontSize(s->vg, 36*1.5*fFontSize);
@@ -999,7 +1000,7 @@ static void ui_draw_debug(UIState *s)
 
   ui_print( s, x_pos, y_pos+250, "Wheel:%.1f,%.1f,%.1f,%.1f", scene.wheel.fl, scene.wheel.fr, scene.wheel.rl, scene.wheel.rr );
 
-  ui_print( s, x_pos, y_pos+300, "%d, %d, %d, %d", scene.params.nOpkrUIBrightness, scene.params.nLightSensor, scene.params.nSmoothBrightness, scene.params.nOpkrUIVolumeBoost );
+  ui_print( s, x_pos, y_pos+300, "%d, %d, %d, %d, %d", scene.params.nOpkrUIBrightness, scene.params.nLightSensor, scene.params.nSmoothBrightness, scene.params.nOpkrUIVolumeBoost, scene.params.nOpkrAutoLanechangedelay );
 
   
 

@@ -65,27 +65,33 @@ class CarState(CarStateBase):
     ret.steeringAngle = cp.vl["SAS11"]['SAS_Angle']  - self.CP.lateralsRatom.steerOffset
     ret.steeringRate = cp.vl["SAS11"]['SAS_Speed']
     ret.yawRate = cp.vl["ESP12"]['YAW_RATE']
-    self.TSigLHSw = cp.vl["CGW1"]['CF_Gway_TSigLHSw']
-    self.TSigRHSw = cp.vl["CGW1"]['CF_Gway_TSigRHSw']
-    leftBlinker = cp.vl["CGW1"]['CF_Gway_TurnSigLh'] != 0
-    rightBlinker = cp.vl["CGW1"]['CF_Gway_TurnSigRh'] != 0
     ret.steeringTorque = cp.vl["MDPS12"]['CR_Mdps_StrColTq']
     ret.steeringTorqueEps = cp.vl["MDPS12"]['CR_Mdps_OutTq']
     ret.steeringPressed = abs(ret.steeringTorque) > STEER_THRESHOLD
 
+    # Blind Spot Detection and Lane Change Assist signals
+    ret.leftBlindspot = cp.vl["LCA11"]['CF_Lca_IndLeft'] != 0
+    ret.rightBlindspot = cp.vl["LCA11"]['CF_Lca_IndRight'] != 0
+
+    self.TSigLHSw = cp.vl["CGW1"]['CF_Gway_TSigLHSw']
+    self.TSigRHSw = cp.vl["CGW1"]['CF_Gway_TSigRHSw']
+    leftBlinker = cp.vl["CGW1"]['CF_Gway_TurnSigLh'] != 0
+    rightBlinker = cp.vl["CGW1"]['CF_Gway_TurnSigRh'] != 0
+
     if leftBlinker:
-      self.left_blinker_flash = 200
+      self.left_blinker_flash = 300
     elif  self.left_blinker_flash:
       self.left_blinker_flash -= 1
 
     if rightBlinker:
-      self.right_blinker_flash = 200
+      self.right_blinker_flash = 300
     elif  self.right_blinker_flash:
       self.right_blinker_flash -= 1
 
     ret.leftBlinker = self.left_blinker_flash != 0
     ret.rightBlinker = self.right_blinker_flash != 0
     
+
     self.lead_distance = cp.vl["SCC11"]['ACC_ObjDist']
     lead_objspd = cp.vl["SCC11"]['ACC_ObjRelSpd']
     self.lead_objspd = lead_objspd * CV.MS_TO_KPH
@@ -290,6 +296,10 @@ class CarState(CarStateBase):
 
       ("PV_AV_CAN", "EMS12", 0),
       ("CF_Ems_AclAct", "EMS16", 0),
+
+      ("CF_Lca_Stat", "LCA11", 0),
+      ("CF_Lca_IndLeft", "LCA11", 0),
+      ("CF_Lca_IndRight", "LCA11", 0),      
     ]
 
     checks = [
