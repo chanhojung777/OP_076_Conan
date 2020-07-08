@@ -119,6 +119,10 @@ static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int
 {
   static float  angleSteers += 0.01;  // s->scene.angleSteers
 
+  if( angleSteers> 360 )
+      angleSteers = 0;
+
+    
   const int img_size = size * 1.5;
   float img_rotation =  angleSteers/180*3.141592;
 
