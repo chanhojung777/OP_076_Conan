@@ -108,22 +108,34 @@ keys = {
   "Offroad_IsTakingSnapshot": [TxType.CLEAR_ON_MANAGER_START],
   "OpkrAutoShutdown": [TxType.PERSISTENT],   
   "OpkrAutoScreenOff": [TxType.PERSISTENT], 
+  "OpkrUIVolumeBoost": [TxType.PERSISTENT],  #
+  "OpkrUIBrightness": [TxType.PERSISTENT],   #
   "OpkrEnableDriverMonitoring": [TxType.PERSISTENT],
   "OpkrEnableLogger": [TxType.PERSISTENT],
   "OpkrEnableLearner": [TxType.PERSISTENT], 
   "OpkrAutoResume": [TxType.PERSISTENT],
-  "OpkrTraceSet": [TxType.PERSISTENT],       #
+  "OpkrTraceSet": [TxType.PERSISTENT],
   "OpkrWhoisDriver": [TxType.PERSISTENT],
   "OpkrTuneProfile": [TxType.PERSISTENT],    #
   "OpkrTuneStartAt": [TxType.PERSISTENT],    #
-  "OpkrAccelProfile": [TxType.PERSISTENT],   #
+  "OpkrAccelProfile": [TxType.PERSISTENT],
   "OpkrAutoLanechangedelay": [TxType.PERSISTENT],    #
   "OpkrDevelMode1": [TxType.PERSISTENT],
   "OpkrDevelMode2": [TxType.PERSISTENT],
   "OpkrRunMixplorer": [TxType.PERSISTENT],
   "OpkrRunQuickedit": [TxType.PERSISTENT],
+  "OpkrEnableSoftkey": [TxType.PERSISTENT],
+  "OpkrRunSoftkey": [TxType.PERSISTENT],
+  "OpkrBootSoftkey": [TxType.PERSISTENT],
+  "OpkrEnableNavigation": [TxType.PERSISTENT],  
   "OpkrRunAtlanmap": [TxType.PERSISTENT],
-  "OpkrRunSoftkey": [TxType.PERSISTENT],  
+  "OpkrBootAtlanmap": [TxType.PERSISTENT],
+  "OpkrRunOnenavi": [TxType.PERSISTENT],
+  "OpkrBootOnenavi": [TxType.PERSISTENT],
+  "OpkrRunTmap": [TxType.PERSISTENT],
+  "OpkrBootTmap": [TxType.PERSISTENT],
+  "OpkrRunKakaonavi": [TxType.PERSISTENT],
+  "OpkrBootKakaonavi": [TxType.PERSISTENT],
 }
 
 

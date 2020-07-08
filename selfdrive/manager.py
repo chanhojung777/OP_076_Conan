@@ -585,6 +585,8 @@ def main():
     ("IsOpenpilotViewEnabled", "0"),
     ("OpkrAutoShutdown", "0"),
     ("OpkrAutoScreenOff", "0"),
+    ("OpkrUIVolumeBoost", "0"),
+    ("OpkrUIBrightness", "0"),    
     ("OpkrEnableDriverMonitoring", "1"),
     ("OpkrEnableLogger", "1"),
     ("OpkrEnableLearner", "0"),
@@ -599,8 +601,18 @@ def main():
     ("OpkrDevelMode2", "1"),    
     ("OpkrRunMixplorer", "0"),
     ("OpkrRunQuickedit", "0"),
+    ("OpkrEnableSoftkey", "0"),
+    ("OpkrRunSoftkey", "0"),
+    ("OpkrBootSoftkey", "0"),
+    ("OpkrEnableNavigation", "0"),    
     ("OpkrRunAtlanmap", "0"),
-    ("OpkrRunSoftkey", "0"),    
+    ("OpkrBootAtlanmap", "0"),
+    ("OpkrRunOnenavi", "0"),
+    ("OpkrBootOnenavi", "0"),
+    ("OpkrRunTmap", "0"),
+    ("OpkrBootTmap", "0"),
+    ("OpkrRunKakaonavi", "0"),
+    ("OpkrBootKakaonavi", "0"),  
   ]
 
 

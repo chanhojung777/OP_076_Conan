@@ -439,6 +439,14 @@ EVENTS = {
       Priority.LOW, VisualAlert.steerRequired, AudibleAlert.none, .0, .1, .1, alert_rate=0.75),
   },
 
+  EventName.emgButtonManual: {
+    ET.WARNING: Alert(
+      "TAKE CONTROL",
+      "비상 점멸등 작동중",
+      AlertStatus.userPrompt, AlertSize.mid,
+      Priority.LOW, VisualAlert.steerRequired, AudibleAlert.none, .0, .1, .1, alert_rate=0.75),
+  },  
+
   EventName.steerSaturated: {
     ET.WARNING: Alert(
       "TAKE CONTROL",
