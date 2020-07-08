@@ -115,12 +115,13 @@ static void draw_chevron(UIState *s, float x_in, float y_in, float sz,
 
 
 // LOGW("got CarVin %s", value_vin);
+// 
 static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int image, NVGcolor color, float img_alpha, float angleSteers = 0) 
 {
   const int img_size = size * 1.5;
   float img_rotation =  angleSteers/180*3.141592;
 
-  int ct_pos = -size*0.9;
+  int ct_pos = -size*0.8;
 
   nvgBeginPath(vg);
   nvgCircle(vg, x, y + (bdr_s * 1.5), size);
