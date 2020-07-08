@@ -115,8 +115,10 @@ static void draw_chevron(UIState *s, float x_in, float y_in, float sz,
 
 static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int image, NVGcolor color, float img_alpha, int img_y = 0) 
 {
+  float  angleSteers = 0.1;  // s->scene.angleSteers
+
   const int img_size = size * 1.5;
-  const float img_rotation =  0.01; //s->scene.angleSteers/180*3.141592;
+  const float img_rotation =  angleSteers/180*3.141592;
 
   nvgSave( vg );
 
