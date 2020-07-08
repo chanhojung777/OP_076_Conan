@@ -209,28 +209,24 @@ class PathPlanner():
       # State transitions
       # off
       if self.lane_change_state == LaneChangeState.off and one_blinker and not self.prev_one_blinker and not below_lane_change_speed:
-        self.lane_change_wait_timer += DT_MDL
-        if leftBlindspot:
-          self.lane_change_BSM = LaneChangeBSM.left
-        elif rightBlindspot:
-          self.lane_change_BSM = LaneChangeBSM.right
-        elif self.lane_change_auto_delay:  # 자동 차선변경
-          if self.lane_change_wait_timer > self.lane_change_auto_delay:
-            self.lane_change_state = LaneChangeState.laneChangeStarting
-            self.lane_change_ll_prob = 1.0
-            self.lane_change_BSM = LaneChangeBSM.none
-        else:  # 수동 차선변경.
-          self.lane_change_state = LaneChangeState.preLaneChange
-          self.lane_change_ll_prob = 1.0
-          self.lane_change_BSM = LaneChangeBSM.none
+        self.lane_change_state = LaneChangeState.preLaneChange
+        self.lane_change_ll_prob = 1.0
+        self.lane_change_BSM = LaneChangeBSM.none
 
       # pre
       elif self.lane_change_state == LaneChangeState.preLaneChange:
+        self.lane_change_wait_timer += DT_MDL
+        lane_change_BSM = LaneChangeBSM.none  
         if not one_blinker or below_lane_change_speed:
           self.lane_change_state = LaneChangeState.off
-        elif torque_applied:
+        elif leftBlindspot:
+          lane_change_BSM = LaneChangeBSM.left
+        elif rightBlindspot:
+          lane_change_BSM = LaneChangeBSM.right
+        elif torque_applied or (self.lane_change_auto_delay and self.lane_change_wait_timer > self.lane_change_auto_delay):
           self.lane_change_state = LaneChangeState.laneChangeStarting
 
+        self.lane_change_BSM = lane_change_BSM
       # starting
       elif self.lane_change_state == LaneChangeState.laneChangeStarting:
         # fade out over .5s
