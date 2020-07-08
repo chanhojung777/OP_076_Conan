@@ -121,7 +121,7 @@ static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int
   const int img_size = size * 1.5;
   float img_rotation =  angleSteers/180*3.141592;
 
-  int ct_pos = -size * 0.7;
+  int ct_pos = -size * 0.75;
 
   nvgBeginPath(vg);
   nvgCircle(vg, x, y + (bdr_s * 1.5), size);
