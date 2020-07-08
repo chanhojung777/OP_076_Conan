@@ -1128,7 +1128,7 @@ static void ui_draw_vision_event(UIState *s) {
       color = nvgRGBA(100, 100, 100, 50);
     }
 
-    is_engageable = 1
+    is_engageable = 1;
     if( is_engageable )  // debug_atom
     {
       ui_draw_circle_image(s->vg, bg_wheel_x, bg_wheel_y, bg_wheel_size, s->img_wheel, color, 1.0f, bg_wheel_y - 25);
