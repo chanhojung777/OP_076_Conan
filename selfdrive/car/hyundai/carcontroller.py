@@ -116,7 +116,7 @@ class CarController():
 
 
   def cV_tune( self, v_ego, cv_value ):  # cV(곡률에 의한 변화)
-    self.kBPV = self.CP.lateralPIDatom.kBPV
+    self.sRKPHV = self.CP.lateralPIDatom.sRKPHV
     self.cVBPV = self.CP.lateralCVatom.cvBPV
     self.cvSteerMaxV1  = self.CP.lateralCVatom.cvSteerMaxV1
     self.cvSteerDeltaUpV1 = self.CP.lateralCVatom.cvSteerDeltaUpV1
@@ -130,19 +130,19 @@ class CarController():
     self.steerMax1 = interp( cv_value, cv_BPV, self.cvSteerMaxV1 )
     self.steerMax2 = interp( cv_value, cv_BPV, self.cvSteerMaxV2 )
     self.steerMaxV = [ float(self.steerMax1), float(self.steerMax2) ]
-    self.MAX = interp( v_ego, self.kBPV, self.steerMaxV )  
+    self.MAX = interp( v_ego, self.sRKPHV, self.steerMaxV )  
 
     # Up
     self.steerUP1 = interp( cv_value, cv_BPV, self.cvSteerDeltaUpV1 )
     self.steerUP2 = interp( cv_value, cv_BPV, self.cvSteerDeltaUpV2 )
     self.steerUPV = [ float(self.steerUP1), float(self.steerUP2) ]
-    self.UP = interp( v_ego, self.kBPV, self.steerUPV )
+    self.UP = interp( v_ego, self.sRKPHV, self.steerUPV )
 
     # dn
     self.steerDN1 = interp( cv_value, cv_BPV, self.cvSteerDeltaDnV1 )
     self.steerDN2 = interp( cv_value, cv_BPV, self.cvSteerDeltaDnV2 )    
     self.steerDNV = [ float(self.steerDN1), float(self.steerDN2) ]
-    self.DN = interp( v_ego, self.kBPV, self.steerDNV )
+    self.DN = interp( v_ego, self.sRKPHV, self.steerDNV )
 
 
 

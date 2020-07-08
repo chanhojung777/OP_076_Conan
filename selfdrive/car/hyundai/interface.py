@@ -208,13 +208,7 @@ class CarInterface(CarInterfaceBase):
 
 
     # 3번 atom param.
-    ret.lateralPIDatom.kBPV = [9., 22.] #0.15, 0.20]  # 속도.
-
-    ret.steerRatio = ATOMC.steerRatio  #10.5  #12.5
-    ret.steerRateCost = ATOMC.steerRateCost #0.4 #0.4
-    ret.steerActuatorDelay = ATOMC.steerActuatorDelay
-    ret.steerLimitTimer = ATOMC.steerLimitTimer
-    
+    ret.lateralPIDatom.sRKPHV = [9., 22.] #0.15, 0.20]  # 속도.
   
     ret.lateralPIDatom.sRkBPV = ATOMC.sR_BPV   # 조향각.
     ret.lateralPIDatom.sRBoostV = ATOMC.sR_BoostV
@@ -240,6 +234,11 @@ class CarInterface(CarInterfaceBase):
     ret.lateralsRatom.deadzone = ATOMC.deadzone
     ret.lateralsRatom.steerOffset = ATOMC.steerOffset
     ret.lateralsRatom.tireStiffnessFactor = ATOMC.tire_stiffness_factor
+
+    ret.steerRatio = ATOMC.steerRatio  #10.5  #12.5
+    ret.steerRateCost = ATOMC.steerRateCost #0.4 #0.4
+    ret.steerActuatorDelay = ATOMC.steerActuatorDelay
+    ret.steerLimitTimer = ATOMC.steerLimitTimer
     tire_stiffness_factor = ATOMC.tire_stiffness_factor
 
 

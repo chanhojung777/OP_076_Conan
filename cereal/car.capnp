@@ -435,7 +435,7 @@ struct CarParams {
   }
 
   struct LateralPIDatom {
-    kBPV @0 :List(Float32);
+    sRKPHV @0 :List(Float32);
     sRkBPV @1 :List(Float32);
     sRkpV1 @2 :List(Float32);
     sRkiV1 @3 :List(Float32);

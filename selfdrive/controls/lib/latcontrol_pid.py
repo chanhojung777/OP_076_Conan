@@ -31,7 +31,7 @@ class LatControlPID():
     v_ego = CS.vEgo
     
 
-    self.kBPV = CP.lateralPIDatom.kBPV
+    self.sRKPHV = CP.lateralPIDatom.sRKPHV
     self.sRkBPV = CP.lateralPIDatom.sRkBPV
     self.sRBoostV = CP.lateralPIDatom.sRBoostV
 
@@ -47,7 +47,7 @@ class LatControlPID():
     self.deadzone =  CP.lateralsRatom.deadzone
 
 
-    str1 = 'bp={}  srBP={} sRBoost={} sRkpV={},{} sRkiV={},{} sRkdV={},{} sRkfV={},{}'.format( self.kBPV, self.sRkBPV, self.sRBoostV, self.sRkpV1, self.sRkpV2, self.sRkiV1, self.sRkiV2, self.sRkdV1, self.sRkdV2, self.sRkfV1, self.sRkfV2 )
+    str1 = 'bp={}  srBP={} sRBoost={} sRkpV={},{} sRkiV={},{} sRkdV={},{} sRkfV={},{}'.format( self.sRKPHV, self.sRkBPV, self.sRBoostV, self.sRkpV1, self.sRkpV2, self.sRkiV1, self.sRkiV2, self.sRkdV1, self.sRkdV2, self.sRkfV1, self.sRkfV2 )
     self.trPID.add( str1 )    
 
     cv_angle = abs(self.angle_steers_des)
@@ -79,11 +79,11 @@ class LatControlPID():
     self.steerKf1 = interp( cv_angle, cv, fKf1 )
     self.steerKf2 = interp( cv_angle, cv, fKf2 )
 
-    kBP = self.kBPV
+    sRKPHV = self.sRKPHV
     fp = [float(self.steerKf1), float(self.steerKf2) ]
-    self.steerKf = interp( v_ego,  kBP, fp )
+    self.steerKf = interp( v_ego,  sRKPHV, fp )
 
-    self.pid.gain( (kBP, self.steerKpV), (kBP, self.steerKiV), k_f=self.steerKf, k_d=(kBP, self.steerKdV) )
+    self.pid.gain( (sRKPHV, self.steerKpV), (sRKPHV, self.steerKiV), k_f=self.steerKf, k_d=(sRKPHV, self.steerKdV) )
 
 
 
