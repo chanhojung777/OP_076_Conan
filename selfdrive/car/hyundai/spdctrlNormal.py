@@ -14,7 +14,7 @@ class SpdctrlNormal(SpdController):
         self.cv_Dist = -5
 
     def update_lead(self, CS,  dRel, yRel, vRel):
-        lead_set_speed = CS.cruise_set_speed_kph
+        lead_set_speed = self.cruise_set_speed_kph
         lead_wait_cmd = 600
         if int(CS.cruise_set_mode) != 2:
             return lead_wait_cmd, lead_set_speed
@@ -99,7 +99,7 @@ class SpdctrlNormal(SpdController):
         elif lead_objspd < -7:
             self.seq_step_debug = 17
             lead_wait_cmd, lead_set_speed = self.get_tm_speed(CS, 50, -1)
-        elif CS.cruise_set_speed_kph > CS.clu_Vanz:
+        elif self.cruise_set_speed_kph > CS.clu_Vanz:
             self.seq_step_debug = 18
             # 선행 차량이 가속하고 있으면.
             if dRel >= 150: # 감지범위 밖에 멀리 떨어져 있으면
@@ -135,31 +135,31 @@ class SpdctrlNormal(SpdController):
 
             if dRel > (CS.clu_Vanz + lead_objspd) * cv_Raio :   # 선행차 속도를 감안한(가감속) "내차 주행 속도" 수치의 비율(cv_Raio) 보다 선행차가 멀리 있다면 가속할 수 있도록 최대 설정 속도로 설정
                 self.seq_step_debug = 29
-                lead_set_speed = CS.cruise_set_speed_kph
+                lead_set_speed = self.cruise_set_speed_kph
 
         return lead_wait_cmd, lead_set_speed
 
     def update_curv(self, CS, sm, model_speed):
         wait_time_cmd = 0
-        set_speed = CS.cruise_set_speed_kph
+        set_speed = self.cruise_set_speed_kph
 
         # 2. 커브 감속.
-        #if CS.cruise_set_speed_kph >= 100:
+        #if self.cruise_set_speed_kph >= 100:
         if CS.clu_Vanz >= 100:            
             if model_speed < 50:
-                set_speed = CS.cruise_set_speed_kph - 7 
+                set_speed = self.cruise_set_speed_kph - 7 
                 self.seq_step_debug = 30
                 wait_time_cmd = 50
             elif model_speed < 60:  
-                set_speed = CS.cruise_set_speed_kph - 4
+                set_speed = self.cruise_set_speed_kph - 4
                 self.seq_step_debug = 31
                 wait_time_cmd = 70
             elif model_speed < 80:  
-                set_speed = CS.cruise_set_speed_kph - 2
+                set_speed = self.cruise_set_speed_kph - 2
                 self.seq_step_debug = 32
                 wait_time_cmd = 100
             elif model_speed < 90:  
-                set_speed = CS.cruise_set_speed_kph - 1 
+                set_speed = self.cruise_set_speed_kph - 1 
                 self.seq_step_debug = 33
                 wait_time_cmd = 150
             if set_speed > model_speed:
@@ -167,11 +167,11 @@ class SpdctrlNormal(SpdController):
                 set_speed = model_speed
         elif CS.clu_Vanz >= 85:
             if model_speed < 80:  
-                set_speed = CS.cruise_set_speed_kph - 2 
+                set_speed = self.cruise_set_speed_kph - 2 
                 self.seq_step_debug = 35
                 wait_time_cmd = 70
             elif model_speed < 90:  
-                set_speed = CS.cruise_set_speed_kph - 1
+                set_speed = self.cruise_set_speed_kph - 1
                 self.seq_step_debug = 36
                 wait_time_cmd = 100
                 if set_speed > model_speed:
@@ -179,11 +179,11 @@ class SpdctrlNormal(SpdController):
                    set_speed = model_speed
         elif CS.clu_Vanz >= 70:
             if model_speed < 50: 
-                set_speed = CS.cruise_set_speed_kph - 2 
+                set_speed = self.cruise_set_speed_kph - 2 
                 self.seq_step_debug = 38
                 wait_time_cmd = 70
             elif model_speed < 70:  
-                set_speed = CS.cruise_set_speed_kph - 1 
+                set_speed = self.cruise_set_speed_kph - 1 
                 self.seq_step_debug = 39
                 wait_time_cmd = 100
                 if set_speed > model_speed:
