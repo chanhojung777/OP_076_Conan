@@ -113,13 +113,23 @@ static void draw_chevron(UIState *s, float x_in, float y_in, float sz,
   nvgFill(s->vg);
 }
 
-static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int image, NVGcolor color, float img_alpha, int img_y = 0) {
+static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int image, NVGcolor color, float img_alpha, int img_y = 0) 
+{
   const int img_size = size * 1.5;
+  const float img_rotation =  0.01; //s->scene.angleSteers/180*3.141592;
+
+  nvgSave( vg );
+
+  nvgTranslate(vg,x,(y + (bdr_s*1.5)));
+  nvgRotate(vg,-img_rotation);
+
   nvgBeginPath(vg);
   nvgCircle(vg, x, y + (bdr_s * 1.5), size);
   nvgFillColor(vg, color);
   nvgFill(vg);
   ui_draw_image(vg, x - (img_size / 2), img_y ? img_y : y - (size / 4), img_size, img_size, image, img_alpha);
+
+  nvgRestore(vg);
 }
 
 static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int image, bool active) {
@@ -1118,6 +1128,7 @@ static void ui_draw_vision_event(UIState *s) {
       color = nvgRGBA(100, 100, 100, 50);
     }
 
+    is_engageable = 1
     if( is_engageable )  // debug_atom
     {
       ui_draw_circle_image(s->vg, bg_wheel_x, bg_wheel_y, bg_wheel_size, s->img_wheel, color, 1.0f, bg_wheel_y - 25);
