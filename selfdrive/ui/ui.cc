@@ -969,6 +969,9 @@ int main(int argc, char* argv[]) {
     // light sensor is only exposed on EONs
     float clipped_brightness = (s->light_sensor*brightness_m) + brightness_b;
     if (clipped_brightness > 512) clipped_brightness = 512;
+
+    scene.params.nLightSensor = clipped_brightness;
+
     smooth_brightness = clipped_brightness * 0.01 + smooth_brightness * 0.99;
     if (smooth_brightness > 255) smooth_brightness = 255;
     set_brightness(s, (int)smooth_brightness);

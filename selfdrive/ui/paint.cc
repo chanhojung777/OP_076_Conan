@@ -999,7 +999,7 @@ static void ui_draw_debug(UIState *s)
 
   ui_print( s, x_pos, y_pos+250, "Wheel:%.1f,%.1f,%.1f,%.1f", scene.wheel.fl, scene.wheel.fr, scene.wheel.rl, scene.wheel.rr );
 
-  ui_print( s, x_pos, y_pos+300, "%d, %.3f", scene.params.nOpkrUIBrightness, s->light_sensor );
+  ui_print( s, x_pos, y_pos+300, "%d, %d", scene.params.nOpkrUIBrightness, scene.params.nLightSensor );
 
   
 
