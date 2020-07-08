@@ -117,9 +117,11 @@ static void draw_chevron(UIState *s, float x_in, float y_in, float sz,
 // LOGW("got CarVin %s", value_vin);
 static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int image, NVGcolor color, float img_alpha, int img_y = 0) 
 {
-  static float  angleSteers += 0.01;  // s->scene.angleSteers
+  static float  angleSteers;  // s->scene.angleSteers
 
-  if( angleSteers> 360 )
+
+  angleSteers += 0.01;
+  if( angleSteers > 360 )
       angleSteers = 0;
 
     
