@@ -113,6 +113,8 @@ static void draw_chevron(UIState *s, float x_in, float y_in, float sz,
   nvgFill(s->vg);
 }
 
+
+// LOGW("got CarVin %s", value_vin);
 static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int image, NVGcolor color, float img_alpha, int img_y = 0) 
 {
   float  angleSteers = 0.0;  // s->scene.angleSteers
@@ -125,9 +127,10 @@ static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int
 
   int img_x =  x - (img_size / 2);
 
+  LOGW("image %d,%d", img_x, img_y );
   nvgSave( vg );
 
-  //nvgTranslate(vg,x,(y + (bdr_s*1.5)));
+  nvgTranslate(vg,x,(y + (bdr_s*1.5)));
   //nvgRotate(vg,-img_rotation);
 
   nvgBeginPath(vg);
