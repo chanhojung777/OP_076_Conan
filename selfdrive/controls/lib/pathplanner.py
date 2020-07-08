@@ -66,8 +66,20 @@ class PathPlanner():
     self.solution_invalid_cnt = 0
 
     self.params = Params()
+
+    # Lane change 
     self.lane_change_enabled = self.params.get('LaneChangeEnabled') == b'1'
-    self.lane_change_auto_delay = int( self.params.get('OpkrAutoLanechangedelay') )
+    lane_change_delay = int( self.params.get('OpkrAutoLanechangedelay') )
+    if lane_change_delay == 1:
+      self.lane_change_auto_delay = 1.0
+    elif lane_change_delay == 2:
+      self.lane_change_auto_delay = 1.5
+    elif lane_change_delay == 3:
+      self.lane_change_auto_delay = 2.0
+    else:
+      self.lane_change_auto_delay = 0
+      
+
     
     self.lane_change_BSM = LaneChangeBSM.none
     self.lane_change_state = LaneChangeState.off
