@@ -208,7 +208,7 @@ class CarInterface(CarInterfaceBase):
 
 
     # 3번 atom param.
-    ret.lateralPIDatom.sRKPHV = [9., 22.] #0.15, 0.20]  # 속도.
+    ret.lateralPIDatom.sRKPHV = [9., 17.]   # 속도. 32~61
   
     ret.lateralPIDatom.sRkBPV = ATOMC.sR_BPV   # 조향각.
     ret.lateralPIDatom.sRBoostV = ATOMC.sR_BoostV
