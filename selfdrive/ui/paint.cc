@@ -127,16 +127,21 @@ static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int
 
   int img_x =  x - (img_size / 2);
 
-  LOGW("image %d,%d", img_x, img_y );
-  nvgSave( vg );
 
-  nvgTranslate(vg,x,(y + (bdr_s*1.5)));
-  //nvgRotate(vg,-img_rotation);
+
+
+
 
   nvgBeginPath(vg);
   nvgCircle(vg, x, y + (bdr_s * 1.5), size);
   nvgFillColor(vg, color);
   nvgFill(vg);
+
+  nvgSave( vg );
+  nvgTranslate(vg,x,(y + (bdr_s*1.5)));
+  //nvgRotate(vg,-img_rotation);
+
+  LOGW("image %d,%d  %.1f,%.1f", img_x, img_y, x, (y + (bdr_s*1.5)) );
   ui_draw_image(vg, img_x, img_y, img_size, img_size, image, img_alpha);
 
   nvgRestore(vg);
