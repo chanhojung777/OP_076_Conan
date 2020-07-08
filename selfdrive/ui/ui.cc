@@ -953,6 +953,7 @@ int main(int argc, char* argv[]) {
       case 1: ui_get_params( "OpkrDevelMode1", &scene.params.nOpkrDevelMode1 ); break;
       case 2: ui_get_params( "OpkrAutoScreenOff", &scene.params.nOpkrAutoScreenOff ); break;
       case 3: ui_get_params( "OpkrAccelProfile", &scene.params.nOpkrAccelProfile ); break;
+      case 4: ui_get_params( "OpkrUIBrightness", &scene.params.nOpkrUIBrightness ); break;
       
       default: nParamRead = 0; break;
     }
@@ -961,7 +962,6 @@ int main(int argc, char* argv[]) {
     if( nAwakeTime != nTimeOff )
     {
         nAwakeTime = nTimeOff;
-        //LOGW("nOpkrAutoScreenOff %d",nAwakeTime);
     }
     
     if( nAwakeTime == 0 )  nTimeOff = 30;
