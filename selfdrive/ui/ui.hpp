@@ -227,6 +227,7 @@ typedef struct UIScene {
     int nOpkrAccelProfile;
     int nOpkrUIBrightness;
 
+    int nSmoothBrightness;
     int nLightSensor;
   } params;
 
