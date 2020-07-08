@@ -120,7 +120,7 @@ static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int
   static float  angleSteers;  // s->scene.angleSteers
 
 
-  angleSteers += 0.1;
+  angleSteers += 1;
   if( angleSteers > 360 )
       angleSteers = 0;
 
