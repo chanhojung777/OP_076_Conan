@@ -128,15 +128,16 @@ static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int
   const int img_size = size * 1.5;
   float img_rotation =  angleSteers/180*3.141592;
 
+/*
   if( img_y == 0 )
       img_y = y - (size / 4);
 
   int img_x =  x - (img_size / 2);
+*/
 
 
 
-
-  int ct_pos = -size*0.7;
+  int ct_pos = -size*0.8;
 
   nvgBeginPath(vg);
   nvgCircle(vg, x, y + (bdr_s * 1.5), size);
@@ -148,7 +149,7 @@ static void ui_draw_circle_image(NVGcontext *vg, float x, float y, int size, int
   nvgRotate(vg,-img_rotation);
 
 
-  LOGW("angleSteers = %.1f", angleSteers );
+  //LOGW("angleSteers = %.1f", angleSteers );
   //LOGW("image %d,%d  %.1f,%.1f", img_x, img_y, x, (y + (bdr_s*1.5)) );
   ui_draw_image(vg, ct_pos, ct_pos, img_size, img_size, image, img_alpha);
 
