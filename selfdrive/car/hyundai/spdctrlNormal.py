@@ -16,7 +16,7 @@ class SpdctrlNormal(SpdController):
     def update_lead(self, CS,  dRel, yRel, vRel):
         lead_set_speed = self.cruise_set_speed_kph
         lead_wait_cmd = 600
-        if int(CS.cruise_set_mode) != 2:
+        if int(self.cruise_set_mode) != 2:
             return lead_wait_cmd, lead_set_speed
 
         #dRel, yRel, vRel = self.get_lead( sm, CS )

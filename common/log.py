@@ -6,7 +6,7 @@ ROOT_LOG = '/data/media/0/videos/'
 
 global_alertTextMsg1 = 'T1'
 global_alertTextMsg2 = 'T2'
-cruise_set_mode = 0
+
 
 
 def printf( txt ):
