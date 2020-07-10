@@ -995,8 +995,11 @@ static void ui_draw_debug(UIState *s)
   y_pos = 150; 
   ui_print( s, x_pos, y_pos+0, "B:%d,%.5f", scene.steerOverride, scene.output_scale );
 
-  ui_print( s, x_pos, y_pos+150, "L1:%d, %.1f,%.1f,%.1f", (int)scene.lead_status, scene.lead_d_rel, scene.lead_y_rel , scene.lead_v_rel  );
-  ui_print( s, x_pos, y_pos+200, "L2:%d, %.1f,%.1f,%.1f", (int)scene.lead_status2, scene.lead_d_rel2, scene.lead_y_rel2 , scene.lead_v_rel2  );
+    
+  ui_print( s, x_pos, y_pos+150, "blindspot L:%d, R:%d", scene.leftBlindspot, scene.rightBlindspot  );
+
+  //ui_print( s, x_pos, y_pos+150, "L1:%d, %.1f,%.1f,%.1f", (int)scene.lead_status, scene.lead_d_rel, scene.lead_y_rel , scene.lead_v_rel  );
+  //ui_print( s, x_pos, y_pos+200, "L2:%d, %.1f,%.1f,%.1f", (int)scene.lead_status2, scene.lead_d_rel2, scene.lead_y_rel2 , scene.lead_v_rel2  );
 
   ui_print( s, x_pos, y_pos+250, "Wheel:%.1f,%.1f,%.1f,%.1f", scene.wheel.fl, scene.wheel.fr, scene.wheel.rl, scene.wheel.rr );
 

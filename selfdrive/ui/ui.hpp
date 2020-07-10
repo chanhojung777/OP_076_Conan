@@ -189,6 +189,9 @@ typedef struct UIScene {
   bool leftBlinker;
   bool rightBlinker;
 
+  bool leftBlindspot;
+  bool  rightBlindspot;  
+
   cereal::CarState::GearShifter  getGearShifter;  
 
   struct _STATUS_
@@ -196,8 +199,6 @@ typedef struct UIScene {
       char text1[512];
       char text2[512];
   } alert;
-
-
 
 
   struct LateralsRatom {

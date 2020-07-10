@@ -40,6 +40,9 @@ class CarState(CarStateBase):
     self.TSigRHSw = 0
     self.driverAcc_time = 0
 
+    self.leftBlindspot_time = 0
+    self.rightBlindspot_time = 0
+
     self.SC = SpdController()
 
   def update(self, cp, cp_cam):
@@ -199,8 +202,21 @@ class CarState(CarStateBase):
         ret.gearShifter = GearShifter.unknown
 
     # Blind Spot Detection and Lane Change Assist signals
-    ret.leftBlindspot = cp.vl["LCA11"]['CF_Lca_IndLeft'] != 0
-    ret.rightBlindspot = cp.vl["LCA11"]['CF_Lca_IndRight'] != 0
+    if cp.vl["LCA11"]['CF_Lca_IndLeft'] != 0:
+      self.leftBlindspot_time = 200
+    elif self.leftBlindspot_time:
+      self.leftBlindspot_time -=  1
+
+    if cp.vl["LCA11"]['CF_Lca_IndRight'] != 0:
+      self.rightBlindspot_time = 200
+    elif self.rightBlindspot_time:
+      self.rightBlindspot_time -= 1
+
+
+    ret.leftBlindspot = self.leftBlindspot_time != 0
+    ret.rightBlindspot = self.rightBlindspot_time != 0
+
+
 
     # save the entire LKAS11 and CLU11
     self.lkas11 = cp_cam.vl["LKAS11"]

@@ -527,6 +527,8 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.rightBlinker = data.getRightBlinker();
     scene.getGearShifter = data.getGearShifter();
 
+    scene.leftBlindspot = data.getLeftBlindspot();
+    scene.rightBlindspot = data.getRightBlindspot();
 
     auto cruiseState = data.getCruiseState();
 
