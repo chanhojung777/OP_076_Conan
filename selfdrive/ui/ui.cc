@@ -1084,11 +1084,14 @@ int main(int argc, char* argv[]) {
 
     if (s->volume_timeout > 0) {
       s->volume_timeout--;
-    } else {
-      int volume = fmin(MAX_VOLUME, MIN_VOLUME + s->scene.v_ego / 5);  // up one notch every 5 m/s
-      int cur_volume = scene.params.nOpkrUIVolumeBoost + volume;
-      if( cur_volume < 0  ) cur_volume = 0;
-      set_volume( cur_volume );
+    } else  {
+      if( scene.params.nOpkrUIVolumeBoost )
+      {
+          int volume = fmin(MAX_VOLUME, MIN_VOLUME + s->scene.v_ego / 5);  // up one notch every 5 m/s
+          int cur_volume = scene.params.nOpkrUIVolumeBoost + volume;
+          if( cur_volume < 0  ) cur_volume = 0;
+          set_volume( cur_volume );
+      }
       s->volume_timeout = 5 * UI_FREQ;
     }
 
