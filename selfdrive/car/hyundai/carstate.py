@@ -1,5 +1,5 @@
 from cereal import car
-from selfdrive.car.hyundai.values import DBC, STEER_THRESHOLD, FEATURES
+from selfdrive.car.hyundai.values import DBC, STEER_THRESHOLD, FEATURES, EV_HYBRID
 from selfdrive.car.interfaces import CarStateBase
 from opendbc.can.parser import CANParser
 from selfdrive.config import Conversions as CV
@@ -69,9 +69,6 @@ class CarState(CarStateBase):
     ret.steeringTorqueEps = cp.vl["MDPS12"]['CR_Mdps_OutTq']
     ret.steeringPressed = abs(ret.steeringTorque) > STEER_THRESHOLD
 
-    # Blind Spot Detection and Lane Change Assist signals
-    ret.leftBlindspot = cp.vl["LCA11"]['CF_Lca_IndLeft'] != 0
-    ret.rightBlindspot = cp.vl["LCA11"]['CF_Lca_IndRight'] != 0
 
     self.TSigLHSw = cp.vl["CGW1"]['CF_Gway_TSigLHSw']
     self.TSigRHSw = cp.vl["CGW1"]['CF_Gway_TSigRHSw']
@@ -143,8 +140,12 @@ class CarState(CarStateBase):
     ret.brakeLights = bool(cp.vl["TCS13"]['BrakeLight'] or ret.brakePressed)
 
     #TODO: find pedal signal for EV/HYBRID Cars
-    ret.gas = cp.vl["EMS12"]['PV_AV_CAN'] / 100
-    ret.gasPressed = bool(cp.vl["EMS16"]["CF_Ems_AclAct"])
+    if self.CP.carFingerprint in EV_HYBRID:
+      ret.gas = cp.vl["E_EMS11"]['Accel_Pedal_Pos'] / 256.
+      ret.gasPressed = ret.gas > 0
+    else:    
+      ret.gas = cp.vl["EMS12"]['PV_AV_CAN'] / 100
+      ret.gasPressed = bool(cp.vl["EMS16"]["CF_Ems_AclAct"])
 
     # TODO: refactor gear parsing in function
     # Gear Selection via Cluster - For those Kia/Hyundai which are not fully discovered, we can use the Cluster Indicator for Gear Selection, as this seems to be standard over all cars, but is not the preferred method.
@@ -196,6 +197,10 @@ class CarState(CarStateBase):
         ret.gearShifter = GearShifter.reverse
       else:
         ret.gearShifter = GearShifter.unknown
+
+    # Blind Spot Detection and Lane Change Assist signals
+    ret.leftBlindspot = cp.vl["LCA11"]['CF_Lca_IndLeft'] != 0
+    ret.rightBlindspot = cp.vl["LCA11"]['CF_Lca_IndRight'] != 0
 
     # save the entire LKAS11 and CLU11
     self.lkas11 = cp_cam.vl["LKAS11"]
@@ -272,6 +277,9 @@ class CarState(CarStateBase):
 
       ("CF_Lvr_GearInf", "LVR11", 0),        # Transmission Gear (0 = N or P, 1-8 = Fwd, 14 = Rev)
 
+      ("CF_Lca_IndLeft", "LCA11", 0),
+      ("CF_Lca_IndRight", "LCA11", 0),           
+
       ("CR_Mdps_StrColTq", "MDPS12", 0),
       ("CF_Mdps_Def", "MDPS12", 0),    #
       ("CF_Mdps_ToiActive", "MDPS12", 0),
@@ -293,13 +301,6 @@ class CarState(CarStateBase):
       ("ACC_ObjDist", "SCC11", 0),
       ("ACC_ObjRelSpd", "SCC11", 0),
       ("ACCMode", "SCC12", 1),
-
-      ("PV_AV_CAN", "EMS12", 0),
-      ("CF_Ems_AclAct", "EMS16", 0),
-
-      ("CF_Lca_Stat", "LCA11", 0),
-      ("CF_Lca_IndLeft", "LCA11", 0),
-      ("CF_Lca_IndRight", "LCA11", 0),      
     ]
 
     checks = [
@@ -315,9 +316,26 @@ class CarState(CarStateBase):
       ("SAS11", 100),
       ("SCC11", 50),
       ("SCC12", 50),
-      #("EMS12", 100),
-      #("EMS16", 100),
+      ("LCA11", 50),      
     ]
+
+    if CP.carFingerprint in EV_HYBRID:
+      signals += [
+        ("Accel_Pedal_Pos", "E_EMS11", 0),
+      ]
+      #checks += [
+      #  ("E_EMS11", 50),
+      #]
+    else:
+      signals += [
+        ("PV_AV_CAN", "EMS12", 0),
+        ("CF_Ems_AclAct", "EMS16", 0),
+      ]
+      #checks += [
+      #  ("EMS12", 100),
+      #  ("EMS16", 100),
+      #]
+
     if CP.carFingerprint in FEATURES["use_cluster_gears"]:
       signals += [
         ("CF_Clu_InhibitD", "CLU15", 0),

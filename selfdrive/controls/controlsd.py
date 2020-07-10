@@ -41,7 +41,7 @@ Desire = log.PathPlan.Desire
 
 LaneChangeState = log.PathPlan.LaneChangeState
 LaneChangeDirection = log.PathPlan.LaneChangeDirection
-LaneChangeBSM = log.PathPlan.LaneChangeBSM
+
 
 EventName = car.CarEvent.EventName
 
@@ -208,15 +208,16 @@ class Controls:
 
     # Handle lane change
     # lane change bsm alerts 
-    if self.sm['pathPlan'].laneChangeBSM == LaneChangeBSM.right:
-      self.events.add(EventName.rightBlindspot)
-    elif self.sm['pathPlan'].laneChangeBSM == LaneChangeBSM.left:
-      self.events.add(EventName.leftBlindspot)
-    elif self.sm['pathPlan'].laneChangeState == LaneChangeState.preLaneChange:
-      if self.sm['pathPlan'].laneChangeDirection == LaneChangeDirection.left:
-        self.events.add(EventName.preLaneChangeLeft)
+    if self.sm['pathPlan'].laneChangeState == LaneChangeState.preLaneChange:
+      direction = self.sm['pathPlan'].laneChangeDirection
+      if (CS.leftBlindspot and direction == LaneChangeDirection.left) or \
+         (CS.rightBlindspot and direction == LaneChangeDirection.right):
+        self.events.add(EventName.laneChangeBlocked)
       else:
-        self.events.add(EventName.preLaneChangeRight)
+        if direction == LaneChangeDirection.left:
+          self.events.add(EventName.preLaneChangeLeft)
+        else:
+          self.events.add(EventName.preLaneChangeRight)
     elif self.sm['pathPlan'].laneChangeState in [LaneChangeState.laneChangeStarting, \
                                         LaneChangeState.laneChangeFinishing]:
       self.events.add(EventName.laneChange)

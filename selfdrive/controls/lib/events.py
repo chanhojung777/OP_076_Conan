@@ -423,6 +423,14 @@ EVENTS = {
       Priority.LOW, VisualAlert.steerRequired, AudibleAlert.none, .0, .1, .1, alert_rate=0.75),
   },
 
+  EventName.laneChangeBlocked: {
+    ET.WARNING: Alert(
+      "Car Detected in Blindspot",
+      "Monitor Other Vehicles",
+      AlertStatus.normal, AlertSize.mid,
+      Priority.LOW, VisualAlert.steerRequired, AudibleAlert.none, .0, .1, .1),
+  },  
+
   EventName.laneChange: {
     ET.WARNING: Alert(
       "Changing Lane",
@@ -447,21 +455,7 @@ EVENTS = {
       Priority.LOW, VisualAlert.steerRequired, AudibleAlert.none, .0, .1, .1, alert_rate=0.75),
   },  
 
-   EventName.rightBlindspot: {
-     ET.WARNING: Alert(
-       "Vehicle in Right Lane",
-       "Waiting for Lane to be clear",
-       AlertStatus.userPrompt, AlertSize.mid,
-       Priority.LOW, VisualAlert.none, AudibleAlert.none, .0, .1, .1),
-   },
 
-   EventName.leftBlindspot: {
-     ET.WARNING: Alert(
-       "Vehicle in Left Lane",
-       "Waiting for Lane to be clear",
-       AlertStatus.userPrompt, AlertSize.mid,
-       Priority.LOW, VisualAlert.none, AudibleAlert.none, .0, .1, .1),
-   },
 
   EventName.steerSaturated: {
     ET.WARNING: Alert(

@@ -100,7 +100,7 @@ class CarInterfaceBase():
       events.add(EventName.wrongCarMode)
     elif cs_out.espDisabled:
       events.add(EventName.espDisabled)
-    elif cs_out.gasPressed:
+    elif cs_out.gasPressed and self.CP.longcontrolEnabled:
       events.add(EventName.gasPressed)
     elif cs_out.stockFcw:
       events.add(EventName.stockFcw)

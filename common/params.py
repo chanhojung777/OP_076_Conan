@@ -422,6 +422,49 @@ class Params():
     write_db(self.db, key, dat)
 
 
+
+  def get_OpkrAutoShutdown(self):
+      cvt_dictionary = {
+          0:0,
+          1:10,
+          2:20,
+          3:30,
+          4:60,
+          5:120,
+          6:240,
+      }
+
+      nID = get('OpkrAutoShutdown')
+      value = 0
+      try:
+          value = cvt_dictionary[nID]
+      except:
+          value = 0
+
+      return  value
+
+
+  def get_OpkrAutoLanechangedelay(self):
+      cvt_dictionary = {
+          0:0.0,
+          1:1.0,
+          2:1.5,
+          3:2.0,
+      }
+
+      nID = get('OpkrAutoLanechangedelay')
+      value = 0
+      try:
+          value = cvt_dictionary[nID]
+      except:
+          value = 0
+
+      return  value    
+
+
+
+
+
 def put_nonblocking(key, val):
   def f(key, val):
     params = Params()
@@ -430,3 +473,5 @@ def put_nonblocking(key, val):
   t = threading.Thread(target=f, args=(key, val))
   t.start()
   return t
+
+
