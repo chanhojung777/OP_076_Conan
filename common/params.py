@@ -434,7 +434,7 @@ class Params():
           6:240,
       }
 
-      nID = get('OpkrAutoShutdown')
+      nID = int( get('OpkrAutoShutdown') )
       value = 0
       try:
           value = cvt_dictionary[nID]
@@ -452,7 +452,7 @@ class Params():
           3:2.0,
       }
 
-      nID = get('OpkrAutoLanechangedelay')
+      nID = int(  get('OpkrAutoLanechangedelay') )
       value = 0
       try:
           value = cvt_dictionary[nID]
