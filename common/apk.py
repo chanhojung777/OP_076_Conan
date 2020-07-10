@@ -5,8 +5,10 @@ import hashlib
 import shutil
 from common.basedir import BASEDIR
 from selfdrive.swaglog import cloudlog
+from common.params import Params, put_nonblocking
+params = Params()
 
-android_packages = ("ai.comma.plus.offroad",)
+android_packages = ("com.google.android.voicesearch", "com.google.android.inputmethod.korean", "com.mixplorer", "com.rhmsoft.edit.pro", "kr.mappers.AtlanSmart", "kt.navi", "com.skt.tmap.ku", "com.locnall.KimGiSa", "com.gmd.hidesoftkeys", "ai.comma.plus.offroad")
 
 def get_installed_apks():
   dat = subprocess.check_output(["pm", "list", "packages", "-f"], encoding='utf8').strip().split("\n")
@@ -27,8 +29,13 @@ def install_apk(path):
   return ret == 0
 
 def start_offroad():
+  opkr_boot_softkey = True if params.get("OpkrBootSoftkey", encoding='utf8') == "1" else False
+
   set_package_permissions()
   system("am start -n ai.comma.plus.offroad/.MainActivity")
+
+  if opkr_boot_softkey:
+    system("am start -n com.gmd.hidesoftkeys/com.gmd.hidesoftkeys.MainActivity")
 
 def set_package_permissions():
   pm_grant("ai.comma.plus.offroad", "android.permission.ACCESS_FINE_LOCATION")
@@ -36,8 +43,8 @@ def set_package_permissions():
   pm_grant("ai.comma.plus.offroad", "android.permission.READ_EXTERNAL_STORAGE")
   appops_set("ai.comma.plus.offroad", "SU", "allow")
   appops_set("ai.comma.plus.offroad", "WIFI_SCAN", "allow")
+  appops_set("com.gmd.hidesoftkeys", "SU", "allow")
 
-  
 def appops_set(package, op, mode):
   system(f"LD_LIBRARY_PATH= appops set {package} {op} {mode}")
 

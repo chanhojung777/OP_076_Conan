@@ -38,6 +38,26 @@ with open(BASEDIR + "/selfdrive/controls/lib/alerts_offroad.json") as json_file:
   OFFROAD_ALERTS = json.load(json_file)
 
 
+def get_OpkrAutoShutdown( nID ):
+    cvt_dictionary = {
+        0:0,
+        1:10,
+        2:20,
+        3:30,
+        4:60,
+        5:120,
+        6:240,
+    }
+
+    value = 0
+    try:
+        value = cvt_dictionary[nID]
+    except:
+        value = 0
+
+    return  value
+ 
+
 def read_tz(x, clip=True):
   if not ANDROID:
     # we don't monitor thermal on PC
@@ -199,7 +219,8 @@ def thermald_thread():
   while 1:
     OpkrLoadStep += 1
     if OpkrLoadStep == 1:
-      OpkrAutoShutdown = int( params.get("OpkrAutoShutdown") )
+      param = int(params.get("OpkrAutoShutdown"))
+      OpkrAutoShutdown = get_OpkrAutoShutdown( param )
     elif OpkrLoadStep == 2:
       do_uninstall = params.get("DoUninstall") == b"1"
     elif OpkrLoadStep == 3:
