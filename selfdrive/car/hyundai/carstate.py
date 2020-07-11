@@ -113,7 +113,6 @@ class CarState(CarStateBase):
       self.steerWarning += 1
 
     ret.steerWarning = steerWarning
-    
 
     # cruise state
     #ret.cruiseState.available = True
