@@ -151,6 +151,12 @@ class CarState(CarStateBase):
       ret.gasPressed = bool(cp.vl["EMS16"]["CF_Ems_AclAct"])
 
     # TODO: refactor gear parsing in function
+    ret.gearShifter = self.get_gearShifter( cp )
+
+    # Blind Spot Detection and Lane Change Assist signals
+    ret.leftBlindspot, ret.rightBlindspot = self.get_Blindspot( cp )
+
+    """
     # Gear Selection via Cluster - For those Kia/Hyundai which are not fully discovered, we can use the Cluster Indicator for Gear Selection, as this seems to be standard over all cars, but is not the preferred method.
     if self.CP.carFingerprint in FEATURES["use_cluster_gears"]:
       if cp.vl["CLU15"]["CF_Clu_InhibitD"] == 1:
@@ -201,7 +207,6 @@ class CarState(CarStateBase):
       else:
         ret.gearShifter = GearShifter.unknown
 
-    # Blind Spot Detection and Lane Change Assist signals
     if cp.vl["LCA11"]['CF_Lca_IndLeft'] != 0:
       self.leftBlindspot_time = 200
     elif self.leftBlindspot_time:
@@ -215,7 +220,7 @@ class CarState(CarStateBase):
 
     ret.leftBlindspot = self.leftBlindspot_time != 0
     ret.rightBlindspot = self.rightBlindspot_time != 0
-
+    """
 
 
     # save the entire LKAS11 and CLU11
@@ -244,6 +249,127 @@ class CarState(CarStateBase):
     elif self.driverAcc_time:
       self.driverAcc_time -= 1
 
+
+  def get_gearShifter(self, cp):
+    gearShifter = GearShifter.unknown 
+    # TODO: refactor gear parsing in function
+    # Gear Selection via Cluster - For those Kia/Hyundai which are not fully discovered, we can use the Cluster Indicator for Gear Selection, as this seems to be standard over all cars, but is not the preferred method.
+    if self.CP.carFingerprint in FEATURES["use_cluster_gears"]:
+      if cp.vl["CLU15"]["CF_Clu_InhibitD"] == 1:
+        gearShifter = GearShifter.drive
+      elif cp.vl["CLU15"]["CF_Clu_InhibitN"] == 1:
+        gearShifter = GearShifter.neutral
+      elif cp.vl["CLU15"]["CF_Clu_InhibitP"] == 1:
+        gearShifter = GearShifter.park
+      elif cp.vl["CLU15"]["CF_Clu_InhibitR"] == 1:
+        gearShifter = GearShifter.reverse
+
+    # Gear Selecton via TCU12
+    elif self.CP.carFingerprint in FEATURES["use_tcu_gears"]:
+      gear = cp.vl["TCU12"]["CUR_GR"]
+      if gear == 0:
+        gearShifter = GearShifter.park
+      elif gear == 14:
+        gearShifter = GearShifter.reverse
+      elif gear > 0 and gear < 9:    # unaware of anything over 8 currently
+        gearShifter = GearShifter.drive
+
+    # Gear Selecton - This is only compatible with optima hybrid 2017
+    elif self.CP.carFingerprint in FEATURES["use_elect_gears"]:
+      gear = cp.vl["ELECT_GEAR"]["Elect_Gear_Shifter"]
+      if gear in (5, 8): # 5: D, 8: sport mode
+        gearShifter = GearShifter.drive
+      elif gear == 6:
+        gearShifter = GearShifter.neutral
+      elif gear == 0:
+        gearShifter = GearShifter.park
+      elif gear == 7:
+        gearShifter = GearShifter.reverse
+
+    # Gear Selecton - This is not compatible with all Kia/Hyundai's, But is the best way for those it is compatible with
+    else:
+      gear = cp.vl["LVR12"]["CF_Lvr_Gear"]
+      if gear in (5, 8): # 5: D, 8: sport mode
+        gearShifter = GearShifter.drive
+      elif gear == 6:
+        gearShifter = GearShifter.neutral
+      elif gear == 0:
+        gearShifter = GearShifter.park
+      elif gear == 7:
+        gearShifter = GearShifter.reverse
+
+    return gearShifter
+
+  def get_Blindspot(self, cp):
+    if cp.vl["LCA11"]['CF_Lca_IndLeft'] != 0:
+      self.leftBlindspot_time = 200
+    elif self.leftBlindspot_time:
+      self.leftBlindspot_time -=  1
+
+    if cp.vl["LCA11"]['CF_Lca_IndRight'] != 0:
+      self.rightBlindspot_time = 200
+    elif self.rightBlindspot_time:
+      self.rightBlindspot_time -= 1
+
+    leftBlindspot = self.leftBlindspot_time != 0
+    rightBlindspot = self.rightBlindspot_time != 0
+
+    return  leftBlindspot, rightBlindspot
+
+
+  @staticmethod
+  def get_parser_gears(CP, signals, checks):
+    if CP.carFingerprint in FEATURES["use_cluster_gears"]:
+      signals += [
+        ("CF_Clu_InhibitD", "CLU15", 0),
+        ("CF_Clu_InhibitP", "CLU15", 0),
+        ("CF_Clu_InhibitN", "CLU15", 0),
+        ("CF_Clu_InhibitR", "CLU15", 0),
+      ]
+      checks += [
+        ("CLU15", 5)
+      ]
+    elif CP.carFingerprint in FEATURES["use_tcu_gears"]:
+      signals += [
+        ("CUR_GR", "TCU12", 0)
+      ]
+      checks += [
+        ("TCU12", 100)
+      ]
+    elif CP.carFingerprint in FEATURES["use_elect_gears"]:
+      signals += [("Elect_Gear_Shifter", "ELECT_GEAR", 0)]
+      checks += [("ELECT_GEAR", 20)]
+    else:
+      signals += [
+        ("CF_Lvr_Gear", "LVR12", 0)
+      ]
+      checks += [
+        ("LVR12", 100)
+      ]
+
+    return signals, checks
+
+
+  @staticmethod
+  def get_parser_ev_hybrid(CP, signals, checks):
+    if CP.carFingerprint in EV_HYBRID:
+      signals += [
+        ("Accel_Pedal_Pos", "E_EMS11", 0),
+      ]
+      checks += [
+        ("E_EMS11", 50),
+      ]
+    else:
+      signals += [
+        ("PV_AV_CAN", "EMS12", 0),
+        ("CF_Ems_AclAct", "EMS16", 0),
+      ]
+      checks += [
+        ("EMS12", 100),
+        ("EMS16", 100),
+      ]
+
+    return signals, checks
 
   @staticmethod
   def get_can_parser(CP):
@@ -335,6 +461,10 @@ class CarState(CarStateBase):
       ("LCA11", 50),      
     ]
 
+    signals, checks = get_parser_ev_hybrid( CP, signals, checks )
+    signals, checks = get_parser_gears( CP, signals, checks )
+
+    """
     if CP.carFingerprint in EV_HYBRID:
       signals += [
         ("Accel_Pedal_Pos", "E_EMS11", 0),
@@ -351,6 +481,7 @@ class CarState(CarStateBase):
       #  ("EMS12", 100),
       #  ("EMS16", 100),
       #]
+
 
     if CP.carFingerprint in FEATURES["use_cluster_gears"]:
       signals += [
@@ -379,6 +510,7 @@ class CarState(CarStateBase):
       checks += [
         ("LVR12", 100)
       ]
+    """
 
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)
 
