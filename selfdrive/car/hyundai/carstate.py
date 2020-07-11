@@ -461,10 +461,10 @@ class CarState(CarStateBase):
       ("LCA11", 50),      
     ]
 
-    signals, checks = get_parser_ev_hybrid( CP, signals, checks )
-    signals, checks = get_parser_gears( CP, signals, checks )
+    #signals, checks = get_parser_ev_hybrid( CP, signals, checks )
+    #signals, checks = get_parser_gears( CP, signals, checks )
 
-    """
+    
     if CP.carFingerprint in EV_HYBRID:
       signals += [
         ("Accel_Pedal_Pos", "E_EMS11", 0),
@@ -510,7 +510,7 @@ class CarState(CarStateBase):
       checks += [
         ("LVR12", 100)
       ]
-    """
+    
 
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)
 
