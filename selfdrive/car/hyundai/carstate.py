@@ -72,7 +72,9 @@ class CarState(CarStateBase):
     ret.steeringTorqueEps = cp.vl["MDPS12"]['CR_Mdps_OutTq']
     ret.steeringPressed = abs(ret.steeringTorque) > STEER_THRESHOLD
 
+    ret.leftBlinker, ret.rightBlinker = self.update_blinker(cp)
 
+    """
     self.TSigLHSw = cp.vl["CGW1"]['CF_Gway_TSigLHSw']
     self.TSigRHSw = cp.vl["CGW1"]['CF_Gway_TSigRHSw']
     leftBlinker = cp.vl["CGW1"]['CF_Gway_TurnSigLh'] != 0
@@ -90,7 +92,7 @@ class CarState(CarStateBase):
 
     ret.leftBlinker = self.left_blinker_flash != 0
     ret.rightBlinker = self.right_blinker_flash != 0
-    
+    """
 
     self.lead_distance = cp.vl["SCC11"]['ACC_ObjDist']
     lead_objspd = cp.vl["SCC11"]['ACC_ObjRelSpd']
@@ -168,6 +170,27 @@ class CarState(CarStateBase):
     self.lead_distance = cp.vl["SCC11"]['ACC_ObjDist']
 
     return ret
+
+
+  def update_blinker(self, cp):
+    self.TSigLHSw = cp.vl["CGW1"]['CF_Gway_TSigLHSw']
+    self.TSigRHSw = cp.vl["CGW1"]['CF_Gway_TSigRHSw']
+    leftBlinker = cp.vl["CGW1"]['CF_Gway_TurnSigLh'] != 0
+    rightBlinker = cp.vl["CGW1"]['CF_Gway_TurnSigRh'] != 0
+
+    if leftBlinker:
+      self.left_blinker_flash = 300
+    elif  self.left_blinker_flash:
+      self.left_blinker_flash -= 1
+
+    if rightBlinker:
+      self.right_blinker_flash = 300
+    elif  self.right_blinker_flash:
+      self.right_blinker_flash -= 1
+
+    leftBlinker = self.left_blinker_flash != 0
+    rightBlinker = self.right_blinker_flash != 0
+    return  leftBlinker, rightBlinker
 
   def update_atom(self, cp, cp_cam):
     # atom append
