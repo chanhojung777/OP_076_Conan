@@ -1005,7 +1005,7 @@ static void ui_draw_debug(UIState *s)
 
   
      
-
+/*
   ui_print( s, x_pos, y_pos+0, "sR:%.2f", scene.liveParams.steerRatio );
   ui_print( s, x_pos, y_pos+50, "gB:%.2f", scene.liveParams.gyroBias );
   ui_print( s, x_pos, y_pos+100, "aO:%.2f", scene.liveParams.angleOffset );
@@ -1013,7 +1013,7 @@ static void ui_draw_debug(UIState *s)
   ui_print( s, x_pos, y_pos+200, "tS:%.2f", scene.liveParams.stiffnessFactor );
   ui_print( s, x_pos, y_pos+250, "yR:%.2f", scene.liveParams.yawRate );
   ui_print( s, x_pos, y_pos+300, "pS:%.2f", scene.liveParams.posenetSpeed );
-
+*/
 
   ui_print( s, 0, 1020, "%s", scene.alert.text1 );
   ui_print( s, 0, 1078, "%s", scene.alert.text2 );

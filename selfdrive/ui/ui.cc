@@ -554,6 +554,7 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.carParams.lateralsRatom.tireStiffnessFactor  = lateralsRatom.getTireStiffnessFactor();
   }
 
+/*  
   if (sm.updated("liveParameters")) {
     auto data = sm["liveParameters"].getLiveParametersData();
     scene.liveParams.gyroBias = data.getGyroBias();
@@ -563,7 +564,8 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.liveParams.steerRatio = data.getSteerRatio();
     scene.liveParams.yawRate = data.getYawRate();
     scene.liveParams.posenetSpeed = data.getPosenetSpeed();
-  }  
+  }
+  */  
 
   s->started = s->thermal_started || s->preview_started ;
   // Handle onroad/offroad transition
