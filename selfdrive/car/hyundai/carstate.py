@@ -28,7 +28,7 @@ class CarState(CarStateBase):
 
     self.main_on = False
     self.acc_active = False
-    self.cruise_engaged_on = False
+
 
     self.Mdps_ToiUnavail = 0
 
@@ -74,34 +74,14 @@ class CarState(CarStateBase):
 
     ret.leftBlinker, ret.rightBlinker = self.update_blinker(cp)
 
-    """
-    self.TSigLHSw = cp.vl["CGW1"]['CF_Gway_TSigLHSw']
-    self.TSigRHSw = cp.vl["CGW1"]['CF_Gway_TSigRHSw']
-    leftBlinker = cp.vl["CGW1"]['CF_Gway_TurnSigLh'] != 0
-    rightBlinker = cp.vl["CGW1"]['CF_Gway_TurnSigRh'] != 0
-
-    if leftBlinker:
-      self.left_blinker_flash = 300
-    elif  self.left_blinker_flash:
-      self.left_blinker_flash -= 1
-
-    if rightBlinker:
-      self.right_blinker_flash = 300
-    elif  self.right_blinker_flash:
-      self.right_blinker_flash -= 1
-
-    ret.leftBlinker = self.left_blinker_flash != 0
-    ret.rightBlinker = self.right_blinker_flash != 0
-    """
 
     self.lead_distance = cp.vl["SCC11"]['ACC_ObjDist']
     lead_objspd = cp.vl["SCC11"]['ACC_ObjRelSpd']
     self.lead_objspd = lead_objspd * CV.MS_TO_KPH
 
     self.VSetDis = cp.vl["SCC11"]['VSetDis']
+    self.Mdps_ToiUnavail = cp.vl["MDPS12"]['CF_Mdps_ToiUnavail']    
     self.clu_Vanz = cp.vl["CLU11"]["CF_Clu_Vanz"]
-
-    self.Mdps_ToiUnavail = cp.vl["MDPS12"]['CF_Mdps_ToiUnavail']
     ret.vEgo = self.clu_Vanz * CV.KPH_TO_MS
 
     steerWarning = False
