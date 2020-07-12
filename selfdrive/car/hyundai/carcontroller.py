@@ -189,7 +189,7 @@ class CarController():
       self.steer_torque_ratio_dir = 1
 
     lane_change_torque_lower = 0
-    if self.nBlinker > 10:
+    if self.nBlinker > 10 and v_ego_kph > 1:
       lane_change_torque_lower = int(CS.out.leftBlinker) + int(CS.out.rightBlinker) * 2
       if CS.out.steeringPressed and self.param_OpkrWhoisDriver:
         self.steer_torque_ratio = 0.05      
