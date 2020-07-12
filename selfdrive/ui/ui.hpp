@@ -214,6 +214,17 @@ typedef struct UIScene {
       struct LateralsRatom  lateralsRatom;
   } carParams;
 
+  struct _LiveParams
+  {
+    float gyroBias;
+    float angleOffset;
+    float angleOffsetAverage;
+    float stiffnessFactor;
+    float steerRatio;
+    float yawRate;
+    float posenetSpeed;
+  } liveParams;
+
   struct _CRUISE_STATE
   {
     bool standstill;

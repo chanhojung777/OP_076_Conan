@@ -992,28 +992,28 @@ static void ui_draw_debug(UIState *s)
   ui_print( s, ui_viz_rx+10, 50, "S:%d",  s->awake_timeout );
 
   x_pos = ui_viz_rx + 300;
-  y_pos = 150; 
-  ui_print( s, x_pos, y_pos+0, "B:%d,%.5f", scene.steerOverride, scene.output_scale );
-
-    
-  ui_print( s, x_pos, y_pos+150, "blindspot L:%d, R:%d", scene.leftBlindspot, scene.rightBlindspot  );
+  y_pos = 100; 
+  //ui_print( s, x_pos, y_pos+0, "B:%d,%.5f", scene.steerOverride, scene.output_scale );
+  //#ui_print( s, x_pos, y_pos+150, "blindspot L:%d, R:%d", scene.leftBlindspot, scene.rightBlindspot  );
 
   //ui_print( s, x_pos, y_pos+150, "L1:%d, %.1f,%.1f,%.1f", (int)scene.lead_status, scene.lead_d_rel, scene.lead_y_rel , scene.lead_v_rel  );
   //ui_print( s, x_pos, y_pos+200, "L2:%d, %.1f,%.1f,%.1f", (int)scene.lead_status2, scene.lead_d_rel2, scene.lead_y_rel2 , scene.lead_v_rel2  );
 
-  ui_print( s, x_pos, y_pos+250, "Wheel:%.1f,%.1f,%.1f,%.1f", scene.wheel.fl, scene.wheel.fr, scene.wheel.rl, scene.wheel.rr );
+  //ui_print( s, x_pos, y_pos+250, "Wheel:%.1f,%.1f,%.1f,%.1f", scene.wheel.fl, scene.wheel.fr, scene.wheel.rl, scene.wheel.rr );
 
-  ui_print( s, x_pos, y_pos+300, "%d, %d, %d, %d, %d", scene.params.nOpkrUIBrightness, scene.params.nLightSensor, scene.params.nSmoothBrightness, scene.params.nOpkrUIVolumeBoost, scene.params.nOpkrAutoLanechangedelay );
+  ui_print( s, x_pos, y_pos+350, "%d, %d, %d, %d, %d", scene.params.nOpkrUIBrightness, scene.params.nLightSensor, scene.params.nSmoothBrightness, scene.params.nOpkrUIVolumeBoost, scene.params.nOpkrAutoLanechangedelay );
 
   
+     
 
-/*
-  ui_print( s, x_pos, y_pos+0, "sR:%.2f", scene.carParams.steerRatio );
-  ui_print( s, x_pos, y_pos+50, "LP:%d", scene.carParams.lateralsRatom.learnerParams );
-  ui_print( s, x_pos, y_pos+100, "dZ:%.1f", scene.carParams.lateralsRatom.deadzone );
-  ui_print( s, x_pos, y_pos+150, "sO:%.3f", scene.carParams.lateralsRatom.steerOffset );
-  ui_print( s, x_pos, y_pos+200, "tS:%.3f", scene.carParams.lateralsRatom.tireStiffnessFactor );
-*/
+  ui_print( s, x_pos, y_pos+0, "sR:%.2f", scene.liveParams.steerRatio );
+  ui_print( s, x_pos, y_pos+50, "gB:%.2f", scene.liveParams.gyroBias );
+  ui_print( s, x_pos, y_pos+100, "aO:%.2f", scene.liveParams.angleOffset );
+  ui_print( s, x_pos, y_pos+150, "aA:%.2f", scene.liveParams.angleOffsetAverage );
+  ui_print( s, x_pos, y_pos+200, "tS:%.2f", scene.liveParams.stiffnessFactor );
+  ui_print( s, x_pos, y_pos+250, "yR:%.2f", scene.liveParams.yawRate );
+  ui_print( s, x_pos, y_pos+300, "pS:%.2f", scene.liveParams.posenetSpeed );
+
 
   ui_print( s, 0, 1020, "%s", scene.alert.text1 );
   ui_print( s, 0, 1078, "%s", scene.alert.text2 );

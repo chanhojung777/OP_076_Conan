@@ -554,6 +554,17 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.carParams.lateralsRatom.tireStiffnessFactor  = lateralsRatom.getTireStiffnessFactor();
   }
 
+  if (sm.updated("liveParameters")) {
+    auto data = sm["carParams"].getLiveParametersData();
+    scene.liveParams.gyroBias = data.getGyroBias();
+    scene.liveParams.angleOffset = data.getAngleOffset();
+    scene.liveParams.angleOffsetAverage = data.getAngleOffsetAverage();
+    scene.liveParams.stiffnessFactor = data.getStiffnessFactor();
+    scene.liveParams.steerRatio = data.getSteerRatio();
+    scene.liveParams.yawRate = data.getYawRate();
+    scene.liveParams.posenetSpeed = data.getPosenetSpeed();
+  }  
+
   s->started = s->thermal_started || s->preview_started ;
   // Handle onroad/offroad transition
   if (!s->started) {
