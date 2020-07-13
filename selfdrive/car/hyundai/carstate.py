@@ -28,7 +28,7 @@ class CarState(CarStateBase):
 
     self.main_on = False
     self.acc_active = False
-
+    self.cruiseState_modeSel = 0
 
     self.Mdps_ToiUnavail = 0
 
@@ -101,19 +101,20 @@ class CarState(CarStateBase):
     self.acc_active = (cp.vl["SCC12"]['ACCMode'] != 0)
     self.update_atom( cp, cp_cam )
 
-    ret.cruiseState.available = self.main_on
-    ret.cruiseState.enabled =  ret.cruiseState.available  #if not self.CP.longcontrolEnabled else ret.cruiseState.enabled
+    ret.cruiseState.available = self.main_on and self.cruiseState_modeSel != 3
+    ret.cruiseState.enabled =  ret.cruiseState.available
     ret.cruiseState.standstill = cp.vl["SCC11"]['SCCInfoDisplay'] == 4.
 
     # most HKG cars has no long control, it is safer and easier to engage by main on
-    ret.cruiseState.modeSel, speed_kph = self.SC.update_cruiseSW( self )
+    self.cruiseState_modeSel , speed_kph = self.SC.update_cruiseSW( self )
+    ret.cruiseState.modeSel = self.cruiseState_modeSel
     if self.acc_active:
       is_set_speed_in_mph = int(cp.vl["CLU11"]["CF_Clu_SPEED_UNIT"])
       speed_conv = CV.MPH_TO_MS if is_set_speed_in_mph else CV.KPH_TO_MS
-      #ret.cruiseState.speed = self.VSetDis * speed_conv    
       ret.cruiseState.speed = speed_kph * speed_conv
     else:
       ret.cruiseState.speed = 0
+
 
 
     # TODO: Find brake pressure

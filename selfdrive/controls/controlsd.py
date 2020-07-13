@@ -183,7 +183,7 @@ class Controls:
     # Handle startup event
     if self.startup_event is not None:
       self.events.add(self.startup_event)
-      self.startup_event = None    
+      self.startup_event = None
 
     # Create events for battery, temperature, disk space, and memory
     if self.sm['thermal'].batteryPercent < 1 and self.sm['thermal'].chargingError:
