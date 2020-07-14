@@ -8,7 +8,7 @@ from selfdrive.swaglog import cloudlog
 from common.params import Params, put_nonblocking
 params = Params()
 
-android_packages = ("com.google.android.voicesearch", "com.google.android.inputmethod.korean", "com.mixplorer", "com.rhmsoft.edit.pro", "kr.mappers.AtlanSmart", "kt.navi", "com.skt.tmap.ku", "com.locnall.KimGiSa", "com.gmd.hidesoftkeys", "ai.comma.plus.offroad")
+android_packages = ("com.google.android.voicesearch", "com.google.android.inputmethod.korean", "com.mixplorer", "com.rhmsoft.edit.pro",  "com.skt.tmap.ku",  "com.gmd.hidesoftkeys", "ai.comma.plus.offroad")
 
 def get_installed_apks():
   dat = subprocess.check_output(["pm", "list", "packages", "-f"], encoding='utf8').strip().split("\n")
