@@ -106,6 +106,7 @@ typedef struct UIScene {
   bool world_objects_visible;
   mat4 extrinsic_matrix;      // Last row is 0 so we can use mat4.
 
+  int  canErrorCounter;
   float v_cruise;
   uint64_t v_cruise_update_ts;
   float v_ego;

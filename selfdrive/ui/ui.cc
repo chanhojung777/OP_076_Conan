@@ -349,6 +349,8 @@ void handle_message(UIState *s, SubMaster &sm) {
     if (data.getVCruise() != scene.v_cruise) {
       scene.v_cruise_update_ts = event.getLogMonoTime();
     }
+
+    scene.canErrorCounter = data.getCanErrorCounter();
     scene.v_cruise = data.getVCruise();
     scene.v_ego = data.getVEgo();
     scene.angleSteers = data.getAngleSteers();
@@ -361,6 +363,11 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.decel_for_model = data.getDecelForModel();
     auto alert_sound = data.getAlertSound();
     const auto sound_none = cereal::CarControl::HUDControl::AudibleAlert::NONE;
+
+    if( scene.canErrorCounter > 0)
+    {
+      is_awake_command = true;
+    }
     if (alert_sound != s->alert_sound){
       is_awake_command = true;
       if (s->alert_sound != sound_none){
