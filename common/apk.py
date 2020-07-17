@@ -8,7 +8,7 @@ from selfdrive.swaglog import cloudlog
 from common.params import Params, put_nonblocking
 params = Params()
 
-android_packages = ("com.google.android.voicesearch", "com.google.android.inputmethod.korean", "com.mixplorer", "com.rhmsoft.edit.pro",  "com.skt.tmap.ku",  "com.gmd.hidesoftkeys", "ai.comma.plus.offroad")
+android_packages = ("com.google.android.inputmethod.korean", "com.mixplorer", "com.rhmsoft.edit.pro",  "com.skt.tmap.ku",  "com.gmd.hidesoftkeys", "ai.comma.plus.offroad")
 
 def get_installed_apks():
   dat = subprocess.check_output(["pm", "list", "packages", "-f"], encoding='utf8').strip().split("\n")
@@ -43,7 +43,7 @@ def set_package_permissions():
   pm_grant("ai.comma.plus.offroad", "android.permission.READ_EXTERNAL_STORAGE")
   appops_set("ai.comma.plus.offroad", "SU", "allow")
   appops_set("ai.comma.plus.offroad", "WIFI_SCAN", "allow")
-  appops_set("com.gmd.hidesoftkeys", "SU", "allow")
+
 
 def appops_set(package, op, mode):
   system(f"LD_LIBRARY_PATH= appops set {package} {op} {mode}")
