@@ -292,8 +292,8 @@ class CarController():
     lkas_active = enabled and abs(CS.out.steeringAngle) < 90. #and self.lkas_button
 
     # fix for Genesis hard fault at low speed
-    if CS.out.vEgo < 16.7 and self.car_fingerprint == CAR.HYUNDAI_GENESIS:
-      lkas_active = 0
+    #if CS.out.vEgo < 16.7 and self.car_fingerprint == CAR.HYUNDAI_GENESIS:
+    #  lkas_active = 0
 
     if not lkas_active:
       apply_steer = 0
@@ -309,13 +309,16 @@ class CarController():
       self.lkas11_cnt = CS.lkas11["CF_Lkas_MsgCount"] + 1
     self.lkas11_cnt %= 0x10
 
+    # send mdps12 to LKAS to prevent LKAS error if no cancel cmd
+    #can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
+
     can_sends.append(create_lkas11(self.packer, self.lkas11_cnt, self.car_fingerprint, apply_steer, steer_req,
                                    CS.lkas11, sys_warning, sys_state, CC ))
 
-
+    # send mdps12 to LKAS to prevent LKAS error if no cancel cmd
     can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
 
-    str_log1 = 'CV={:.1f}/{:.3f} torg:{:5.0f}'.format(  self.model_speed, self.model_sum, apply_steer )
+    str_log1 = 'CV={:5.1f}/{:5.3f} torg:{:5.0f}'.format(  self.model_speed, self.model_sum, apply_steer )
     str_log2 = 'limit={:.0f} tm={:.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
