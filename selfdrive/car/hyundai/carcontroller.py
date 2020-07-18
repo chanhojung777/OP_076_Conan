@@ -310,13 +310,13 @@ class CarController():
     self.lkas11_cnt %= 0x10
 
     # send mdps12 to LKAS to prevent LKAS error if no cancel cmd
-    #can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
+    can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
 
     can_sends.append(create_lkas11(self.packer, self.lkas11_cnt, self.car_fingerprint, apply_steer, steer_req,
                                    CS.lkas11, sys_warning, sys_state, CC ))
 
     # send mdps12 to LKAS to prevent LKAS error if no cancel cmd
-    can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
+    #can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
 
     str_log1 = 'CV={:5.1f}/{:5.3f} torg:{:5.0f}'.format(  self.model_speed, self.model_sum, apply_steer )
     str_log2 = 'limit={:.0f} tm={:.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
