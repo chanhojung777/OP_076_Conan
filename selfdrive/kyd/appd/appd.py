@@ -28,11 +28,11 @@ offroad_main = ".MainActivity"
 
 def main(gctx=None):
 
-  opkr_enable_mixplorer = True #if params.get('OpkrEnableMixplorer', encoding='utf8') == "1" else False
-  opkr_enable_quickedit = True #if params.get("OpkrEnableQuickedit", encoding='utf8') == "1" else False
-  opkr_enable_tmap = True #if params.get("OpkrEnableTmap", encoding='utf8') == "1" else False
-  opkr_boot_tmap = True if params.get("OpkrBootTmap", encoding='utf8') == "1" else False
-  opkr_enable_softkey = True #if params.get("OpkrEnableSoftkey", encoding='utf8') == "1" else False
+  opkr_enable_mixplorer = False #if params.get('OpkrEnableMixplorer', encoding='utf8') == "1" else False
+  opkr_enable_quickedit = False #if params.get("OpkrEnableQuickedit", encoding='utf8') == "1" else False
+  opkr_enable_tmap = False #if params.get("OpkrEnableTmap", encoding='utf8') == "1" else False
+  opkr_boot_tmap = False #if params.get("OpkrBootTmap", encoding='utf8') == "1" else False
+  opkr_enable_softkey = False #if params.get("OpkrEnableSoftkey", encoding='utf8') == "1" else False
 
   
   mixplorer_is_running = False
