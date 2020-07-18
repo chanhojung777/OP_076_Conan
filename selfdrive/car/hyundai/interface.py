@@ -60,7 +60,7 @@ class CarInterface(CarInterfaceBase):
     """
 
     tire_stiffness_factor = 1.
-    ret.steerActuatorDelay = 0.09  # Default delay
+    ret.steerActuatorDelay = 0.125  # Default delay
     ret.steerRateCost = 0.5
     ret.steerLimitTimer = 0.4
 
@@ -178,11 +178,6 @@ class CarInterface(CarInterfaceBase):
       #ret.lateralTuning.lqr.k = [-110.73572306, 451.22718255]
       #ret.lateralTuning.lqr.l = [0.3233671, 0.3185757]
       #ret.lateralTuning.lqr.dcGain = 0.002237852961363602
-
-
-
-
-
 
 
       # indi
