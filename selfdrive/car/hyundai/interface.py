@@ -75,15 +75,15 @@ class CarInterface(CarInterfaceBase):
 
 
 
-      ret.lateralTuning.init('lqr')
-      ret.lateralTuning.lqr.scale = 2500.0
-      ret.lateralTuning.lqr.ki = 0.05
-      ret.lateralTuning.lqr.a = [0., 1., -0.22619643, 1.21822268]
-      ret.lateralTuning.lqr.b = [-1.92006585e-04, 3.95603032e-05]
-      ret.lateralTuning.lqr.c = [1., 0.]
-      ret.lateralTuning.lqr.k = [-100., 450.]
-      ret.lateralTuning.lqr.l = [0.22, 0.318]
-      ret.lateralTuning.lqr.dcGain = 0.003
+      #ret.lateralTuning.init('lqr')
+      #ret.lateralTuning.lqr.scale = 2500.0
+      #ret.lateralTuning.lqr.ki = 0.05
+      #ret.lateralTuning.lqr.a = [0., 1., -0.22619643, 1.21822268]
+      #ret.lateralTuning.lqr.b = [-1.92006585e-04, 3.95603032e-05]
+      #ret.lateralTuning.lqr.c = [1., 0.]
+      #ret.lateralTuning.lqr.k = [-100., 450.]
+      #ret.lateralTuning.lqr.l = [0.22, 0.318]
+      #ret.lateralTuning.lqr.dcGain = 0.003
 
     elif candidate == CAR.SANTA_FE:
       ret.lateralTuning.pid.kf = 0.00005
