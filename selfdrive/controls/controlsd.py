@@ -282,8 +282,7 @@ class Controls:
     # Therefore we allow a mismatch for two samples, then we trigger the disengagement.
     if not self.enabled:
       self.mismatch_counter = 0
-
-    if not self.sm['health'].controlsAllowed and self.enabled:
+    elif not self.sm['health'].controlsAllowed:
       self.mismatch_counter += 1
 
     return CS
@@ -431,6 +430,13 @@ class Controls:
     """Send actuators and hud commands to the car, send controlsstate and MPC logging"""
     global trace1
 
+    log_alertTextMsg1 = trace1.global_alertTextMsg1
+    log_alertTextMsg2 = trace1.global_alertTextMsg2
+
+    log_alertTextMsg1 += ' ctrl={}'.format( self.sm['health'].controlsAllowed )
+    # trace1.printf( '' )
+    
+
     CC = car.CarControl.new_message()
     CC.enabled = self.enabled
     CC.actuators = actuators
@@ -529,8 +535,8 @@ class Controls:
     controlsState.mapValid = self.sm['plan'].mapValid
     controlsState.forceDecel = bool(force_decel)
     controlsState.canErrorCounter = self.can_error_counter
-    controlsState.alertTextMsg1 = str(trace1.global_alertTextMsg1)
-    controlsState.alertTextMsg2 = str(trace1.global_alertTextMsg2)
+    controlsState.alertTextMsg1 = str(log_alertTextMsg1)
+    controlsState.alertTextMsg2 = str(log_alertTextMsg2)
 
     if self.CP.lateralTuning.which() == 'pid':
       controlsState.lateralControlState.pidState = lac_log
