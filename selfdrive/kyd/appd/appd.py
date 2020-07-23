@@ -23,9 +23,6 @@ tmap_main = "com.skt.tmap.activity.TmapNaviActivity"
 softkey = "com.gmd.hidesoftkeys"
 softkey_main = "com.gmd.hidesoftkeys.MainActivity"
 
-offroad = "ai.comma.plus.offroad"
-offroad_main = ".MainActivity"
-
 def main(gctx=None):
 
   opkr_enable_mixplorer = False #if params.get('OpkrEnableMixplorer', encoding='utf8') == "1" else False
@@ -65,40 +62,26 @@ def main(gctx=None):
     if opkr_enable_mixplorer:
       status = params.get('OpkrRunMixplorer', encoding='utf8')
       if not status == "0":
-        if not softkey_is_running:
-          softkey_is_running = exec_app(status, softkey, softkey_main)
-          put_nonblocking('OpkrRunSoftkey', '0')
         mixplorer_is_running = exec_app(status, mixplorer, mixplorer_main)
         put_nonblocking('OpkrRunMixplorer', '0')
 
     if opkr_enable_quickedit:
       status = params.get('OpkrRunQuickedit', encoding='utf8')
       if not status == "0":
-        if not softkey_is_running:
-          softkey_is_running = exec_app(status, softkey, softkey_main)
-          put_nonblocking('OpkrRunSoftkey', '0')
         quickedit_is_running = exec_app(status, quickedit, quickedit_main)
         put_nonblocking('OpkrRunQuickedit', '0')
+
+    if opkr_enable_tmap:
+      status = params.get('OpkrRunTmap', encoding='utf8')
+      if not status == "0":
+        tmap_is_running = exec_app(status, tmap, tmap_main)
+        put_nonblocking('OpkrRunTmap', '0')
 
     if opkr_enable_softkey:
       status = params.get('OpkrRunSoftkey', encoding='utf8')
       if not status == "0":
         softkey_is_running = exec_app(status, softkey, softkey_main)
         put_nonblocking('OpkrRunSoftkey', '0')
-
-
-
-
-    if opkr_enable_tmap:
-      status = params.get('OpkrRunTmap', encoding='utf8')
-      if not status == "0":
-        if not softkey_is_running:
-          softkey_is_running = exec_app(status, softkey, softkey_main)
-          put_nonblocking('OpkrRunSoftkey', '0')
-        tmap_is_running = exec_app(status, tmap, tmap_main)
-        put_nonblocking('OpkrRunTmap', '0')
-
- 
 
     msg = messaging.recv_sock(thermal_sock, wait=True)
     started = msg.thermal.started
@@ -116,18 +99,6 @@ def main(gctx=None):
             put_nonblocking('OpkrRunSoftkey', '0')
           tmap_is_running = exec_app('1', tmap, tmap_main)
           put_nonblocking('OpkrRunTmap', '0')
-
-
-        # Logic:
-        # if temp reach red, we disable all 3rd party apps.
-        # once the temp drop below yellow, we then re-enable them
-        #
-        # set allow_auto_boot back to True once the thermal status is < yellow
-        # kill mixplorer when car started
-      #if mixplorer_is_running:
-      #  mixplorer_is_running = exec_app('0', mixplorer, mixplorer_main)
-      #if quickedit_is_running:
-      #  quickedit_is_running = exec_app('0', quickedit, quickedit_main)
 
     # car off
     else:
