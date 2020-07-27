@@ -222,33 +222,19 @@ bool screen_button_clicked(int touch_x, int touch_y)
 
 void draw_date_time(UIState *s)
 {
+  /*
   if (captureState == CAPTURE_STATE_NOT_CAPTURING)
   {
     // Don't draw if we're not recording
     return;
   }
-
-  // Draw the current date/time
-
- // int rect_w = 465;
- // int rect_h = 80;
- // int rect_x = 1517;//  (1920 - rect_w) / 2;
-  //int rect_y = (1080 - rect_h - 10);
+  */
 
   // Get local time to display
   char now[50];
   struct tm tm = get_time_struct();
   snprintf(now, sizeof(now), "%04d/%02d/%02d  %02d:%02d:%02d", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 
-/*
-  nvgBeginPath(s->vg);
-  nvgRoundedRect(s->vg, rect_x, rect_y, rect_w, rect_h, 15);
-  nvgFillColor(s->vg, nvgRGBA(0, 0, 0, 100));
-  nvgFill(s->vg);
-  nvgStrokeColor(s->vg, nvgRGBA(255, 255, 255, 80));
-  nvgStrokeWidth(s->vg, 6);
-  nvgStroke(s->vg);
-*/
 
   nvgFontSize(s->vg, 40*fFontSize);
   nvgFontFace(s->vg, "sans-semibold");
