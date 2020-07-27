@@ -12,9 +12,9 @@ class kegman_conf():
                   "sR_BPV":[0.0,0.0], "sR_boostV":[0.0,0.0], "cvBPV":[90,255], \
                   "cvSteerMaxV1":[255,200], "cvSteerDeltaUpV1":[3,2], "cvSteerDeltaDnV1":[5,3], \
                   "cvSteerMaxV2":[255,200], "cvSteerDeltaUpV2":[3,2], "cvSteerDeltaDnV2":[5,3], \
-                  "steerRatio":11.5, "steerRateCost":0.4, \
+                  "steerRatio":13.27, "steerRateCost":0.4, \
                   "tire_stiffness_factor":1.0, \
-                  "deadzone":0.0, "steerOffset":0.0, \
+                  "deadzone":0.0, "steerOffset":0.0, "cameraOffset":0.00, \
                   "steerLimitTimer":0.4,
                   "steerActuatorDelay":0.1 }
 
