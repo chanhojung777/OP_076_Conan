@@ -44,7 +44,7 @@ def dmonitoringd_thread(sm=None, pm=None):
 
   # 10Hz <- dmonitoringmodeld
   while True:
-    time.sleep(0.1)
+    time.sleep(0.01)
     sm.update()
 
     # Handle calibration

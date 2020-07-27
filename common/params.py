@@ -106,36 +106,25 @@ keys = {
   "Offroad_PandaFirmwareMismatch": [TxType.CLEAR_ON_MANAGER_START, TxType.CLEAR_ON_PANDA_DISCONNECT],
   "Offroad_InvalidTime": [TxType.CLEAR_ON_MANAGER_START],
   "Offroad_IsTakingSnapshot": [TxType.CLEAR_ON_MANAGER_START],
-  "OpkrAutoShutdown": [TxType.PERSISTENT],   
-  "OpkrAutoScreenOff": [TxType.PERSISTENT], 
-  "OpkrUIVolumeBoost": [TxType.PERSISTENT],  #
-  "OpkrUIBrightness": [TxType.PERSISTENT],   #
+  "OpkrAutoShutdown": [TxType.PERSISTENT],
+  "OpkrAutoScreenOff": [TxType.PERSISTENT],
+  "OpkrUIBrightness": [TxType.PERSISTENT],
   "OpkrEnableDriverMonitoring": [TxType.PERSISTENT],
   "OpkrEnableLogger": [TxType.PERSISTENT],
-  "OpkrEnableLearner": [TxType.PERSISTENT], 
+  "OpkrEnableGetoffAlert": [TxType.PERSISTENT],
+  "OpkrEnableLearner": [TxType.PERSISTENT],
   "OpkrAutoResume": [TxType.PERSISTENT],
   "OpkrTraceSet": [TxType.PERSISTENT],
   "OpkrWhoisDriver": [TxType.PERSISTENT],
-  "OpkrTuneProfile": [TxType.PERSISTENT],    #
-  "OpkrTuneStartAt": [TxType.PERSISTENT],    #
+  "OpkrTuneStartAt": [TxType.PERSISTENT],
   "OpkrAccelProfile": [TxType.PERSISTENT],
-  "OpkrAutoLanechangedelay": [TxType.PERSISTENT],    #
-  "OpkrDevelMode1": [TxType.PERSISTENT],
-  "OpkrDevelMode2": [TxType.PERSISTENT],
+  "OpkrAutoLanechangedelay": [TxType.PERSISTENT],
   "OpkrRunMixplorer": [TxType.PERSISTENT],
   "OpkrRunQuickedit": [TxType.PERSISTENT],
-  "OpkrEnableSoftkey": [TxType.PERSISTENT],
   "OpkrRunSoftkey": [TxType.PERSISTENT],
-  "OpkrBootSoftkey": [TxType.PERSISTENT],
-  "OpkrEnableNavigation": [TxType.PERSISTENT],  
-  "OpkrRunAtlanmap": [TxType.PERSISTENT],
-  "OpkrBootAtlanmap": [TxType.PERSISTENT],
-  "OpkrRunOnenavi": [TxType.PERSISTENT],
-  "OpkrBootOnenavi": [TxType.PERSISTENT],
-  "OpkrRunTmap": [TxType.PERSISTENT],
-  "OpkrBootTmap": [TxType.PERSISTENT],
-  "OpkrRunKakaonavi": [TxType.PERSISTENT],
-  "OpkrBootKakaonavi": [TxType.PERSISTENT],
+  "OpkrRunNavigation": [TxType.PERSISTENT],
+  "OpkrBootNavigation": [TxType.PERSISTENT],
+  "FingerprintIssuedFix": [TxType.PERSISTENT],
 }
 
 
@@ -447,9 +436,10 @@ class Params():
   def get_OpkrAutoLanechangedelay(self):
       cvt_dictionary = {
           0:0.0,
-          1:1.0,
-          2:1.5,
-          3:2.0,
+          1:0.5,
+          2:1.0,
+          3:1.5,
+          4:2.0,
       }
 
       nID = int(  self.get("OpkrAutoLanechangedelay") )

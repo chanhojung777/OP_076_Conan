@@ -15,27 +15,24 @@ mixplorer_main = "com.mixplorer.activities.BrowseActivity"
 quickedit = "com.rhmsoft.edit.pro"
 quickedit_main = "com.rhmsoft.edit.activity.MainActivity"
 
-
-tmap = "com.skt.tmap.ku"
-tmap_main = "com.skt.tmap.activity.TmapNaviActivity"
-
-
 softkey = "com.gmd.hidesoftkeys"
 softkey_main = "com.gmd.hidesoftkeys.MainActivity"
 
+navigation = "com.skt.tmap.ku"
+navigation_main = "com.skt.tmap.activity.TmapNaviActivity"
+
+
 def main(gctx=None):
 
-  opkr_enable_mixplorer = False #if params.get('OpkrEnableMixplorer', encoding='utf8') == "1" else False
-  opkr_enable_quickedit = False #if params.get("OpkrEnableQuickedit", encoding='utf8') == "1" else False
-  opkr_enable_tmap = False #if params.get("OpkrEnableTmap", encoding='utf8') == "1" else False
-  opkr_boot_tmap = False #if params.get("OpkrBootTmap", encoding='utf8') == "1" else False
-  opkr_enable_softkey = False #if params.get("OpkrEnableSoftkey", encoding='utf8') == "1" else False
+  opkr_enable_mixplorer = True
+  opkr_enable_quickedit = True
+  opkr_enable_softkey = True
+  opkr_enable_navigation = True
 
-  
   mixplorer_is_running = False
   quickedit_is_running = False
-  tmap_is_running = False
   softkey_is_running = False
+  navigation_is_running = True if params.get("OpkrBootNavigation", encoding='utf8') == "1" else False
 
   allow_auto_boot = True
   last_started = False
@@ -43,20 +40,10 @@ def main(gctx=None):
   start_delay = None
   stop_delay = None
 
-  put_nonblocking('OpkrRunMixplorer', '0')
-  put_nonblocking('OpkrRunQuickedit', '0')
-  put_nonblocking('OpkrRunTmap', '0')
-  put_nonblocking('OpkrRunSoftkey', '0')
-
-  # we want to disable all app when boot
-  system("pm disable %s" % mixplorer)
-  system("pm disable %s" % quickedit)
-  system("pm disable %s" % tmap)
-  system("pm disable %s" % softkey)
 
   thermal_sock = messaging.sub_sock('thermal')
 
-  while opkr_enable_mixplorer or opkr_enable_quickedit  or opkr_enable_tmap  or opkr_enable_softkey:
+  while opkr_enable_mixplorer or opkr_enable_quickedit or opkr_enable_softkey or opkr_enable_navigation:
 
     # allow user to manually start/stop app
     if opkr_enable_mixplorer:
@@ -71,17 +58,20 @@ def main(gctx=None):
         quickedit_is_running = exec_app(status, quickedit, quickedit_main)
         put_nonblocking('OpkrRunQuickedit', '0')
 
-    if opkr_enable_tmap:
-      status = params.get('OpkrRunTmap', encoding='utf8')
-      if not status == "0":
-        tmap_is_running = exec_app(status, tmap, tmap_main)
-        put_nonblocking('OpkrRunTmap', '0')
-
     if opkr_enable_softkey:
       status = params.get('OpkrRunSoftkey', encoding='utf8')
       if not status == "0":
         softkey_is_running = exec_app(status, softkey, softkey_main)
         put_nonblocking('OpkrRunSoftkey', '0')
+
+    if opkr_enable_navigation:
+      status = params.get('OpkrRunNavigation', encoding='utf8')
+      if not status == "0":
+        if not softkey_is_running:
+          softkey_is_running = exec_app(status, softkey, softkey_main)
+          put_nonblocking('OpkrRunSoftkey', '0')
+        navigation_is_running = exec_app(status, navigation, navigation_main)
+        put_nonblocking('OpkrRunNavigation', '0')
 
     msg = messaging.recv_sock(thermal_sock, wait=True)
     started = msg.thermal.started
@@ -90,15 +80,6 @@ def main(gctx=None):
       stop_delay = None
       if start_delay is None:
         start_delay = frame + 5
-
-
-      if opkr_boot_tmap and frame > start_delay:
-        if not tmap_is_running:
-          if not softkey_is_running:
-            softkey_is_running = exec_app(status, softkey, softkey_main)
-            put_nonblocking('OpkrRunSoftkey', '0')
-          tmap_is_running = exec_app('1', tmap, tmap_main)
-          put_nonblocking('OpkrRunTmap', '0')
 
     # car off
     else:
