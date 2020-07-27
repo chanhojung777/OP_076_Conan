@@ -987,7 +987,7 @@ int main(int argc, char* argv[]) {
         nAwakeTime = nTimeOff;
     }
     
-    if( nAwakeTime == 0 )  nTimeOff = 30;
+    if( nAwakeTime <= 0 )  nTimeOff = 30;
 
     // light sensor is only exposed on EONs
     float clipped_brightness = (s->light_sensor*brightness_m) + brightness_b;
@@ -1057,7 +1057,7 @@ int main(int argc, char* argv[]) {
       if( is_awake_command || nAwakeTime == 0 || scene.cruiseState.standstill  )
       {
         is_awake_command = false;
-        set_awake(s, true, 30);
+        set_awake(s, true, nTimeOff);
       }
         
 
