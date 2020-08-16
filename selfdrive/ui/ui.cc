@@ -226,7 +226,7 @@ static void ui_init(UIState *s) {
 
   pthread_mutex_init(&s->lock, NULL);
   s->sm = new SubMaster({"model", "controlsState", "carState", "uiLayoutState", "liveCalibration", "radarState", "thermal",
-                         "health", "ubloxGnss", "driverState", "dMonitoringState", "offroadLayout", "carParams"
+                         "health", "ubloxGnss", "driverState", "dMonitoringState", "offroadLayout", "carParams", "liveMpc"
 #ifdef SHOW_SPEEDLIMIT
                         , "liveMapData"
 #endif
@@ -450,7 +450,7 @@ void handle_message(UIState *s, SubMaster &sm) {
     scene.lead_d_rel2 = leaddatad2.getDRel();
     scene.lead_y_rel2 = leaddatad2.getYRel();
     scene.lead_v_rel2 = leaddatad2.getVRel();
-    s->livempc_or_radarstate_changed = true;
+    s->livempc_or_radarstate_changed |= 1;
   }
   if (sm.updated("liveCalibration")) {
     scene.world_objects_visible = true;
@@ -463,16 +463,16 @@ void handle_message(UIState *s, SubMaster &sm) {
     read_model(scene.model, sm["model"].getModel());
     s->model_changed = true;
   }
-  // else if (which == cereal::Event::LIVE_MPC) {
-  //   auto data = event.getLiveMpc();
-  //   auto x_list = data.getX();
-  //   auto y_list = data.getY();
-  //   for (int i = 0; i < 50; i++){
-  //     scene.mpc_x[i] = x_list[i];
-  //     scene.mpc_y[i] = y_list[i];
-  //   }
-  //   s->livempc_or_radarstate_changed = true;
-  // }
+  if (sm.updated("liveMpc")) {
+     auto data = sm["liveMpc"].getLiveMpc();
+     auto x_list = data.getX();
+     auto y_list = data.getY();
+     for (int i = 0; i < 50; i++){
+       scene.mpc_x[i] = x_list[i];
+       scene.mpc_y[i] = y_list[i];
+     }
+     s->livempc_or_radarstate_changed |= 2;
+  }
   if (sm.updated("uiLayoutState")) {
     auto data = sm["uiLayoutState"].getUiLayoutState();
     s->active_app = data.getActiveApp();

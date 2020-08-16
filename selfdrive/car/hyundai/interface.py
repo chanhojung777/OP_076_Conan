@@ -346,7 +346,7 @@ class CarInterface(CarInterfaceBase):
     events = self.create_common_events(ret)
 
 
-    
+
     if not self.cruise_enabled_prev:
       self.meg_timer = 0
       self.meg_name =  None

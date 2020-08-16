@@ -378,6 +378,4 @@ void dashcam(UIState *s, int touch_x, int touch_y)
     stop_capture();
   }
   
-
-  s->scene.recording = (captureState != CAPTURE_STATE_NOT_CAPTURING);
 }
