@@ -562,7 +562,7 @@ void handle_message(UIState *s, SubMaster &sm) {
 
 
   if (sm.updated("liveParameters")) {
-    auto data = sm["liveParameters"].getLiveParametersData();
+    auto data = sm["liveParameters"].getLiveParameters();
     scene.liveParams.gyroBias = data.getGyroBias();
     scene.liveParams.angleOffset = data.getAngleOffset();
     scene.liveParams.angleOffsetAverage = data.getAngleOffsetAverage();
