@@ -274,9 +274,6 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
       int torque_scale = (int)fabs(510*(float)s->scene.kegman.output_scale);
       red_lvl = fmin(255, torque_scale);
       green_lvl = fmin(255, 510-torque_scale);
-      //track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
-      //  nvgRGBA(          red_lvl,            green_lvl,  0, 255),
-      //  nvgRGBA((int)(0.5*red_lvl), (int)(0.5*green_lvl), 0, 50));
 
       NVGcolor color1 = nvgRGBA(          red_lvl,            green_lvl,  0, 255); 
       NVGcolor color2 = nvgRGBA((int)(0.5*red_lvl), (int)(0.5*green_lvl), 0, 50);

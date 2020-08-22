@@ -176,8 +176,11 @@ typedef struct UIScene {
 
 
   // pathcoloring
-  float output_scale;
-  bool steerOverride;
+  struct _KEGMEN_
+  {
+      bool steerOverride;
+      float output_scale;
+  } kegman;
 
   // dev ui
   uint16_t maxCpuTemp;
