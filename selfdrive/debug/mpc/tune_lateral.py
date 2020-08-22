@@ -3,9 +3,8 @@
 
 import numpy as np
 from collections import OrderedDict
-#import matplotlib.pyplot as plt
-from selfdrive.car.hyundai.interface import CarInterface
-from selfdrive.car.hyundai.values import CAR
+import matplotlib.pyplot as plt
+from selfdrive.car.honda.interface import CarInterface
 from selfdrive.controls.lib.lateral_mpc import libmpc_py
 from selfdrive.controls.lib.vehicle_model import VehicleModel
 
@@ -42,13 +41,7 @@ deltas = []
 psis = []
 times = []
 
-CP = CarInterface.get_params( CAR.GRANDEUR_H_19 )
-print( 'CP.steerRatio1={}'.format( CP.steerRatio ) )
-CP = CarInterface.live_tune( CP )
-
-print( 'CP.steerRatio2={}'.format( CP.steerRatio ) )
-
-
+CP = CarInterface.get_params("HONDA CIVIC 2016 TOURING")
 VM = VehicleModel(CP)
 
 v_ref = 32.00  # 45 mph
@@ -158,7 +151,7 @@ ys.append(sol_y)
 deltas.append(delta)
 
 
-"""
+
 plt.figure()
 
 for i in range(len(xs)):
@@ -193,4 +186,3 @@ for i in range(len(xs)):
   plt.grid(True)
 
 plt.show()
-"""
