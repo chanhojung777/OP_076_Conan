@@ -226,7 +226,7 @@ static void ui_init(UIState *s) {
 
   pthread_mutex_init(&s->lock, NULL);
   s->sm = new SubMaster({"model", "controlsState", "carState", "uiLayoutState", "liveCalibration", "radarState", "thermal",
-                         "health", "ubloxGnss", "driverState", "dMonitoringState", "offroadLayout", "carParams", "liveMpc"
+                         "health", "ubloxGnss", "driverState", "dMonitoringState", "offroadLayout", "carParams", "liveMpc", "liveParameters"
 #ifdef SHOW_SPEEDLIMIT
                         , "liveMapData"
 #endif
@@ -418,26 +418,16 @@ void handle_message(UIState *s, SubMaster &sm) {
     std::string user_text2 = data.getAlertTextMsg2();
     const char* va_text1 = user_text1.c_str();
     const char* va_text2 = user_text2.c_str();    
-    if (va_text1) 
-      snprintf(scene.alert.text1, sizeof(scene.alert.text1), "%s", va_text1);
-    else 
-      scene.alert.text1[0] = '\0';
+    if (va_text1) snprintf(scene.alert.text1, sizeof(scene.alert.text1), "%s", va_text1);
+    else  scene.alert.text1[0] = '\0';
 
-    if (va_text2) 
-      snprintf(scene.alert.text2, sizeof(scene.alert.text2), "%s", va_text2);
-    else 
-      scene.alert.text2[0] = '\0';
+    if (va_text2) snprintf(scene.alert.text2, sizeof(scene.alert.text2), "%s", va_text2);
+    else scene.alert.text2[0] = '\0';
 
-  
     scene.kegman.output_scale = data.getOutput();
     scene.kegman.steerOverride = data.getSteerOverride();
-
-
-
-
-
-
   }
+
   if (sm.updated("radarState")) {
     auto data = sm["radarState"].getRadarState();
 
