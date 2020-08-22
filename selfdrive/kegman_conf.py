@@ -2,22 +2,32 @@ import json
 import os
 
 
-json_file_name = '/data/atom_076.json'
+json_file_name = '/data/atom_0761.json'
 
 class kegman_conf():
   def __init__(self, CP=None):
     self.config = None
-    self.init = { "sR_KpV1":[0.11,0.13], "sR_KiV1":[0.008,0.015], "sR_KdV1":[0.0,0.0], "sR_KfV1":[0.000001,0.00003],  \
-                  "sR_KpV2":[0.12,0.15], "sR_KiV2":[0.010,0.020], "sR_KdV2":[0.0,0.0], "sR_KfV2":[0.000001,0.00003], \
-                  "sR_BPV":[0.0,0.0], "sR_boostV":[0.0,0.0], "cvBPV":[90,255], \
-                  "cvSteerMaxV1":[255,200], "cvSteerDeltaUpV1":[3,2], "cvSteerDeltaDnV1":[5,3], \
-                  "cvSteerMaxV2":[255,200], "cvSteerDeltaUpV2":[3,2], "cvSteerDeltaDnV2":[5,3], \
-                  "steerRatio":13.27, "steerRateCost":0.4, \
-                  "tire_stiffness_factor":1.0, \
-                  "deadzone":0.0, "steerOffset":0.0, "cameraOffset":0.00, \
-                  "steerLimitTimer":0.4,
-                  "steerActuatorDelay":0.1 }
-
+    self.init = { 
+        "tun_type": "lqr",
+        "sR_KPH": [30,60],
+        "sR_BPV": [[-5,0,5],[-10,0,10]],
+        "sR_steerRatioV": [[13.95,13.85,13.95],[13.95,13.85,13.95]],
+        "sR_pid_KiV": [[0.02,0.01,0.02],[0.03,0.02,0.03]],
+        "sR_pid_KpV": [[0.20,0.15,0.20],[0.25,0.20,0.25]],
+        "sR_pid_deadzone": 0.1,
+        "sR_lqr_kiV": [[0.01,0.01,0.01],[0.02,0.02,0.02]],
+        "sR_lqr_scaleV": [[2000,2000,2000],[1900,2000,1900]],
+        "cv_KPH": [30,60],
+        "cv_BPV": [[150,255],[150,255]],
+        "cv_sMaxV": [[255,200],[255,200]],
+        "cv_sdUPV": [[3,3],[3,3]],
+        "cv_sdDNV": [[7,5],[7,5]],
+        "steerOffset": 0.0,
+        "steerRateCost": 0.5,
+        "steerLimitTimer": 0.8,
+        "steerActuatorDelay":0.2,
+        "cameraOffset":0.0
+         }
 
 
   def data_check(self, name, value ):

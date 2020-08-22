@@ -5,73 +5,49 @@ class AtomConf():
   def __init__(self, CP=None):
     self.kegman = kegman_conf()
 
-    self.sR_BPV = [4.,30.]
-    self.sR_BoostV = [0.0,1.5]
+    self.tun_type   = 'lqr'
+    self.sR_KPH         = [30, 40, 80]   # Speed  kph
+    self.sR_BPV         = [[0.],      [0.],      [0.]     ]
+    self.sR_steerRatioV = [[13.95,13.85,13.95],[13.95,13.85,13.95]]
+    self.sR_pid_KiV     = [[0.02,0.01,0.02],[0.03,0.02,0.03]]
+    self.sR_pid_KpV     = [[0.20,0.15,0.20],[0.25,0.20,0.25]]
+    self.sR_pid_deadzone  = 0.1
+    self.sR_lqr_kiV     = [[0.005],   [0.015],   [0.02]   ]
+    self.sR_lqr_scaleV  = [[2000],    [1900.0],  [1850.0] ]
 
-    self.sR_kpV1 = [0.11,0.12]
-    self.sR_kiV1 = [0.008,0.01]
-    self.sR_kdV1 = [0.0,0.0]
-    self.sR_kfV1 = [0.000001,0.00001]
+    self.cv_KPH    = [0.]   # Speed  kph
+    self.cv_BPV    = [[150., 255.]]  # CV
+    self.cv_sMaxV  = [[255., 230.]]
+    self.cv_sdUPV  = [[3,3]]
+    self.cv_sdDNV  = [[7,5]]
 
-    self.sR_kpV2 = [0.13,0.15]
-    self.sR_kiV2 = [0.015,0.02]
-    self.sR_kdV2 = [0.0,0.0]
-    self.sR_kfV2 = [0.00003,0.00003]
-
-    self.cvBPV = [80,255]
-    self.cvSteerMaxV1 = [255,200]
-    self.cvSteerDeltaUpV1 = [3,2]
-    self.cvSteerDeltaDnV1 = [5,3]
-
-    self.cvSteerMaxV2 = [255,200]
-    self.cvSteerDeltaUpV2 = [3,2]
-    self.cvSteerDeltaDnV2 = [5,3]
-
-
-    self.deadzone = 0.1
-    self.cameraOffset = 0.06
     self.steerOffset = 0.0
-    self.steerRatio = 12.5
     self.steerRateCost = 0.4
-    self.tire_stiffness_factor = 1.0
+    self.steerLimitTimer = 0.4    
     self.steerActuatorDelay = 0.1
-    self.steerLimitTimer = 0.4
+    self.cameraOffset = 0.06
 
     self.read_tune()
 
 
   def read_tune(self):
     conf = self.kegman.read_config()
-    self.sR_BPV = conf['sR_BPV']
-    self.sR_BoostV = conf['sR_boostV']
-
-    self.sR_kpV1 = conf['sR_KpV1']
-    self.sR_kiV1 = conf['sR_KiV1']
-    self.sR_kdV1 = conf['sR_KdV1']
-    self.sR_kfV1 = conf['sR_KfV1']
-
-    self.sR_kpV2 = conf['sR_KpV2']
-    self.sR_kiV2 = conf['sR_KiV2']
-    self.sR_kdV2 = conf['sR_KdV2']
-    self.sR_kfV2 = conf['sR_KfV2']
-
-
-    self.cvBPV = conf['cvBPV']
-    self.cvSteerMaxV1 = conf['cvSteerMaxV1']
-    self.cvSteerDeltaUpV1 = conf['cvSteerDeltaUpV1']
-    self.cvSteerDeltaDnV1 = conf['cvSteerDeltaDnV1']
-
-    self.cvSteerMaxV2 = conf['cvSteerMaxV2']
-    self.cvSteerDeltaUpV2 = conf['cvSteerDeltaUpV2']
-    self.cvSteerDeltaDnV2 = conf['cvSteerDeltaDnV2']
-
-    self.steerRatio = conf['steerRatio']
-    self.steerRateCost = conf['steerRateCost']
-
-    self.deadzone = conf['deadzone']
-    self.cameraOffset = conf['cameraOffset']
+    self.tun_type   = conf['tun_type']
+    self.sR_KPH   = conf['sR_KPH']
+    self.sR_BPV  = conf['sR_BPV']
+    self.sR_steerRatioV  = conf['sR_steerRatioV']
+    self.sR_pid_KiV  = conf['sR_pid_KiV']
+    self.sR_pid_KpV  = conf['sR_pid_KpV']
+    self.sR_pid_deadzone  = conf['sR_pid_deadzone']
+    self.sR_lqr_kiV  = conf['sR_lqr_kiV']
+    self.sR_lqr_scaleV  = conf['sR_lqr_scaleV']
+    self.cv_KPH  = conf['cv_KPH']
+    self.cv_BPV  = conf['cv_BPV']
+    self.cv_sMaxV  = conf['cv_sMaxV']
+    self.cv_sdUPV  = conf['cv_sdUPV']
+    self.cv_sdDNV = conf['cv_sdDNV']
     self.steerOffset = conf['steerOffset']
-    self.tire_stiffness_factor = conf['tire_stiffness_factor']
-    self.steerActuatorDelay = conf['steerActuatorDelay']
+    self.steerRateCost = conf['steerRateCost']
     self.steerLimitTimer = conf['steerLimitTimer']
-    
+    self.steerActuatorDelay = conf['steerActuatorDelay']
+    self.cameraOffset = conf['cameraOffset']

@@ -115,34 +115,34 @@ class CarController():
     return sys_warning, sys_state
 
 
-  def cV_tune( self, v_ego, cv_value ):  # cV(곡률에 의한 변화)
-    self.sRKPHV = self.CP.lateralPIDatom.sRKPHV
-    self.cVBPV = self.CP.lateralCVatom.cvBPV
-    self.cvSteerMaxV1  = self.CP.lateralCVatom.cvSteerMaxV1
-    self.cvSteerDeltaUpV1 = self.CP.lateralCVatom.cvSteerDeltaUpV1
-    self.cvSteerDeltaDnV1 = self.CP.lateralCVatom.cvSteerDeltaDnV1
-    self.cvSteerMaxV2 = self.CP.lateralCVatom.cvSteerMaxV2
-    self.cvSteerDeltaUpV2 = self.CP.lateralCVatom.cvSteerDeltaUpV2
-    self.cvSteerDeltaDnV2 = self.CP.lateralCVatom.cvSteerDeltaDnV2        
+  def atom_tune( self, v_ego, cv_value ):  # cV(곡률에 의한 변화)
+    self.cv_KPH = self.CP.atomTuning.cv_KPH
+    self.cv_BPV = self.CP.atomTuning.cv_BPV
+    self.cv_sMaxV  = self.CP.atomTuning.cv_sMaxV
+    self.cv_sdUpV = self.CP.atomTuning.cv_sdUpV
+    self.cv_sdDnV = self.CP.atomTuning.cv_sdDnV
 
-    cv_BPV = self.cVBPV   # 곡률
+    self.steerMAX = []
+    self.steerdUP = []
+    self.steerdDN = []
+
     # Max
-    self.steerMax1 = interp( cv_value, cv_BPV, self.cvSteerMaxV1 )
-    self.steerMax2 = interp( cv_value, cv_BPV, self.cvSteerMaxV2 )
-    self.steerMaxV = [ float(self.steerMax1), float(self.steerMax2) ]
-    self.MAX = interp( v_ego, self.sRKPHV, self.steerMaxV )  
+    nPos = 0
+    for sCV in self.cv_BPV:  
+      self.steerMAX.append( interp( cv_value, sCV, self.cv_sMaxV[nPos] ) )
+      self.steerdUP.append( interp( cv_value, sCV, self.cv_sdUpV[nPos] ) )
+      self.steerdDN.append( interp( cv_value, sCV, self.cv_sdDnV[nPos] ) )
+      nPos += 1
+      if nPos > 10:
+        break
 
-    # Up
-    self.steerUP1 = interp( cv_value, cv_BPV, self.cvSteerDeltaUpV1 )
-    self.steerUP2 = interp( cv_value, cv_BPV, self.cvSteerDeltaUpV2 )
-    self.steerUPV = [ float(self.steerUP1), float(self.steerUP2) ]
-    self.UP = interp( v_ego, self.sRKPHV, self.steerUPV )
+    MAX = interp( v_ego, self.cv_KPH, self.steerMAX )
+    UP  = interp( v_ego, self.cv_KPH, self.steerdUP )
+    DN  = interp( v_ego, self.cv_KPH, self.steerdDN )
 
-    # dn
-    self.steerDN1 = interp( cv_value, cv_BPV, self.cvSteerDeltaDnV1 )
-    self.steerDN2 = interp( cv_value, cv_BPV, self.cvSteerDeltaDnV2 )    
-    self.steerDNV = [ float(self.steerDN1), float(self.steerDN2) ]
-    self.DN = interp( v_ego, self.sRKPHV, self.steerDNV )
+    #str_log1 = 'ego={:.1f} /{:.1f}/{:.1f}/{:.1f} {}'.format(v_ego,  MAX, UP, DN, self.steerMAX )
+    #trace1.printf2( '{}'.format( str_log1 ) )      
+    return MAX, UP, DN
 
 
 
@@ -150,10 +150,10 @@ class CarController():
     param = SteerLimitParams()
     v_ego_kph = CS.out.vEgo * CV.MS_TO_KPH
 
-    self.cV_tune( CS.out.vEgo, self.model_speed )
-    param.STEER_MAX = min( param.STEER_MAX, self.MAX)
-    param.STEER_DELTA_UP = min( param.STEER_DELTA_UP, self.UP)
-    param.STEER_DELTA_DOWN = min( param.STEER_DELTA_DOWN, self.DN )
+    MAX, UP, DN = self.atom_tune( v_ego_kph, self.model_speed )
+    param.STEER_MAX = min( param.STEER_MAX, MAX)
+    param.STEER_DELTA_UP = min( param.STEER_DELTA_UP, UP)
+    param.STEER_DELTA_DOWN = min( param.STEER_DELTA_DOWN, DN )
 
 
     # streer over check

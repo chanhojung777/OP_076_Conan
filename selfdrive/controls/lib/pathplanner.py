@@ -147,7 +147,6 @@ class PathPlanner():
     else:
       #angle_offset = 0
       #angleOffsetAverage = 0
-      #stiffnessFactor = CP.lateralsRatom.tireStiffnessFactor
 
       # atom
       self.steer_rate_cost = sm['carParams'].steerRateCost   

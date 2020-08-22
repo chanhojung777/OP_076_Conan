@@ -414,12 +414,29 @@ struct CarParams {
   lateralPIDatom @52 :LateralPIDatom;
   lateralCVatom @53 :LateralCVatom;
   lateralsRatom @54 :LateralsRatom;
+  atomTuning @55 :AtomTuning;
+
+  struct AtomTuning {
+    cv_KPH @0 :List(Float32);
+    cv_BPV @1 :List(List(Float32));
+    cv_sMaxV @2 :List(List(Float32));
+    cv_sdUpV @3 :List(List(Float32));
+    cv_sdDnV @4 :List(List(Float32));
+    sR_KPH @5 :List(Float32);
+    sR_BPV @6 :List(List(Float32));
+    sR_steerRatioV @7 :List(List(Float32));
+    sR_lqr_kiV @8 :List(List(Float32));
+    sR_lqr_scaleV @9 :List(List(Float32));
+    sR_pid_KiV @10 :List(List(Float32));
+    sR_pid_KpV @11 :List(List(Float32));
+  }
+
 
   struct LateralsRatom {
     learnerParams @0 :Int16;    
     deadzone @1 :Float32;
     steerOffset @2 :Float32;
-    tireStiffnessFactor @3 :Float32;
+    camera_offset @3 :Float32;    
   }
 
   struct LateralCVatom {

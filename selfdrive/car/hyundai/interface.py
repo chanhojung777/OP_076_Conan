@@ -65,6 +65,8 @@ class CarInterface(CarInterfaceBase):
     ret.steerLimitTimer = 0.4
 
 
+
+
     if candidate == CAR.GRANDEUR_H_19:
       ret.lateralTuning.pid.kf = 0.000005      
       ret.mass = 1675. + STD_CARGO_KG
@@ -72,18 +74,6 @@ class CarInterface(CarInterfaceBase):
       ret.steerRatio = 12.5  #12.5
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
-
-
-
-      #ret.lateralTuning.init('lqr')
-      #ret.lateralTuning.lqr.scale = 2500.0
-      #ret.lateralTuning.lqr.ki = 0.05
-      #ret.lateralTuning.lqr.a = [0., 1., -0.22619643, 1.21822268]
-      #ret.lateralTuning.lqr.b = [-1.92006585e-04, 3.95603032e-05]
-      #ret.lateralTuning.lqr.c = [1., 0.]
-      #ret.lateralTuning.lqr.k = [-100., 450.]
-      #ret.lateralTuning.lqr.l = [0.22, 0.318]
-      #ret.lateralTuning.lqr.dcGain = 0.003
 
     elif candidate == CAR.SANTA_FE:
       ret.lateralTuning.pid.kf = 0.00005
@@ -219,41 +209,47 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
 
 
+    if ATOMC.tun_type == 'pid':
+      ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
+      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
+    elif ATOMC.tun_type == 'indi':
+      ret.lateralTuning.init('indi')
+      ret.lateralTuning.indi.innerLoopGain = 3.0
+      ret.lateralTuning.indi.outerLoopGain = 2.0
+      ret.lateralTuning.indi.timeConstant = 1.0
+      ret.lateralTuning.indi.actuatorEffectiveness = 1.5
+    elif ATOMC.tun_type == 'lqr':
+      ret.lateralTuning.init('lqr')
+      ret.lateralTuning.lqr.scale = 2500.0
+      ret.lateralTuning.lqr.ki = 0.05
+      ret.lateralTuning.lqr.a = [0., 1., -0.22619643, 1.21822268]
+      ret.lateralTuning.lqr.b = [-1.92006585e-04, 3.95603032e-05]
+      ret.lateralTuning.lqr.c = [1., 0.]
+      ret.lateralTuning.lqr.k = [-100., 450.]
+      ret.lateralTuning.lqr.l = [0.22, 0.318]
+      ret.lateralTuning.lqr.dcGain = 0.003
 
-    # 3번 atom param.
-    ret.lateralPIDatom.sRKPHV = [9., 17.]   # 속도. 32~61
+
+    ret.atomTuning.cv_KPH    = ATOMC.cv_KPH
+    ret.atomTuning.cv_BPV    = ATOMC.cv_BPV
+    ret.atomTuning.cv_sMaxV  = ATOMC.cv_sMaxV
+    ret.atomTuning.cv_sdUpV  = ATOMC.cv_sdUPV
+    ret.atomTuning.cv_sdDnV  = ATOMC.cv_sdDNV
+    ret.atomTuning.sr_KPH     = ATOMC.sR_KPH
+    ret.atomTuning.sr_BPV     = ATOMC.sR_BPV
+    ret.atomTuning.sR_lqr_kiV      = ATOMC.sR_lqr_kiV
+    ret.atomTuning.sR_lqr_scaleV   = ATOMC.sR_lqr_scaleV
+    ret.atomTuning.sR_pid_KiV      = ATOMC.sR_pid_KiV
+    ret.atomTuning.sR_pid_KpV      = ATOMC.sR_pid_KpV
+    ret.atomTuning.sR_steerRatioV = ATOMC.sR_steerRatioV
   
-    ret.lateralPIDatom.sRkBPV = ATOMC.sR_BPV   # 조향각.
-    ret.lateralPIDatom.sRBoostV = ATOMC.sR_BoostV
-    ret.lateralPIDatom.sRkpV1 = ATOMC.sR_kpV1
-    ret.lateralPIDatom.sRkiV1 = ATOMC.sR_kiV1
-    ret.lateralPIDatom.sRkdV1 = ATOMC.sR_kdV1
-    ret.lateralPIDatom.sRkfV1 = ATOMC.sR_kfV1
-
-    ret.lateralPIDatom.sRkpV2 = ATOMC.sR_kpV2
-    ret.lateralPIDatom.sRkiV2 = ATOMC.sR_kiV2
-    ret.lateralPIDatom.sRkdV2 = ATOMC.sR_kdV2
-    ret.lateralPIDatom.sRkfV2 = ATOMC.sR_kfV2
-
-    
-    ret.lateralCVatom.cvBPV = ATOMC.cvBPV
-    ret.lateralCVatom.cvSteerMaxV1 = ATOMC.cvSteerMaxV1
-    ret.lateralCVatom.cvSteerDeltaUpV1 = ATOMC.cvSteerDeltaUpV1
-    ret.lateralCVatom.cvSteerDeltaDnV1 = ATOMC.cvSteerDeltaDnV1
-    ret.lateralCVatom.cvSteerMaxV2 = ATOMC.cvSteerMaxV2
-    ret.lateralCVatom.cvSteerDeltaUpV2 = ATOMC.cvSteerDeltaUpV2
-    ret.lateralCVatom.cvSteerDeltaDnV2 = ATOMC.cvSteerDeltaDnV2
-
-    ret.lateralsRatom.deadzone = ATOMC.deadzone
+    ret.lateralsRatom.deadzone = ATOMC.sR_pid_deadzone
     ret.lateralsRatom.steerOffset = ATOMC.steerOffset
-    ret.lateralsRatom.tireStiffnessFactor = ATOMC.tire_stiffness_factor
+    ret.lateralsRatom.camera_offset = ATOMC.cameraOffset
 
-    ret.steerRatio = ATOMC.steerRatio  #10.5  #12.5
-    ret.steerRateCost = ATOMC.steerRateCost #0.4 #0.4
+    ret.steerRateCost = ATOMC.steerRateCost
     ret.steerActuatorDelay = ATOMC.steerActuatorDelay
     ret.steerLimitTimer = ATOMC.steerLimitTimer
-    tire_stiffness_factor = ATOMC.tire_stiffness_factor
-
 
     ret.centerToFront = ret.wheelbase * 0.4
 
@@ -279,34 +275,28 @@ class CarInterface(CarInterfaceBase):
     if read and nOpkrTuneStartAt:
       ATOMC.read_tune()
 
-    CP.steerRatio = ATOMC.steerRatio  #10.5  #12.5
-    CP.steerRateCost = ATOMC.steerRateCost #0.4 #0.4
-    CP.steerActuatorDelay = ATOMC.steerActuatorDelay
-    CP.steerLimitTimer = ATOMC.steerLimitTimer
-  
-    CP.lateralPIDatom.sRkBPV = ATOMC.sR_BPV   # 조향각.
-    CP.lateralPIDatom.sRBoostV = ATOMC.sR_BoostV
-    CP.lateralPIDatom.sRkpV1 = ATOMC.sR_kpV1
-    CP.lateralPIDatom.sRkiV1 = ATOMC.sR_kiV1
-    CP.lateralPIDatom.sRkdV1 = ATOMC.sR_kdV1
-    CP.lateralPIDatom.sRkfV1 = ATOMC.sR_kfV1
-
-    CP.lateralPIDatom.sRkpV2 = ATOMC.sR_kpV2
-    CP.lateralPIDatom.sRkiV2 = ATOMC.sR_kiV2
-    CP.lateralPIDatom.sRkdV2 = ATOMC.sR_kdV2
-    CP.lateralPIDatom.sRkfV2 = ATOMC.sR_kfV2
+    ret.atomTuning.cv_KPH    = ATOMC.cv_KPH
+    ret.atomTuning.cv_BPV    = ATOMC.cv_BPV
+    ret.atomTuning.cv_sMaxV  = ATOMC.cv_sMaxV
+    ret.atomTuning.cv_sdUpV  = ATOMC.cv_sdUPV
+    ret.atomTuning.cv_sdDnV  = ATOMC.cv_sdDNV
     
-    CP.lateralCVatom.cvBPV = ATOMC.cvBPV
-    CP.lateralCVatom.cvSteerMaxV1 = ATOMC.cvSteerMaxV1
-    CP.lateralCVatom.cvSteerDeltaUpV1 = ATOMC.cvSteerDeltaUpV1
-    CP.lateralCVatom.cvSteerDeltaDnV1 = ATOMC.cvSteerDeltaDnV1
-    CP.lateralCVatom.cvSteerMaxV2 = ATOMC.cvSteerMaxV2
-    CP.lateralCVatom.cvSteerDeltaUpV2 = ATOMC.cvSteerDeltaUpV2
-    CP.lateralCVatom.cvSteerDeltaDnV2 = ATOMC.cvSteerDeltaDnV2
+    ret.atomTuning.sr_KPH     = ATOMC.sR_KPH
+    ret.atomTuning.sr_BPV     = ATOMC.sR_BPV
+    ret.atomTuning.sR_lqr_kiV      = ATOMC.sR_lqr_kiV
+    ret.atomTuning.sR_lqr_scaleV   = ATOMC.sR_lqr_scaleV
+    ret.atomTuning.sR_pid_KiV      = ATOMC.sR_pid_KiV
+    ret.atomTuning.sR_pid_KpV      = ATOMC.sR_pid_KpV
+    ret.atomTuning.sR_steerRatioV = ATOMC.sR_steerRatioV
+  
+    ret.lateralsRatom.deadzone = ATOMC.sR_pid_deadzone      # OK
+    ret.lateralsRatom.steerOffset = ATOMC.steerOffset       # OK
+    ret.lateralsRatom.camera_offset = ATOMC.cameraOffset    # OK
 
-    CP.lateralsRatom.deadzone = ATOMC.deadzone
-    CP.lateralsRatom.steerOffset = ATOMC.steerOffset
-    CP.lateralsRatom.tireStiffnessFactor = ATOMC.tire_stiffness_factor    
+    ret.steerRateCost = ATOMC.steerRateCost
+    ret.steerActuatorDelay = ATOMC.steerActuatorDelay
+    ret.steerLimitTimer = ATOMC.steerLimitTimer
+ 
     return CP
 
   def update(self, c, can_strings):

@@ -1,11 +1,11 @@
 from common.numpy_fast import interp
 import numpy as np
 from cereal import log
-from selfdrive.atom_conf import AtomConf
+from selfdrive.car.hyundai.interface import ATOMC
 
-ATOMC = AtomConf()
 
-CAMERA_OFFSET = ATOMC.steerOffset  # m from center car to camera
+
+CAMERA_OFFSET = ATOMC.camera_offset  # m from center car to camera
 
 
 def compute_path_pinv(l=50):

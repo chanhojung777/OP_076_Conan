@@ -206,7 +206,6 @@ typedef struct UIScene {
     int learnerParams;
     float deadzone;
     float steerOffset;
-    float tireStiffnessFactor;
   };
 
   struct _CAR_PARAMS
