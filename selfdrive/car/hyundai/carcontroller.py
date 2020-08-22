@@ -116,11 +116,11 @@ class CarController():
 
 
   def atom_tune( self, v_ego, cv_value ):  # cV(곡률에 의한 변화)
-    self.cv_KPH = self.CP.atomTuning.cv_KPH
-    self.cv_BPV = self.CP.atomTuning.cv_BPV
-    self.cv_sMaxV  = self.CP.atomTuning.cv_sMaxV
-    self.cv_sdUpV = self.CP.atomTuning.cv_sdUpV
-    self.cv_sdDnV = self.CP.atomTuning.cv_sdDnV
+    self.cv_KPH = self.CP.atomTuning.cvKPH
+    self.cv_BPV = self.CP.atomTuning.cvBPV
+    self.cv_sMaxV  = self.CP.atomTuning.cvsMaxV
+    self.cv_sdUpV = self.CP.atomTuning.cvsdUpV
+    self.cv_sdDnV = self.CP.atomTuning.cvsdDnV
 
     self.steerMAX = []
     self.steerdUP = []

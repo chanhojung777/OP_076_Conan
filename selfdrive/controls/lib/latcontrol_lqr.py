@@ -45,10 +45,10 @@ class LatControlLQR():
 
 
   def atom_tune( self, v_ego_kph, sr_value, CP ):  # 조향각에 따른 변화.
-    self.sr_KPH = CP.atomTuning.sr_KPH
-    self.sr_BPV = CP.atomTuning.sr_BPV
-    self.sR_lqr_kiV  = CP.atomTuning.sR_lqr_kiV
-    self.sR_lqr_scaleV = CP.atomTuning.sR_lqr_scaleV
+    self.sr_KPH = CP.atomTuning.srKPH
+    self.sr_BPV = CP.atomTuning.srBPV
+    self.sR_lqr_kiV  = CP.atomTuning.sRlqrkiV
+    self.sR_lqr_scaleV = CP.atomTuning.sRlqrscaleV
 
     self.ki = []
     self.scale = []

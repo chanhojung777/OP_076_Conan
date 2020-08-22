@@ -230,19 +230,19 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.lqr.dcGain = 0.003
 
 
-    ret.atomTuning.cv_KPH    = ATOMC.cv_KPH
-    ret.atomTuning.cv_BPV    = ATOMC.cv_BPV
-    ret.atomTuning.cv_sMaxV  = ATOMC.cv_sMaxV
-    ret.atomTuning.cv_sdUpV  = ATOMC.cv_sdUPV
-    ret.atomTuning.cv_sdDnV  = ATOMC.cv_sdDNV
+    ret.atomTuning.cvKPH    = ATOMC.cv_KPH
+    ret.atomTuning.cvBPV    = ATOMC.cv_BPV
+    ret.atomTuning.cvsMaxV  = ATOMC.cv_sMaxV
+    ret.atomTuning.cvsdUpV  = ATOMC.cv_sdUPV
+    ret.atomTuning.cvsdDnV  = ATOMC.cv_sdDNV
     
-    ret.atomTuning.sr_KPH     = ATOMC.sR_KPH
-    ret.atomTuning.sr_BPV     = ATOMC.sR_BPV
-    ret.atomTuning.sR_lqr_kiV      = ATOMC.sR_lqr_kiV
-    ret.atomTuning.sR_lqr_scaleV   = ATOMC.sR_lqr_scaleV
-    ret.atomTuning.sR_pid_KiV      = ATOMC.sR_pid_KiV
-    ret.atomTuning.sR_pid_KpV      = ATOMC.sR_pid_KpV
-    ret.atomTuning.sR_steerRatioV = ATOMC.sR_steerRatioV
+    ret.atomTuning.srKPH     = ATOMC.sR_KPH
+    ret.atomTuning.srBPV     = ATOMC.sR_BPV
+    ret.atomTuning.sRlqrkiV      = ATOMC.sR_lqr_kiV
+    ret.atomTuning.sRlqrscaleV   = ATOMC.sR_lqr_scaleV
+    ret.atomTuning.sRpidKiV      = ATOMC.sR_pid_KiV
+    ret.atomTuning.sRpidKpV      = ATOMC.sR_pid_KpV
+    ret.atomTuning.sRsteerRatioV = ATOMC.sR_steerRatioV
   
     ret.lateralsRatom.deadzone = ATOMC.sR_pid_deadzone
     ret.lateralsRatom.steerOffset = ATOMC.steerOffset
@@ -276,19 +276,19 @@ class CarInterface(CarInterfaceBase):
     if read and nOpkrTuneStartAt:
       ATOMC.read_tune()
 
-    ret.atomTuning.cv_KPH    = ATOMC.cv_KPH
-    ret.atomTuning.cv_BPV    = ATOMC.cv_BPV
-    ret.atomTuning.cv_sMaxV  = ATOMC.cv_sMaxV
-    ret.atomTuning.cv_sdUpV  = ATOMC.cv_sdUPV
-    ret.atomTuning.cv_sdDnV  = ATOMC.cv_sdDNV
+    ret.atomTuning.cvKPH    = ATOMC.cv_KPH
+    ret.atomTuning.cvBPV    = ATOMC.cv_BPV
+    ret.atomTuning.cvsMaxV  = ATOMC.cv_sMaxV
+    ret.atomTuning.cvsdUpV  = ATOMC.cv_sdUPV
+    ret.atomTuning.cvsdDnV  = ATOMC.cv_sdDNV
     
-    ret.atomTuning.sr_KPH     = ATOMC.sR_KPH
-    ret.atomTuning.sr_BPV     = ATOMC.sR_BPV
-    ret.atomTuning.sR_lqr_kiV      = ATOMC.sR_lqr_kiV
-    ret.atomTuning.sR_lqr_scaleV   = ATOMC.sR_lqr_scaleV
-    ret.atomTuning.sR_pid_KiV      = ATOMC.sR_pid_KiV
-    ret.atomTuning.sR_pid_KpV      = ATOMC.sR_pid_KpV
-    ret.atomTuning.sR_steerRatioV = ATOMC.sR_steerRatioV
+    ret.atomTuning.srKPH     = ATOMC.sR_KPH
+    ret.atomTuning.srBPV     = ATOMC.sR_BPV
+    ret.atomTuning.sRlqrkiV      = ATOMC.sR_lqr_kiV
+    ret.atomTuning.sRlqrscaleV   = ATOMC.sR_lqr_scaleV
+    ret.atomTuning.sRpidKiV      = ATOMC.sR_pid_KiV
+    ret.atomTuning.sRpidKpV      = ATOMC.sR_pid_KpV
+    ret.atomTuning.sRsteerRatioV = ATOMC.sR_steerRatioV
   
     ret.lateralsRatom.deadzone = ATOMC.sR_pid_deadzone      # OK
     ret.lateralsRatom.steerOffset = ATOMC.steerOffset       # OK

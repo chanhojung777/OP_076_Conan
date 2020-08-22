@@ -157,9 +157,9 @@ class PathPlanner():
       if self.steerRatio == 0:
         self.steerRatio = CP.steerRatio
       
-      self.steerRatio = interp( angle_steers, CP.atomTuning.sr_BPV, CP.atomTuning.sR_steerRatioV)
+      self.steerRatio = interp( angle_steers, CP.atomTuning.srBPV, CP.atomTuning.sRsteerRatioV)
 
-      str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format( self.steerRatio, CP.steerRatio, CP.atomTuning.sr_BPV, CP.atomTuning.sR_steerRatioV )
+      str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format( self.steerRatio, CP.steerRatio, CP.atomTuning.srBPV, CP.atomTuning.sRsteerRatioV )
       str_log2 = 'steerRateCost={:.2f}'.format( self.steer_rate_cost )
       self.trPATH.add( '{} {}'.format( str_log1, str_log2 ) )
       
