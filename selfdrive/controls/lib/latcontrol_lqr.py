@@ -44,11 +44,11 @@ class LatControlLQR():
     return self.sat_count > self.sat_limit
 
 
-  def atom_tune( self, v_ego_kph, sr_value ):  # 조향각에 따른 변화.
-    self.sr_KPH = self.CP.atomTuning.sr_KPH
-    self.sr_BPV = self.CP.atomTuning.sr_BPV
-    self.sR_lqr_kiV  = self.CP.atomTuning.sR_lqr_kiV
-    self.sR_lqr_scaleV = self.CP.atomTuning.sR_lqr_scaleV
+  def atom_tune( self, v_ego_kph, sr_value, CP ):  # 조향각에 따른 변화.
+    self.sr_KPH = CP.atomTuning.sr_KPH
+    self.sr_BPV = CP.atomTuning.sr_BPV
+    self.sR_lqr_kiV  = CP.atomTuning.sR_lqr_kiV
+    self.sR_lqr_scaleV = CP.atomTuning.sR_lqr_scaleV
 
     self.ki = []
     self.scale = []
@@ -75,7 +75,7 @@ class LatControlLQR():
     steering_angle = CS.steeringAngle
 
     v_ego_kph = CS.vEgo * CV.MS_TO_KPH
-    self.ki, self.scale = self.atom_tune( v_ego_kph, CS.steeringAngle )
+    self.ki, self.scale = self.atom_tune( v_ego_kph, CS.steeringAngle, CP )
 
     # Subtract offset. Zero angle should correspond to zero torque
     self.angle_steers_des = path_plan.angleSteers - path_plan.angleOffset
