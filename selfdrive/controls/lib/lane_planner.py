@@ -5,7 +5,7 @@ from selfdrive.car.hyundai.interface import ATOMC
 
 
 
-CAMERA_OFFSET = ATOMC.camera_offset  # m from center car to camera
+CAMERA_OFFSET = ATOMC.steerOffset  # m from center car to camera
 
 
 def compute_path_pinv(l=50):
