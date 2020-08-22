@@ -80,10 +80,10 @@ class CarController():
       return value
 
 
-  def process_hud_alert(self, enabled, CC ):
-    visual_alert = CC.hudControl.visualAlert
-    left_lane = CC.hudControl.leftLaneVisible
-    right_lane = CC.hudControl.rightLaneVisible
+  def process_hud_alert(self, enabled, c ):
+    visual_alert = c.hudControl.visualAlert
+    left_lane = c.hudControl.leftLaneVisible
+    right_lane = c.hudControl.rightLaneVisible
 
     sys_warning = (visual_alert == VisualAlert.steerRequired)
 
@@ -146,82 +146,48 @@ class CarController():
 
 
 
-  def steerParams_torque(self, CS, abs_angle_steers, path_plan, CC ):
+  def steerParams_torque(self, CS, abs_angle_steers, path_plan ):
     param = SteerLimitParams()
     v_ego_kph = CS.out.vEgo * CV.MS_TO_KPH
 
-    MAX, UP, DN = self.atom_tune( v_ego_kph, self.model_speed )
-    param.STEER_MAX = min( param.STEER_MAX, MAX)
-    param.STEER_DELTA_UP = min( param.STEER_DELTA_UP, UP)
-    param.STEER_DELTA_DOWN = min( param.STEER_DELTA_DOWN, DN )
-
-
-    # streer over check
-    if v_ego_kph > 5 and abs( CS.out.steeringTorque ) > 180:  #사용자 핸들 토크
-      self.steer_torque_over_timer = 1
-    else:
+    self.enable_time = self.timer1.sampleTime()
+    if self.enable_time < 50:
       self.steer_torque_over_timer = 0
-
-
-    if CS.out.leftBlinker or CS.out.rightBlinker:
-      self.nBlinker += 1
-    elif self.nBlinker:
-      self.nBlinker = 0
-
-    # 차선이 없고 앞차량이 없으면.
-    steer_angle_lower = self.dRel > 20 and (not CC.hudControl.leftLaneVisible  and not CC.hudControl.rightLaneVisible)
-
-    if v_ego_kph < 1:
-      self.steer_torque_over_timer = 0
-      self.steer_torque_ratio_dir = 1
-    elif path_plan.laneChangeState != LaneChangeState.off:
-      self.steer_torque_ratio_dir = 1
-      self.steer_torque_over_timer = 0
-      self.nBlinker = 0
-    elif self.steer_torque_over_timer:  #or CS.out.steerWarning:
-      self.steer_torque_ratio_dir = -1
-    elif steer_angle_lower:
-      param.STEER_MAX *= 0.5
-      param.STEER_DELTA_UP  = 1
-      param.STEER_DELTA_DOWN = 2
-      self.steer_torque_ratio_dir = 1      
-    else:
-      self.steer_torque_ratio_dir = 1
-
-    lane_change_torque_lower = 0
-    if self.nBlinker > 10 and v_ego_kph > 1:
-      lane_change_torque_lower = int(CS.out.leftBlinker) + int(CS.out.rightBlinker) * 2
-      if CS.out.steeringPressed and self.param_OpkrWhoisDriver:
-        self.steer_torque_ratio = 0.05      
-
-    self.lane_change_torque_lower =  lane_change_torque_lower
-
-    # smoth torque enable or disable
-
-    sec_pval = 0.5  # 0.5 sec 운전자 => 오파 
-    sec_mval = 1.0  # 오파 => 운전자.
-    if self.param_OpkrWhoisDriver == 1: # 민감
-      sec_mval = 1.0  # 1 sec
-    elif self.param_OpkrWhoisDriver == 2: # 중간
-      sec_mval = 3.0  # 2 sec
-    else:  # 보통.
-      sec_mval = 5.0  # 5 sec
-
-    ratio_pval = 1/(100*sec_pval)     
-    ratio_mval = 1/(100*sec_mval)   
-    if self.param_OpkrWhoisDriver == 0:
       self.steer_torque_ratio = 1
-    elif self.steer_torque_ratio_dir >= 1:
-      if self.steer_torque_ratio < 1:
-        self.steer_torque_ratio += ratio_pval   
-    elif self.steer_torque_ratio_dir <= -1:
-      if self.steer_torque_ratio > 0:
-        self.steer_torque_ratio -= ratio_mval   
+      return param
+
+    nMAX, nUP, nDN = self.atom_tune( CS.out.vEgo, self.model_speed )
+    param.STEER_MAX = min( param.STEER_MAX, nMAX)
+    param.STEER_DELTA_UP = min( param.STEER_DELTA_UP, nUP)
+    param.STEER_DELTA_DOWN = min( param.STEER_DELTA_DOWN, nDN )
+
+    sec_pval = 0.5  # 0.5 sec 운전자 => 오파  (sec)
+    sec_mval = 30.0  # 오파 => 운전자.  (sec)
+    # streer over check
+    if path_plan.laneChangeState != LaneChangeState.off:
+      self.steer_torque_over_timer = 0
+    elif CS.out.leftBlinker or CS.out.rightBlinker:
+      sec_mval = 0.2  # 오파 => 운전자.
+      sec_pval = 10
+
+
+    if v_ego_kph > 5 and CS.out.steeringPressed:  #사용자 핸들 토크
+      self.steer_torque_over_timer = 50
+    elif self.steer_torque_over_timer:
+      self.steer_torque_over_timer -= 1
+
+    ratio_pval = 1/(100*sec_pval)
+    ratio_mval = 1/(100*sec_mval)
+
+    if self.steer_torque_over_timer:
+      self.steer_torque_ratio -= ratio_mval
+    else:
+      self.steer_torque_ratio += ratio_pval
 
     if self.steer_torque_ratio < 0:
       self.steer_torque_ratio = 0
     elif self.steer_torque_ratio > 1:
-      self.steer_torque_ratio = 1
+      self.steer_torque_ratio = 1      
 
     return  param
 
@@ -254,17 +220,17 @@ class CarController():
         self.SC = SpdctrlNormal()      
 
 
-#  CC:car.CarControl(car.capnp), CS:CarState  CP:CarInterface.get_params
-  def update(self, CC, CS, frame, sm, CP ):
+#  c:car.CarControl(car.capnp), CS:CarState  CP:CarInterface.get_params
+  def update(self, c, CS, frame, sm, CP ):
     if self.CP != CP:
       self.CP = CP
 
     self.param_load()
 
 
-    enabled = CC.enabled
-    actuators = CC.actuators
-    pcm_cancel_cmd = CC.cruiseControl.cancel
+    enabled = c.enabled
+    actuators = c.actuators
+    pcm_cancel_cmd = c.cruiseControl.cancel
 
 
     path_plan = sm['pathPlan']
@@ -278,7 +244,7 @@ class CarController():
       self.model_speed = self.model_sum = 0
 
     # Steering Torque
-    param = self.steerParams_torque( CS, abs_angle_steers, path_plan, CC )
+    param = self.steerParams_torque( CS, abs_angle_steers, path_plan )
 
 
     new_steer = actuators.steer * param.STEER_MAX
@@ -294,9 +260,6 @@ class CarController():
     # disable if steer angle reach 90 deg, otherwise mdps fault in some models
     lkas_active = enabled and abs(CS.out.steeringAngle) < 90. #and self.lkas_button
 
-    # fix for Genesis hard fault at low speed
-    #if CS.out.vEgo < 16.7 and self.car_fingerprint == CAR.HYUNDAI_GENESIS:
-    #  lkas_active = 0
 
     if not lkas_active:
       apply_steer = 0
@@ -305,7 +268,7 @@ class CarController():
 
     self.apply_steer_last = apply_steer
 
-    sys_warning, sys_state = self.process_hud_alert( lkas_active, CC )
+    sys_warning, sys_state = self.process_hud_alert( lkas_active, c )
 
     can_sends = []
     if frame == 0: # initialize counts from last received count signals
@@ -316,7 +279,7 @@ class CarController():
     can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
 
     can_sends.append(create_lkas11(self.packer, self.lkas11_cnt, self.car_fingerprint, apply_steer, steer_req,
-                                   CS.lkas11, sys_warning, sys_state, CC ))
+                                   CS.lkas11, sys_warning, sys_state, c ))
 
     # send mdps12 to LKAS to prevent LKAS error if no cancel cmd
     #can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))

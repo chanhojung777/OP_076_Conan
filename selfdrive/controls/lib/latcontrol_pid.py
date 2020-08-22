@@ -2,7 +2,7 @@ from selfdrive.controls.lib.pid import PIController
 from selfdrive.controls.lib.drive_helpers import get_steer_max
 from cereal import car
 from cereal import log
-
+from selfdrive.config import Conversions as CV
 
 from common.numpy_fast import interp
 
@@ -25,65 +25,38 @@ class LatControlPID():
   def reset(self):
     self.pid.reset()
 
+  def atom_tune( self, v_ego_kph, sr_value, CP ):  # 조향각에 따른 변화.
+    self.sr_KPH = CP.atomTuning.sr_KPH
+    self.sr_BPV = CP.atomTuning.sr_BPV
+    self.sR_pid_KiV  = CP.atomTuning.sR_pid_KiV
+    self.sR_pid_KpV = CP.atomTuning.sR_pid_KpV
 
+
+    self.Ki = []
+    self.Kp = []
+    self.Ms = []
+
+    nPos = 0
+    for angle in self.sr_BPV:  # angle
+      self.Ki.append( interp( sr_value, angle, self.sR_pid_KiV[nPos] ) )
+      self.Kp.append( interp( sr_value, angle, self.sR_pid_KpV[nPos] ) )
+      nPos += 1
+      if nPos > 10:
+        break
+
+    for kph in self.sr_KPH:
+      self.Ms.append( kph * CV.KPH_TO_MS )
+
+    #rt_Ki = interp( v_ego_kph, self.sr_KPH, self.Ki )
+    #rt_Kp  = interp( v_ego_kph, self.sr_KPH, self.Kp )
+     
+    return self.Ms, self.Ki, self.Kp
 
   def linear2_tune( self, CS, CP ):  # angle(조향각에 의한 변화)
-    v_ego = CS.vEgo
-    
-
-    self.sRKPHV = CP.lateralPIDatom.sRKPHV
-    self.sRkBPV = CP.lateralPIDatom.sRkBPV
-    self.sRBoostV = CP.lateralPIDatom.sRBoostV
-
-    self.sRkpV1 = CP.lateralPIDatom.sRkpV1
-    self.sRkiV1 = CP.lateralPIDatom.sRkiV1
-    self.sRkdV1 = CP.lateralPIDatom.sRkdV1
-    self.sRkfV1 = CP.lateralPIDatom.sRkfV1
-    self.sRkpV2 = CP.lateralPIDatom.sRkpV2
-    self.sRkiV2 = CP.lateralPIDatom.sRkiV2
-    self.sRkdV2 = CP.lateralPIDatom.sRkdV2
-    self.sRkfV2 = CP.lateralPIDatom.sRkfV2
-
-    self.deadzone =  CP.lateralsRatom.deadzone
-
-
-    str1 = 'bp={}  srBP={} sRBoost={} sRkpV={},{} sRkiV={},{} sRkdV={},{} sRkfV={},{}'.format( self.sRKPHV, self.sRkBPV, self.sRBoostV, self.sRkpV1, self.sRkpV2, self.sRkiV1, self.sRkiV2, self.sRkdV1, self.sRkdV2, self.sRkfV1, self.sRkfV2 )
-    self.trPID.add( str1 )    
-
-    cv_angle = abs(self.angle_steers_des)
-    cv = self.sRkBPV   # angle
-    # Kp
-    fKp1 = self.sRkpV1
-    fKp2 = self.sRkpV2
-    self.steerKp1 = interp( cv_angle, cv, fKp1 )
-    self.steerKp2 = interp( cv_angle, cv, fKp2 )
-    self.steerKpV = [ float(self.steerKp1), float(self.steerKp2) ]
-
-    # Ki
-    fKi1 = self.sRkiV1
-    fKi2 = self.sRkiV2
-    self.steerKi1 = interp( cv_angle, cv, fKi1 )
-    self.steerKi2 = interp( cv_angle, cv, fKi2 )
-    self.steerKiV = [ float(self.steerKi1), float(self.steerKi2) ]
-
-    # Kd
-    fKd1 = self.sRkdV1
-    fKd2 = self.sRkdV2
-    self.steerKd1 = interp( cv_angle, cv, fKd1 )
-    self.steerKd2 = interp( cv_angle, cv, fKd2 )    
-    self.steerKdV = [ float(self.steerKd1), float(self.steerKd2) ]
-
-    # kf
-    fKf1 = self.sRkfV1
-    fKf2 = self.sRkfV2
-    self.steerKf1 = interp( cv_angle, cv, fKf1 )
-    self.steerKf2 = interp( cv_angle, cv, fKf2 )
-
-    sRKPHV = self.sRKPHV
-    fp = [float(self.steerKf1), float(self.steerKf2) ]
-    self.steerKf = interp( v_ego,  sRKPHV, fp )
-
-    self.pid.gain( (sRKPHV, self.steerKpV), (sRKPHV, self.steerKiV), k_f=self.steerKf, k_d=(sRKPHV, self.steerKdV) )
+    v_ego_kph = CS.vEgo * CV.MS_TO_KPH
+    sr_value = self.angle_steers_des
+    MsV, KiV, KpV = self.atom_tune( v_ego_kph, sr_value, CP )
+    self.pid.gain( (MsV, KpV), (MsV, KiV), k_f=self.steerKf )
 
 
 

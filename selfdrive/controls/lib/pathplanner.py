@@ -133,7 +133,7 @@ class PathPlanner():
     active = sm['controlsState'].active
     v_ego_kph = v_ego * CV.MS_TO_KPH
 
-    self.atom_steer_ratio = sm['liveParameters'].steerRatio
+    self.steerRatio = sm['liveParameters'].steerRatio
     angle_offset = sm['liveParameters'].angleOffset
     angleOffsetAverage = sm['liveParameters'].angleOffsetAverage
     stiffnessFactor = sm['liveParameters'].stiffnessFactor
@@ -157,21 +157,16 @@ class PathPlanner():
       if self.steerRatio == 0:
         self.steerRatio = CP.steerRatio
       
-      self.atom_sr_boost_bp = CP.lateralPIDatom.sRkBPV
-      self.atom_sr_boost_range = CP.lateralPIDatom.sRBoostV
-      boost_rate = interp(abs(angle_steers), self.atom_sr_boost_bp, self.atom_sr_boost_range)
-      self.atom_steer_ratio = self.steerRatio + boost_rate
+      self.steerRatio = interp( angle_steers, CP.atomTuning.sr_BPV, CP.atomTuning.sR_steerRatioV)
 
-
-
-      str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format( self.steerRatio, CP.steerRatio, self.atom_sr_boost_bp, self.atom_sr_boost_range )
+      str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format( self.steerRatio, CP.steerRatio, CP.atomTuning.sr_BPV, CP.atomTuning.sR_steerRatioV )
       str_log2 = 'steerRateCost={:.2f}'.format( self.steer_rate_cost )
       self.trPATH.add( '{} {}'.format( str_log1, str_log2 ) )
       
 
     # Run MPC
     self.angle_steers_des_prev = self.angle_steers_des_mpc
-    VM.update_params(stiffnessFactor, self.atom_steer_ratio ) # sm['liveParameters'].steerRatio)
+    VM.update_params(stiffnessFactor, self.steerRatio ) # sm['liveParameters'].steerRatio)
     curvature_factor = VM.curvature_factor(v_ego)
 
 
