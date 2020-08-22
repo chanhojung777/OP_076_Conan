@@ -528,7 +528,7 @@ struct ControlsState @0x97ff69c53601abf1 {
 
   decelForModel @54 :Bool;
   canErrorCounter @57 :UInt32;
-  output @58 :Falot32;
+  output @58 :Float32;
   alertTextMsg1  @59 :Text;
   alertTextMsg2  @60 :Text;  
 
