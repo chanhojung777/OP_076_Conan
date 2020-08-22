@@ -411,10 +411,8 @@ struct CarParams {
   fingerprintSource @49: FingerprintSource;
   networkLocation @50 :NetworkLocation;  # Where Panda/C2 is integrated into the car's CAN network
   longcontrolEnabled @51  :Bool;
-  lateralPIDatom @52 :LateralPIDatom;
-  lateralCVatom @53 :LateralCVatom;
-  lateralsRatom @54 :LateralsRatom;
-  atomTuning @55 :AtomTuning;
+  lateralsRatom @52 :LateralsRatom;
+  atomTuning @53 :AtomTuning;
 
   struct AtomTuning {
     cv_KPH @0 :List(Float32);
@@ -436,32 +434,9 @@ struct CarParams {
     learnerParams @0 :Int16;    
     deadzone @1 :Float32;
     steerOffset @2 :Float32;
-    camera_offset @3 :Float32;    
   }
 
-  struct LateralCVatom {
-    cvBPV @0 :List(Float32);
-    cvSteerMaxV1 @1 :List(Float32);
-    cvSteerDeltaUpV1 @2 :List(Float32);
-    cvSteerDeltaDnV1 @3 :List(Float32);
-    cvSteerMaxV2 @4 :List(Float32);
-    cvSteerDeltaUpV2 @5 :List(Float32);
-    cvSteerDeltaDnV2 @6 :List(Float32);
-  }
 
-  struct LateralPIDatom {
-    sRKPHV @0 :List(Float32);
-    sRkBPV @1 :List(Float32);
-    sRkpV1 @2 :List(Float32);
-    sRkiV1 @3 :List(Float32);
-    sRkdV1 @4 :List(Float32);
-    sRkfV1  @5 :List(Float32);
-    sRkpV2 @6 :List(Float32);
-    sRkiV2 @7 :List(Float32);
-    sRkdV2 @8 :List(Float32);
-    sRkfV2  @9 :List(Float32);
-    sRBoostV @10 :List(Float32);
-  }
 
   struct LateralParams {
     torqueBP @0 :List(Int32);
