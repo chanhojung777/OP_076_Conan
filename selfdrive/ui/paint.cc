@@ -688,10 +688,11 @@ static void ui_draw_debug(UIState *s)
 
   
      
+  ui_print( s, x_pos, y_pos+0, "L:%d, R:%d",scene.leftBlindspot, scene.rightBlindspot );
 
-  ui_print( s, x_pos, y_pos+0, "sR:%.2f", scene.liveParams.steerRatio );
-  ui_print( s, x_pos, y_pos+50, "aO:%.2f", scene.liveParams.angleOffset );
-  ui_print( s, x_pos, y_pos+100, "aA:%.2f", scene.liveParams.angleOffsetAverage );
+  ui_print( s, x_pos, y_pos+50, "sR:%.2f", scene.liveParams.steerRatio );
+  ui_print( s, x_pos, y_pos+100, "aO:%.2f", scene.liveParams.angleOffset );
+  ui_print( s, x_pos, y_pos+150, "aA:%.2f", scene.liveParams.angleOffsetAverage );
 
 
 
