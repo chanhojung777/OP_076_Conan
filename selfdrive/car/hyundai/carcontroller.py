@@ -215,7 +215,7 @@ class CarController():
     elif self.steer_torque_ratio > 1:
       self.steer_torque_ratio = 1      
 
-    return  param, dst_steer
+    return  param
 
   def param_load(self ):
     self.command_cnt += 1
@@ -271,7 +271,7 @@ class CarController():
 
     # Steering Torque
     param = SteerLimitParams()    
-    param, dst_steer = self.steerParams_torque( CS, actuators, path_plan, param )
+    #param = self.steerParams_torque( CS, c.actuators, path_plan, param )
 
 
     new_steer = actuators.steer * param.STEER_MAX
@@ -311,7 +311,7 @@ class CarController():
     # send mdps12 to LKAS to prevent LKAS error if no cancel cmd
     #can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
 
-    str_log1 = 'torg:{:5.0f}/{:5.0f}/{:5.0f}  CV={:5.1f}'.format(  apply_steer, new_steer, dst_steer, self.model_speed  )
+    str_log1 = 'torg:{:5.0f}/{:5.0f}  CV={:5.1f}'.format(  apply_steer, new_steer,  self.model_speed  )
     str_log2 = 'limit={:.0f} tm={:.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
