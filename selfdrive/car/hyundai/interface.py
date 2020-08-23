@@ -282,7 +282,7 @@ class CarInterface(CarInterfaceBase):
     CP.atomTuning.cvsdUpV  = ATOMC.cv_sdUPV
     CP.atomTuning.cvsdDnV  = ATOMC.cv_sdDNV
     
-    CP.atomTuning.srKPH     = ATOMC.sR_KPH
+    CP.atomTuning.sRKPH     = ATOMC.sR_KPH
     CP.atomTuning.sRBPV     = ATOMC.sR_BPV
     CP.atomTuning.sRlqrkiV      = ATOMC.sR_lqr_kiV
     CP.atomTuning.sRlqrscaleV   = ATOMC.sR_lqr_scaleV

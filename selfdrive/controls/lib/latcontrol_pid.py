@@ -25,8 +25,8 @@ class LatControlPID():
     self.pid.reset()
 
   def atom_tune( self, v_ego_kph, sr_value, CP ):  # 조향각에 따른 변화.
-    self.sr_KPH = CP.atomTuning.srKPH
-    self.sr_BPV = CP.atomTuning.srBPV
+    self.sr_KPH = CP.atomTuning.sRKPH
+    self.sr_BPV = CP.atomTuning.sRBPV
     self.sR_pid_KiV  = CP.atomTuning.sRpidKiV
     self.sR_pid_KpV = CP.atomTuning.sRpidKpV
 
