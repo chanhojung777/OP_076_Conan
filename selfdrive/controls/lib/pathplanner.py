@@ -22,7 +22,7 @@ LaneChangeDirection = log.PathPlan.LaneChangeDirection
 
 LOG_MPC = os.environ.get('LOG_MPC', False)
 
-LANE_CHANGE_SPEED_MIN = 70 * CV.KPH_TO_MS
+LANE_CHANGE_SPEED_MIN = 60 * CV.KPH_TO_MS
 LANE_CHANGE_TIME_MAX = 10.
 
 DESIRES = {
@@ -157,9 +157,9 @@ class PathPlanner():
       if self.steerRatio == 0:
         self.steerRatio = CP.steerRatio
       
-      self.steerRatio = interp( angle_steers, CP.atomTuning.srBPV, CP.atomTuning.sRsteerRatioV)
+      self.steerRatio = interp( angle_steers, CP.atomTuning.sRBPV, CP.atomTuning.sRsteerRatioV)
 
-      str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format( self.steerRatio, CP.steerRatio, CP.atomTuning.srBPV, CP.atomTuning.sRsteerRatioV )
+      str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format( self.steerRatio, CP.steerRatio, CP.atomTuning.sRBPV, CP.atomTuning.sRsteerRatioV )
       str_log2 = 'steerRateCost={:.2f}'.format( self.steer_rate_cost )
       self.trPATH.add( '{} {}'.format( str_log1, str_log2 ) )
       
@@ -272,7 +272,7 @@ class PathPlanner():
     # atom
     if v_ego_kph < 30:
         xp = [5,15,30]
-        fp2 = [1,3,5]
+        fp2 = [3,5,9]
         limit_steers = interp( v_ego_kph, xp, fp2 )
         self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
 

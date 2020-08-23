@@ -3,6 +3,7 @@ from selfdrive.controls.lib.drive_helpers import get_steer_max
 from common.numpy_fast import clip
 from common.realtime import DT_CTRL
 from cereal import log
+from common.numpy_fast import interp
 from selfdrive.config import Conversions as CV
 
 class LatControlLQR():
@@ -45,8 +46,8 @@ class LatControlLQR():
 
 
   def atom_tune( self, v_ego_kph, sr_value, CP ):  # 조향각에 따른 변화.
-    self.sr_KPH = CP.atomTuning.srKPH
-    self.sr_BPV = CP.atomTuning.srBPV
+    self.sr_KPH = CP.atomTuning.sRKPH
+    self.sr_BPV = CP.atomTuning.sRBPV
     self.sR_lqr_kiV  = CP.atomTuning.sRlqrkiV
     self.sR_lqr_scaleV = CP.atomTuning.sRlqrscaleV
 

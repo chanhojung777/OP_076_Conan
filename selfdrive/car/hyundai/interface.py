@@ -236,8 +236,8 @@ class CarInterface(CarInterfaceBase):
     ret.atomTuning.cvsdUpV  = ATOMC.cv_sdUPV
     ret.atomTuning.cvsdDnV  = ATOMC.cv_sdDNV
     
-    ret.atomTuning.srKPH     = ATOMC.sR_KPH
-    ret.atomTuning.srBPV     = ATOMC.sR_BPV
+    ret.atomTuning.sRKPH     = ATOMC.sR_KPH
+    ret.atomTuning.sRBPV     = ATOMC.sR_BPV
     ret.atomTuning.sRlqrkiV      = ATOMC.sR_lqr_kiV
     ret.atomTuning.sRlqrscaleV   = ATOMC.sR_lqr_scaleV
     ret.atomTuning.sRpidKiV      = ATOMC.sR_pid_KiV
@@ -283,7 +283,7 @@ class CarInterface(CarInterfaceBase):
     ret.atomTuning.cvsdDnV  = ATOMC.cv_sdDNV
     
     ret.atomTuning.srKPH     = ATOMC.sR_KPH
-    ret.atomTuning.srBPV     = ATOMC.sR_BPV
+    ret.atomTuning.sRBPV     = ATOMC.sR_BPV
     ret.atomTuning.sRlqrkiV      = ATOMC.sR_lqr_kiV
     ret.atomTuning.sRlqrscaleV   = ATOMC.sR_lqr_scaleV
     ret.atomTuning.sRpidKiV      = ATOMC.sR_pid_KiV
