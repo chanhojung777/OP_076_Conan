@@ -19,7 +19,13 @@ VisualAlert = car.CarControl.HUDControl.VisualAlert
 LaneChangeState = log.PathPlan.LaneChangeState
 
 
-
+class SteerLimitParams:
+  STEER_MAX = 255   # 409 is the max, 255 is stock
+  STEER_DELTA_UP = 3
+  STEER_DELTA_DOWN = 7
+  STEER_DRIVER_ALLOWANCE = 50
+  STEER_DRIVER_MULTIPLIER = 2
+  STEER_DRIVER_FACTOR = 1
 
 class CarController():
   def __init__(self, dbc_name, CP, VM):
