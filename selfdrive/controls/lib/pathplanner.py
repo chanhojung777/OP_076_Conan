@@ -274,12 +274,15 @@ class PathPlanner():
     # atom
     if steeringPressed:
       delta_steer = self.angle_steers_des_mpc - angle_steers
+      xp = [-255,0,255]
+      fp2 = [-5,0,5]
+      limit_steers = interp( steeringTorque, xp, fp2 )      
       if steeringTorque < 0:  # right
-        if delta_steer > 0:  # 반대 방향 이면 회전 방향으로 조향각을 변경한다.
-          self.angle_steers_des_mpc = angle_steers - 1
+        if delta_steer > 0:
+          self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
       elif steeringTorque > 0:  # left
-        if delta_steer < 0: # 반대 방향 이면 회전 방향으로 조향각을 변경한다.
-          self.angle_steers_des_mpc = angle_steers + 1
+        if delta_steer < 0:
+          self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
 
     elif v_ego_kph < 30:
         xp = [5,15,30]
