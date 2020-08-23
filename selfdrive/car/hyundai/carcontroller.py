@@ -146,8 +146,8 @@ class CarController():
 
 
 
-  def steerParams_torque(self, CS, actuators, path_plan ):
-    param = SteerLimitParams()
+  def steerParams_torque(self, CS, actuators, path_plan, param ):
+    #param = SteerLimitParams()
     v_ego_kph = CS.out.vEgo * CV.MS_TO_KPH
     abs_angle_steers =  abs(actuators.steerAngle)    
     dst_steer = actuators.steer * param.STEER_MAX
@@ -264,7 +264,7 @@ class CarController():
 
     # Steering Torque
     param = SteerLimitParams()    
-    param, dst_steer = self.steerParams_torque( CS, actuators, path_plan )
+    param, dst_steer = self.steerParams_torque( CS, actuators, path_plan, param )
 
 
     new_steer = actuators.steer * param.STEER_MAX
