@@ -1,7 +1,7 @@
 from cereal import car, log
 from selfdrive.car import apply_std_steer_torque_limits
 from selfdrive.car.hyundai.hyundaican import create_lkas11, create_clu11, create_lfa_mfa, create_mdps12
-from selfdrive.car.hyundai.values import Buttons, SteerLimitParams, CAR
+from selfdrive.car.hyundai.values import Buttons, SteerLimitParams, CAR, STEER_THRESHOLD
 from opendbc.can.packer import CANPacker
 from selfdrive.config import Conversions as CV
 from common.numpy_fast import interp
@@ -146,9 +146,11 @@ class CarController():
 
 
 
-  def steerParams_torque(self, CS, abs_angle_steers, path_plan ):
+  def steerParams_torque(self, CS, actuators, path_plan ):
     param = SteerLimitParams()
     v_ego_kph = CS.out.vEgo * CV.MS_TO_KPH
+    abs_angle_steers =  abs(actuators.steerAngle)    
+    dst_steer = actuators.steer * param.STEER_MAX
 
     self.enable_time = self.timer1.sampleTime()
     if self.enable_time < 50:
@@ -172,7 +174,21 @@ class CarController():
 
 
     if v_ego_kph > 5 and CS.out.steeringPressed:  #사용자 핸들 토크
-      self.steer_torque_over_timer = 50
+      if abs_angle_steers > 3 and CS.out.steeringTorque < -STEER_THRESHOLD:   #right
+        if dst_steer > 10:
+          self.steer_torque_over_timer = 0
+        else:
+          sec_mval = 0.1
+          self.steer_torque_over_timer = 50
+      elif abs_angle_steers > 3 and CS.out.steeringTorque > STEER_THRESHOLD:  #left
+        if dst_steer < -10:
+          self.steer_torque_over_timer = 0
+        else:
+          sec_mval = 0.1
+          self.steer_torque_over_timer = 50       
+      else:
+        self.steer_torque_over_timer = 50
+
     elif self.steer_torque_over_timer:
       self.steer_torque_over_timer -= 1
 
@@ -189,7 +205,7 @@ class CarController():
     elif self.steer_torque_ratio > 1:
       self.steer_torque_ratio = 1      
 
-    return  param
+    return  param, dst_steer
 
   def param_load(self ):
     self.command_cnt += 1
@@ -235,7 +251,7 @@ class CarController():
 
     path_plan = sm['pathPlan']
 
-    abs_angle_steers =  abs(actuators.steerAngle)
+
 
     self.dRel, self.yRel, self.vRel = SpdController.get_lead( sm )
     if self.SC is not None:
@@ -244,7 +260,7 @@ class CarController():
       self.model_speed = self.model_sum = 0
 
     # Steering Torque
-    param = self.steerParams_torque( CS, abs_angle_steers, path_plan )
+    param, dst_steer = self.steerParams_torque( CS, actuators, path_plan )
 
 
     new_steer = actuators.steer * param.STEER_MAX
@@ -258,7 +274,7 @@ class CarController():
 
 
     # disable if steer angle reach 90 deg, otherwise mdps fault in some models
-    lkas_active = enabled and abs(CS.out.steeringAngle) < 90. #and self.lkas_button
+    lkas_active = enabled #and abs(CS.out.steeringAngle) < 90. #and self.lkas_button
 
 
     if not lkas_active:
@@ -284,13 +300,13 @@ class CarController():
     # send mdps12 to LKAS to prevent LKAS error if no cancel cmd
     #can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
 
-    str_log1 = 'CV={:5.1f}/{:5.3f} torg:{:5.0f}'.format(  self.model_speed, self.model_sum, apply_steer )
+    str_log1 = 'torg:{:5.0f}/{:5.0f}/{:5.0f}  CV={:5.1f}'.format(  apply_steer, new_steer, dst_steer, self.model_speed  )
     str_log2 = 'limit={:.0f} tm={:.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
     run_speed_ctrl = self.param_OpkrAccelProfile and CS.acc_active and self.SC != None
     if not run_speed_ctrl:
-      str_log2 = 'U={:.0f}  LK={:.0f} dir={} steer={:5.0f} '.format( CS.Mdps_ToiUnavail, CS.lkas_button_on, self.steer_torque_ratio_dir, CS.out.steeringTorque  )
+      str_log2 = 'LKAS={:.0f}  steer={:5.0f} '.format(  CS.lkas_button_on,  CS.out.steeringTorque  )
       trace1.printf2( '{}'.format( str_log2 ) )
 
     if pcm_cancel_cmd and self.CP.longcontrolEnabled:
