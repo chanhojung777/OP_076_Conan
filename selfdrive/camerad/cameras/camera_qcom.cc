@@ -1770,7 +1770,7 @@ static void do_autofocus(CameraState *s) {
   float err = s->focus_err;
   float sag = (s->last_sag_acc_z/9.8) * 128;
 
-  const int dac_up = s->device == DEVICE_LP3? 634:456;
+  const int dac_up = s->device == DEVICE_LP3? 450:456;
   const int dac_down = s->device == DEVICE_LP3? 366:224;
 
   if (!isnan(err))  {
