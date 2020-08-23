@@ -262,7 +262,7 @@ class CarController():
       self.model_speed = self.model_sum = 0
 
     # Steering Torque
-    param = self.steerParams_torque( CS, c.actuators, path_plan )
+    param, dst_steer = self.steerParams_torque( CS, c.actuators, path_plan )
 
 
     new_steer = actuators.steer * param.STEER_MAX
