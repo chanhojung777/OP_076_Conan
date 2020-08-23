@@ -139,7 +139,7 @@ class PathPlanner():
     stiffnessFactor = sm['liveParameters'].stiffnessFactor
 
     if (self.atom_timer_cnt % 100) == 0:
-      str_log3 = 'angleOffset={:.1f} angleOffsetAverage={:.3f} steerRatio={:.2f} stiffnessFactor={:.3f} '.format( angle_offset, angleOffsetAverage, self.atom_steer_ratio, stiffnessFactor )
+      str_log3 = 'angleOffset={:.1f} angleOffsetAverage={:.3f} steerRatio={:.2f} stiffnessFactor={:.3f} '.format( angle_offset, angleOffsetAverage, self.steerRatio, stiffnessFactor )
       self.trLearner.add( 'LearnerParam {}'.format( str_log3 ) )       
 
     if CP.lateralsRatom.learnerParams:
