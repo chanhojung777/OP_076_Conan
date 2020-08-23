@@ -1,7 +1,7 @@
 from cereal import car, log
 from selfdrive.car import apply_std_steer_torque_limits
 from selfdrive.car.hyundai.hyundaican import create_lkas11, create_clu11, create_lfa_mfa, create_mdps12
-from selfdrive.car.hyundai.values import Buttons, SteerLimitParams, CAR  #, STEER_THRESHOLD
+from selfdrive.car.hyundai.values import Buttons, SteerLimitParams, CAR, STEER_THRESHOLD
 from opendbc.can.packer import CANPacker
 from selfdrive.config import Conversions as CV
 from common.numpy_fast import interp
@@ -175,14 +175,14 @@ class CarController():
 
 
     if v_ego_kph > 5 and CS.out.steeringPressed:  #사용자 핸들 토크
-      if abs_angle_steers > 3 and CS.out.steeringTorque < -80:  #STEER_THRESHOLD:   #right
+      if abs_angle_steers > 3 and CS.out.steeringTorque < -STEER_THRESHOLD:   #right
         if dst_steer < 0:
           #param.STEER_MAX = 255
           self.steer_torque_over_timer = 0
         else:
           sec_mval = 0.1
           self.steer_torque_over_timer = 50
-      elif abs_angle_steers > 3 and CS.out.steeringTorque > 80:  #STEER_THRESHOLD:  #left
+      elif abs_angle_steers > 3 and CS.out.steeringTorque > STEER_THRESHOLD:  #left
         if dst_steer > 0:
           #param.STEER_MAX = 255
           self.steer_torque_over_timer = 0
@@ -263,6 +263,7 @@ class CarController():
       self.model_speed = self.model_sum = 0
 
     # Steering Torque
+    param = SteerLimitParams()    
     param, dst_steer = self.steerParams_torque( CS, actuators, path_plan )
 
 
