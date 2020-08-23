@@ -304,13 +304,15 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
 }
 
 
-static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pvd) {
- if (pvd->cnt == 0) return;
+static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pvd) 
+{
+  int  nCnt = pvd->cnt; 
+ if (nCnt == 0) return;
 
   nvgBeginPath(s->vg);
   float offset = 0;
   nvgMoveTo(s->vg, pvd->v[0].x + offset, pvd->v[0].y);
-  for (int i=1; i<pvd->cnt; i++) {
+  for (int i=1; i<nCnt; i++) {
     if (pvd->v[i].y < pvd->v[i-1].y) offset = 100;
     nvgLineTo(s->vg, pvd->v[i].x + offset, pvd->v[i].y);
   }
@@ -331,14 +333,16 @@ static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pv
   nvgFill(s->vg);
 }
 
-static void ui_draw_track_left(UIState *s, bool is_mpc, track_vertices_data *pvd) {
- if (pvd->cnt == 0) return;
+static void ui_draw_track_left(UIState *s, bool is_mpc, track_vertices_data *pvd) 
+{
+   int  nCnt = pvd->cnt;  
+ if ( nCnt == 0) return;
 
   nvgBeginPath(s->vg);
-  float offset = -100;
+  float offset = 0;
   nvgMoveTo(s->vg, pvd->v[0].x + offset, pvd->v[0].y);
-  for (int i=1; i<pvd->cnt; i++) {
-    if (pvd->v[i].y < pvd->v[i-1].y) offset = 0;
+  for (int i=1; i<nCnt; i++) {
+    if (pvd->v[i].y < pvd->v[i-1].y) offset = -100;
     nvgLineTo(s->vg, pvd->v[i].x + offset, pvd->v[i].y);
   }
   nvgClosePath(s->vg);
