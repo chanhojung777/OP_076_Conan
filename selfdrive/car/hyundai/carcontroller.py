@@ -178,16 +178,14 @@ class CarController():
           param.STEER_MAX = SteerLimitParams.STEER_MAX
           self.steer_torque_over_timer = 0
         else:
-          param.STEER_MAX = 0
-          sec_mval = 0.1
+          sec_mval = 0.5
           self.steer_torque_over_timer = 50
       elif abs_angle_steers > 3 and CS.out.steeringTorque > STEER_THRESHOLD:  #left
         if dst_steer > 0:
           param.STEER_MAX = SteerLimitParams.STEER_MAX
           self.steer_torque_over_timer = 0
         else:
-          param.STEER_MAX = 0
-          sec_mval = 0.1
+          sec_mval = 0.5
           self.steer_torque_over_timer = 50       
       else:
         self.steer_torque_over_timer = 50
