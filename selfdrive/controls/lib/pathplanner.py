@@ -22,7 +22,7 @@ LaneChangeDirection = log.PathPlan.LaneChangeDirection
 
 LOG_MPC = os.environ.get('LOG_MPC', False)
 
-LANE_CHANGE_SPEED_MIN = 60 * CV.KPH_TO_MS
+LANE_CHANGE_SPEED_MIN = 65 * CV.KPH_TO_MS
 LANE_CHANGE_TIME_MAX = 10.
 
 DESIRES = {
@@ -130,6 +130,8 @@ class PathPlanner():
 
     v_ego = sm['carState'].vEgo
     angle_steers = sm['carState'].steeringAngle
+    steeringPressed  = sm['carState'].steeringPressed
+    steeringTorque = sm['carState'].steeringTorque
     active = sm['controlsState'].active
     v_ego_kph = v_ego * CV.MS_TO_KPH
 
@@ -186,9 +188,9 @@ class PathPlanner():
       self.lane_change_state = LaneChangeState.off
       self.lane_change_direction = LaneChangeDirection.none
     else:
-      torque_applied = sm['carState'].steeringPressed and \
-                        ((sm['carState'].steeringTorque > 0 and self.lane_change_direction == LaneChangeDirection.left) or \
-                          (sm['carState'].steeringTorque < 0 and self.lane_change_direction == LaneChangeDirection.right))
+      torque_applied = steeringPressed and \
+                        ((steeringTorque > 0 and self.lane_change_direction == LaneChangeDirection.left) or \
+                          (steeringTorque < 0 and self.lane_change_direction == LaneChangeDirection.right))
 
       blindspot_detected = ((sm['carState'].leftBlindspot and self.lane_change_direction == LaneChangeDirection.left) or
                             (sm['carState'].rightBlindspot and self.lane_change_direction == LaneChangeDirection.right))                          
@@ -270,7 +272,16 @@ class PathPlanner():
     org_angle_steers_des = self.angle_steers_des_mpc
 
     # atom
-    if v_ego_kph < 30:
+    if steeringPressed:
+      delta_steer = self.angle_steers_des_mpc - angle_steers
+      if steeringTorque < 0:  # right
+        if delta_steer > 0:  # 반대 방향 이면 회전 방향으로 조향각을 변경한다.
+          self.angle_steers_des_mpc = angle_steers - 1
+      elif steeringTorque > 0:  # left
+        if delta_steer < 0: # 반대 방향 이면 회전 방향으로 조향각을 변경한다.
+          self.angle_steers_des_mpc = angle_steers + 1
+
+    elif v_ego_kph < 30:
         xp = [5,15,30]
         fp2 = [3,5,9]
         limit_steers = interp( v_ego_kph, xp, fp2 )
