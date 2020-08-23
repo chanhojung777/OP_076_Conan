@@ -145,8 +145,8 @@ class CarController():
 
 
 
-  def steerParams_torque(self, CS, actuators, path_plan, param ):
-    #param = SteerLimitParams()
+  def steerParams_torque(self, CS, actuators, path_plan ):
+    param = SteerLimitParams()
     v_ego_kph = CS.out.vEgo * CV.MS_TO_KPH
     abs_angle_steers =  abs(actuators.steerAngle)    
     dst_steer = actuators.steer * param.STEER_MAX
@@ -155,7 +155,7 @@ class CarController():
     if self.enable_time < 50:
       self.steer_torque_over_timer = 0
       self.steer_torque_ratio = 1
-      return param
+      return param, dst_steer
 
 
     nMAX, nUP, nDN = self.atom_tune( CS.out.vEgo, self.model_speed )
@@ -207,7 +207,7 @@ class CarController():
     elif self.steer_torque_ratio > 1:
       self.steer_torque_ratio = 1      
 
-    return  param
+    return  param, dst_steer
 
   def param_load(self ):
     self.command_cnt += 1
@@ -262,8 +262,7 @@ class CarController():
       self.model_speed = self.model_sum = 0
 
     # Steering Torque
-    param = SteerLimitParams()    
-    #param = self.steerParams_torque( CS, c.actuators, path_plan, param )
+    param = self.steerParams_torque( CS, c.actuators, path_plan )
 
 
     new_steer = actuators.steer * param.STEER_MAX
