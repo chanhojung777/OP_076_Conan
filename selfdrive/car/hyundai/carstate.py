@@ -117,7 +117,6 @@ class CarState(CarStateBase):
       ret.cruiseState.speed = 0
 
 
-
     # TODO: Find brake pressure
     ret.brake = 0
     ret.brakePressed = cp.vl["TCS13"]['DriverBraking'] != 0
