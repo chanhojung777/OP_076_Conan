@@ -559,7 +559,7 @@ void handle_message(UIState *s, SubMaster &sm)
     scene.carParams.lateralsRatom.learnerParams = lateralsRatom.getLearnerParams();
     scene.carParams.lateralsRatom.deadzone  = lateralsRatom.getDeadzone();
     scene.carParams.lateralsRatom.steerOffset  = lateralsRatom.getSteerOffset();
-    scene.carParams.cameraOffset = lateralsRatom.getCameraOffset();    
+    scene.carParams.lateralsRatom.cameraOffset = lateralsRatom.getCameraOffset();    
   }
 
 
