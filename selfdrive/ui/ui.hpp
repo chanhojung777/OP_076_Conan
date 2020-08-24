@@ -232,6 +232,7 @@ typedef struct UIScene {
   {
     bool standstill;
     int  modeSel;
+    int  cruiseSwState;
   } cruiseState;
 
 
