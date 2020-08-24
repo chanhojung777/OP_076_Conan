@@ -16,6 +16,7 @@
 #include "dashcam.h"
 
 int  is_awake_command = false;
+int  old_cruiseSwState = 0;
 
 static int last_brightness = -1;
 static void set_brightness(UIState *s, int brightness) {
@@ -337,7 +338,8 @@ static void update_status(UIState *s, int status) {
   }
 }
 
-void handle_message(UIState *s, SubMaster &sm) {
+void handle_message(UIState *s, SubMaster &sm) 
+{
   UIScene &scene = s->scene;
   if (s->started && sm.updated("controlsState")) {
     auto event = sm["controlsState"];
@@ -364,10 +366,16 @@ void handle_message(UIState *s, SubMaster &sm) {
     auto alert_sound = data.getAlertSound();
     const auto sound_none = cereal::CarControl::HUDControl::AudibleAlert::NONE;
 
-    if( scene.canErrorCounter > 0)
+    if( scene.cruiseState.cruiseSwState != old_cruiseSwState )
     {
-      is_awake_command = true;
+      old_cruiseSwState = scene.cruiseState.cruiseSwState;
+       is_awake_command = true;
+    } 
+    else if( scene.canErrorCounter > 0)
+    {
+       is_awake_command = true;
     }
+  
     if (alert_sound != s->alert_sound){
       is_awake_command = true;
       if (s->alert_sound != sound_none){
@@ -532,6 +540,7 @@ void handle_message(UIState *s, SubMaster &sm) {
 
     scene.cruiseState.standstill = cruiseState.getStandstill();
     scene.cruiseState.modeSel = cruiseState.getModeSel();
+    scene.cruiseState.cruiseSwState = cruiseState.getCruiseSwState();
 
 
     auto getWheelSpeeds = data.getWheelSpeeds();

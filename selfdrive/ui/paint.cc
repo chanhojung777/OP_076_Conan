@@ -31,7 +31,7 @@ const uint8_t alert_colors[][4] = {
 };
 
 float  fFontSize = 0.8;
-extern  int  is_awake_command;
+
 
 static void ui_print(UIState *s, int x, int y,  const char* fmt, ... )
 {
@@ -339,10 +339,10 @@ static void ui_draw_track_left(UIState *s, bool is_mpc, track_vertices_data *pvd
  if ( nCnt == 0) return;
 
   nvgBeginPath(s->vg);
-  float offset = -100;
+  float offset = 0;
   nvgMoveTo(s->vg, pvd->v[0].x + offset, pvd->v[0].y);
   for (int i=1; i<nCnt; i++) {
-    if (pvd->v[i].y < pvd->v[i-1].y) offset = 0;
+    if (pvd->v[i].y < pvd->v[i-1].y) offset = -100;
     nvgLineTo(s->vg, pvd->v[i].x + offset, pvd->v[i].y);
   }
   nvgClosePath(s->vg);

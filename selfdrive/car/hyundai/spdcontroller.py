@@ -183,13 +183,12 @@ class SpdController():
             self.curise_set_first = 1
             self.prev_VSetDis = int(CS.VSetDis)
             set_speed_kph = CS.VSetDis
-            if self.prev_clu_CruiseSwState != CS.cruise_buttons:  # MODE 전환.
-                if CS.cruise_buttons == Buttons.CANCEL: 
+            if not CS.main_on and self.prev_clu_CruiseSwState != CS.cruise_buttons:  # MODE 전환.
+                if CS.cruise_buttons == Buttons.GAP_DIST: 
                     self.cruise_set_mode += 1
                 if self.cruise_set_mode > 3:
                     self.cruise_set_mode = 0
                 self.prev_clu_CruiseSwState = CS.cruise_buttons
-            
 
         if set_speed_kph < 30:
             set_speed_kph = 30

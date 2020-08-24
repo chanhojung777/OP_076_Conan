@@ -199,6 +199,7 @@ struct CarState {
     speedOffset @3 :Float32;
     standstill @4 :Bool;
     modeSel @5 :Int16;
+    cruiseSwState @6 :Int16;
   }
 
   enum GearShifter {

@@ -108,6 +108,7 @@ class CarState(CarStateBase):
     # most HKG cars has no long control, it is safer and easier to engage by main on
     self.cruiseState_modeSel , speed_kph = self.SC.update_cruiseSW( self )
     ret.cruiseState.modeSel = self.cruiseState_modeSel
+    ret.cruiseState.cruiseSwState = self.cruise_buttons
     if self.acc_active:
       is_set_speed_in_mph = int(cp.vl["CLU11"]["CF_Clu_SPEED_UNIT"])
       speed_conv = CV.MPH_TO_MS if is_set_speed_in_mph else CV.KPH_TO_MS
