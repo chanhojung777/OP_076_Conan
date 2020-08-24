@@ -173,6 +173,24 @@ class Controls:
     self.init_flag = True
 
 
+    self.timer_alloowed = 1500
+    self.timer_start = 1500
+
+  def auto_enable(self, CS):
+    if self.startup_event != None:
+      self.timer_alloowed = 500
+    elif self.hyundai_lkas or CS.vEgo < 15*CV.KPH_TO_MS or CS.gearShifter != 2:
+      if self.timer_alloowed < 100:
+        self.timer_alloowed = 100
+    elif self.state != State.enabled:
+      if self.timer_alloowed:
+        self.timer_alloowed -= 1
+      else:
+        self.timer_alloowed = 500
+        self.events.add( EventName.pcmEnable )
+    else:
+        self.timer_alloowed = 100
+
   def update_events(self, CS):
     """Compute carEvents from carState"""
 
@@ -258,6 +276,8 @@ class Controls:
     #if CS.brakePressed and self.sm['plan'].vTargetFuture >= STARTING_TARGET_SPEED \
     #   and not self.CP.radarOffCan and CS.vEgo < 0.3:
     #  self.events.add(EventName.noTarget)
+
+    self.auto_enable( CS )
 
 
   def data_sample(self):
