@@ -553,12 +553,13 @@ void handle_message(UIState *s, SubMaster &sm)
   if (sm.updated("carParams")) {
     auto data = sm["carParams"].getCarParams();
     scene.carParams.steerRatio = data.getSteerRatio();
-    scene.carParams.cameraOffset = data.getCameraOffset();
+
 
     auto lateralsRatom = data.getLateralsRatom();
     scene.carParams.lateralsRatom.learnerParams = lateralsRatom.getLearnerParams();
     scene.carParams.lateralsRatom.deadzone  = lateralsRatom.getDeadzone();
     scene.carParams.lateralsRatom.steerOffset  = lateralsRatom.getSteerOffset();
+    scene.carParams.cameraOffset = lateralsRatom.getCameraOffset();    
   }
 
 
