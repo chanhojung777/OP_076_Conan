@@ -692,7 +692,7 @@ static void ui_draw_debug(UIState *s)
 
   
      
-  ui_print( s, x_pos, y_pos+0, "cO:%.3f  %d",scene.carParams.lateralsRatom.cameraOffset, s->livempc_or_radarstate_changed );
+  ui_print( s, x_pos, y_pos+0, "cO:%.3f  %d, %d",scene.carParams.lateralsRatom.cameraOffset, scene.cruiseState.cruiseSwState, s->livempc_or_radarstate_changed );
 
   ui_print( s, x_pos, y_pos+50, "sR:%.2f", scene.liveParams.steerRatio );
   ui_print( s, x_pos, y_pos+100, "aO:%.2f", scene.liveParams.angleOffset );
