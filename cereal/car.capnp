@@ -435,6 +435,7 @@ struct CarParams {
     learnerParams @0 :Int16;    
     deadzone @1 :Float32;
     steerOffset @2 :Float32;
+    cameraOffset @3 :Float32;
   }
 
 

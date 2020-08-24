@@ -465,12 +465,14 @@ class Controls:
     ldw_allowed = self.is_ldw_enabled and CS.vEgo > LDW_MIN_SPEED and not recent_blinker \
                     and not self.active and self.sm['liveCalibration'].calStatus == Calibration.CALIBRATED
 
+
+    poly_camera_offset = CAMERA_OFFSET + self.CP.lateralsRatom.cameraOffset
     meta = self.sm['model'].meta
     if len(meta.desirePrediction) and ldw_allowed:
       l_lane_change_prob = meta.desirePrediction[Desire.laneChangeLeft - 1]
       r_lane_change_prob = meta.desirePrediction[Desire.laneChangeRight - 1]
-      l_lane_close = left_lane_visible and (self.sm['pathPlan'].lPoly[3] < (1.08 - CAMERA_OFFSET))
-      r_lane_close = right_lane_visible and (self.sm['pathPlan'].rPoly[3] > -(1.08 + CAMERA_OFFSET))
+      l_lane_close = left_lane_visible and (self.sm['pathPlan'].lPoly[3] < (1.08 - poly_camera_offset))
+      r_lane_close = right_lane_visible and (self.sm['pathPlan'].rPoly[3] > -(1.08 + poly_camera_offset))
 
       CC.hudControl.leftLaneDepart = bool(l_lane_change_prob > LANE_DEPARTURE_THRESHOLD and l_lane_close)
       CC.hudControl.rightLaneDepart = bool(r_lane_change_prob > LANE_DEPARTURE_THRESHOLD and r_lane_close)

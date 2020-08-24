@@ -1,11 +1,13 @@
 from common.numpy_fast import interp
 import numpy as np
 from cereal import log
-from selfdrive.car.hyundai.interface import ATOMC
 
 
 
-CAMERA_OFFSET = ATOMC.steerOffset  # m from center car to camera
+
+CAMERA_OFFSET = 0.0  # m from center car to camera
+
+
 
 
 def compute_path_pinv(l=50):
@@ -84,12 +86,12 @@ class LanePlanner():
       self.l_lane_change_prob = md.meta.desireState[log.PathPlan.Desire.laneChangeLeft - 1]
       self.r_lane_change_prob = md.meta.desireState[log.PathPlan.Desire.laneChangeRight - 1]
 
-  def update_d_poly(self, v_ego):
+  def update_d_poly(self, v_ego , camera_offset ):
     # only offset left and right lane lines; offsetting p_poly does not make sense
-    self.l_poly[3] += CAMERA_OFFSET
-    self.r_poly[3] += CAMERA_OFFSET
+    self.l_poly[3] += CAMERA_OFFSET + camera_offset
+    self.r_poly[3] += CAMERA_OFFSET + camera_offset
 
-    print('CAMERA_OOFSET={}'.format( CAMERA_OFFSET ))
+    print('CAMERA_OOFSET={}'.format( camera_offset ))
 
     # Find current lanewidth
     self.lane_width_certainty += 0.05 * (self.l_prob * self.r_prob - self.lane_width_certainty)
@@ -101,6 +103,8 @@ class LanePlanner():
 
     self.d_poly = calc_d_poly(self.l_poly, self.r_poly, self.p_poly, self.l_prob, self.r_prob, self.lane_width, v_ego)
 
+"""
   def update(self, v_ego, md):
     self.parse_model(md)
     self.update_d_poly(v_ego)
+"""

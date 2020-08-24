@@ -248,7 +248,7 @@ class PathPlanner():
     if desire == log.PathPlan.Desire.laneChangeRight or desire == log.PathPlan.Desire.laneChangeLeft:
       self.LP.l_prob *= self.lane_change_ll_prob
       self.LP.r_prob *= self.lane_change_ll_prob
-    self.LP.update_d_poly(v_ego)
+    self.LP.update_d_poly(v_ego , CP.lateralsRatom.cameraOffset )
 
     # account for actuation delay
     self.cur_state = calc_states_after_delay(self.cur_state, v_ego, angle_steers - angle_offset, curvature_factor, VM.sR, CP.steerActuatorDelay)

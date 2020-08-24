@@ -246,7 +246,7 @@ class CarInterface(CarInterfaceBase):
   
     ret.lateralsRatom.deadzone = ATOMC.sR_pid_deadzone
     ret.lateralsRatom.steerOffset = ATOMC.steerOffset
-
+    ret.lateralsRatom.cameraOffset = ATOMC.cameraOffset
 
     ret.steerRateCost = ATOMC.steerRateCost
     ret.steerActuatorDelay = ATOMC.steerActuatorDelay
