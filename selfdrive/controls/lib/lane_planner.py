@@ -91,8 +91,6 @@ class LanePlanner():
     self.l_poly[3] += CAMERA_OFFSET + camera_offset
     self.r_poly[3] += CAMERA_OFFSET + camera_offset
 
-    print('CAMERA_OOFSET={}'.format( camera_offset ))
-
     # Find current lanewidth
     self.lane_width_certainty += 0.05 * (self.l_prob * self.r_prob - self.lane_width_certainty)
     current_lane_width = abs(self.l_poly[3] - self.r_poly[3])
