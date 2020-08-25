@@ -40,6 +40,7 @@ class CarState(CarStateBase):
     self.TSigRHSw = 0
     self.driverAcc_time = 0
 
+    self.gearShifter = 0
     self.leftBlindspot_time = 0
     self.rightBlindspot_time = 0
 
@@ -102,7 +103,7 @@ class CarState(CarStateBase):
     self.update_atom( cp, cp_cam )
 
     ret.cruiseState.available = self.main_on and self.cruiseState_modeSel != 3
-    ret.cruiseState.enabled =  ret.cruiseState.available
+    ret.cruiseState.enabled =  ret.cruiseState.available and self.gearShifter == GearShifter.drive
     ret.cruiseState.standstill = cp.vl["SCC11"]['SCCInfoDisplay'] == 4.
 
     # most HKG cars has no long control, it is safer and easier to engage by main on
@@ -133,7 +134,8 @@ class CarState(CarStateBase):
       ret.gasPressed = bool(cp.vl["EMS16"]["CF_Ems_AclAct"])
 
     # TODO: refactor gear parsing in function
-    ret.gearShifter = self.get_gearShifter( cp )
+    self.gearShifter = self.get_gearShifter( cp )
+    ret.gearShifter = self.gearShifter
 
     # Blind Spot Detection and Lane Change Assist signals
     ret.leftBlindspot, ret.rightBlindspot = self.get_Blindspot( cp )
