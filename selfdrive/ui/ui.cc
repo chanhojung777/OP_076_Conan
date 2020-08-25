@@ -227,7 +227,8 @@ static void ui_init(UIState *s) {
 
   pthread_mutex_init(&s->lock, NULL);
   s->sm = new SubMaster({"model", "controlsState", "carState", "uiLayoutState", "liveCalibration", "radarState", "thermal",
-                         "health", "ubloxGnss", "driverState", "dMonitoringState", "offroadLayout", "carParams", "liveMpc", "liveParameters"
+                         "health", "ubloxGnss", "driverState", "dMonitoringState", "offroadLayout", "carParams", "liveMpc", 
+                         "liveParameters", "pathPlan"
 #ifdef SHOW_SPEEDLIMIT
                         , "liveMapData"
 #endif
@@ -572,6 +573,17 @@ void handle_message(UIState *s, SubMaster &sm)
     scene.liveParams.steerRatio = data.getSteerRatio();
     scene.liveParams.yawRate = data.getYawRate();
     scene.liveParams.posenetSpeed = data.getPosenetSpeed();
+  }
+  if( sm.updated("pathPlan") )
+  {
+    auto data = sm["pathPlan"].getPathPlan();
+
+    scene.pathPlan.laneWidth = data.getLaneWidth();
+    scene.pathPlan.steerRatio = data.getSteerRatio();
+    scene.pathPlan.cProb = data.getCProb();
+    scene.pathPlan.lProb = data.getLProb();
+    scene.pathPlan.rProb = data.getRProb();
+    scene.pathPlan.angleOffset = data.getAngleOffset();
   }
 
 

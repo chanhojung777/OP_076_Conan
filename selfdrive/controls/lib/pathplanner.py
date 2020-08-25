@@ -155,20 +155,17 @@ class PathPlanner():
       self.steerRatio = sm['carParams'].steerRatio
       if self.steer_rate_cost == 0:
         self.steer_rate_cost = CP.steerRateCost
-
-      if self.steerRatio == 0:
-        self.steerRatio = CP.steerRatio
-      
+   
       self.steerRatio = interp( angle_steers, CP.atomTuning.sRBPV, CP.atomTuning.sRsteerRatioV)
 
-      str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format( self.steerRatio, CP.steerRatio, CP.atomTuning.sRBPV, CP.atomTuning.sRsteerRatioV )
-      str_log2 = 'steerRateCost={:.2f}'.format( self.steer_rate_cost )
-      self.trPATH.add( '{} {}'.format( str_log1, str_log2 ) )
+      #str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format( self.steerRatio, CP.steerRatio, CP.atomTuning.sRBPV, CP.atomTuning.sRsteerRatioV )
+      #str_log2 = 'steerRateCost={:.2f}'.format( self.steer_rate_cost )
+      #self.trPATH.add( '{} {}'.format( str_log1, str_log2 ) )
       
 
     # Run MPC
     self.angle_steers_des_prev = self.angle_steers_des_mpc
-    VM.update_params(stiffnessFactor, self.steerRatio ) # sm['liveParameters'].steerRatio)
+    VM.update_params(stiffnessFactor, self.steerRatio )  
     curvature_factor = VM.curvature_factor(v_ego)
 
 
@@ -325,11 +322,12 @@ class PathPlanner():
     plan_send.pathPlan.desire = desire
     plan_send.pathPlan.laneChangeState = self.lane_change_state
     plan_send.pathPlan.laneChangeDirection = self.lane_change_direction
+    plan_send.pathPlan.steerRatio = self.steerRatio
     pm.send('pathPlan', plan_send)
 
     if self.solution_invalid_cnt > 0:
       str_log3 = 'v_ego_kph={:.1f} angle_steers_des_mpc={:.1f} angle_steers={:.1f} solution_invalid_cnt={:.0f} mpc_solution={:.1f}/{:.0f}'.format( v_ego_kph, self.angle_steers_des_mpc, angle_steers, self.solution_invalid_cnt, self.mpc_solution[0].cost, mpc_nans )
-      self.trpathPlan.add( 'pathPlan {}'.format( str_log3 ) )   
+      self.trpathPlan.add( 'pathPlan {}  LOG_MPC={}'.format( str_log3, LOG_MPC ) )   
 
 
     if LOG_MPC:

@@ -694,9 +694,14 @@ static void ui_draw_debug(UIState *s)
      
   ui_print( s, x_pos, y_pos+0, "cO:%.3f  %d, %d",scene.carParams.lateralsRatom.cameraOffset, scene.cruiseState.cruiseSwState, s->livempc_or_radarstate_changed );
 
-  ui_print( s, x_pos, y_pos+50, "sR:%.2f", scene.liveParams.steerRatio );
-  ui_print( s, x_pos, y_pos+100, "aO:%.2f", scene.liveParams.angleOffset );
+  ui_print( s, x_pos, y_pos+50, "sR:%.2f, %.2f", scene.liveParams.steerRatio, scene.pathPlan.steerRatio );
+  ui_print( s, x_pos, y_pos+100, "aO:%.2f, %.2f", scene.liveParams.angleOffset, scene.pathPlan.angleOffset );
   ui_print( s, x_pos, y_pos+150, "aA:%.2f", scene.liveParams.angleOffsetAverage );
+  ui_print( s, x_pos, y_pos+200, "sF:%.2f", scene.liveParams.stiffnessFactor );
+
+
+  ui_print( s, x_pos, y_pos+250, "lW:%.2f", scene.pathPlan.laneWidth );
+  ui_print( s, x_pos, y_pos+300, "prob:%.2f, %.2f, %.2f", scene.pathPlan.lProb, scene.pathPlan.cProb, scene.pathPlan.rProb );
 
 
 

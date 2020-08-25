@@ -801,7 +801,7 @@ struct PathPlan {
   desire @17 :Desire;
   laneChangeState @18 :LaneChangeState;
   laneChangeDirection @19 :LaneChangeDirection;
-
+  steerRatio @20 :Float32;
 
   enum Desire {
     none @0;

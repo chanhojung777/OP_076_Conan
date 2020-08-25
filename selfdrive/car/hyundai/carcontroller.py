@@ -276,7 +276,7 @@ class CarController():
 
 
     # disable if steer angle reach 90 deg, otherwise mdps fault in some models
-    lkas_active = enabled  and abs(CS.out.steeringAngle) < 180. #and self.lkas_button
+    lkas_active = enabled and CS.main_on and CS.out.cruiseState.enabled and abs(CS.out.steeringAngle) < 180. #and self.lkas_button
 
     if not lkas_active:
       apply_steer = 0
@@ -295,8 +295,7 @@ class CarController():
                                    CS.lkas11, sys_warning, self.hud_sys_state, c ))
 
     # send mdps12 to LKAS to prevent LKAS error if no cancel cmd
-    if CS.lkas_button_on and CS.lkas_button_on != 15:
-      can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
+    can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
 
     str_log1 = 'torg:{:5.0f}/{:5.0f}/{:5.0f}  CV={:5.1f}'.format(  apply_steer, new_steer, dst_steer, self.model_speed  )
     str_log2 = 'limit={:.0f} tm={:.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )

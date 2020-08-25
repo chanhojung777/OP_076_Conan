@@ -505,7 +505,7 @@ class Controls:
     self.AM.process_alerts(self.sm.frame)
     CC.hudControl.visualAlert = self.AM.visual_alert
 
-    if not self.hyundai_lkas and self.enabled:
+    if not self.hyundai_lkas:
       # send car controls over can
       can_sends = self.CI.apply(CC, self.sm, self.CP )
       self.pm.send('sendcan', can_list_to_can_capnp(can_sends, msgtype='sendcan', valid=CS.canValid))
@@ -622,6 +622,8 @@ class Controls:
       # Update control state
       self.state_transition(CS)
       self.prof.checkpoint("State transition")
+    else:
+      self.enabled = False
 
     # Compute actuators (runs PID loops and lateral MPC)
     actuators, v_acc, a_acc, lac_log = self.state_control(CS)

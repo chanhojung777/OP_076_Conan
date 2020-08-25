@@ -229,6 +229,18 @@ typedef struct UIScene {
     float posenetSpeed;
   } liveParams;
 
+  struct _PathPlan
+  {
+    float laneWidth;
+    float steerRatio;
+
+    float cProb;
+    float lProb;
+    float rProb;
+
+    float angleOffset;
+  } pathPlan;  
+
   struct _CRUISE_STATE
   {
     bool standstill;
