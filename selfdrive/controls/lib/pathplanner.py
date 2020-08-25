@@ -185,6 +185,7 @@ class PathPlanner():
       if self.steer_rate_cost == 0:
         self.steer_rate_cost = CP.steerRateCost
    
+      angle_steers = self.atom_steer( angle_steers, 1, 0.01 )
       self.steerRatio =  self.atom_tune( v_ego_kph, angle_steers, CP )
 
       
