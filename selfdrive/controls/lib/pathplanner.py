@@ -22,7 +22,7 @@ LaneChangeDirection = log.PathPlan.LaneChangeDirection
 
 LOG_MPC = os.environ.get('LOG_MPC', True)
 
-LANE_CHANGE_SPEED_MIN = 65 * CV.KPH_TO_MS
+LANE_CHANGE_SPEED_MIN = 40 * CV.KPH_TO_MS
 LANE_CHANGE_TIME_MAX = 10.
 
 DESIRES = {
@@ -125,9 +125,7 @@ class PathPlanner():
     self.sr_BPV = CP.atomTuning.sRBPV
     self.sr_steerRatioV  = CP.atomTuning.sRsteerRatioV
 
-
     self.sr_SteerRatio = []
-
 
     nPos = 0
     for steerRatio in self.sr_BPV:  # steerRatio
@@ -138,7 +136,19 @@ class PathPlanner():
 
     steerRatio = interp( v_ego_kph, self.sr_KPH, self.sr_SteerRatio )
 
-     
+    return steerRatio
+
+  def  atom_steer( self, sr_value, sr_up, sr_dn ):
+    delta =  sr_value - self.steerRatio_last
+
+    sr_up = min( abs(delta), sr_up )
+    sr_dn = min( abs(delta), sr_dn )
+    if delta > 0:
+      steerRatio = self.steerRatio_last + sr_up
+    elif delta < 0:
+      steerRatio = self.steerRatio_last - sr_dn
+
+    self.steerRatio_last = steerRatio
     return steerRatio
 
   def update(self, sm, pm, CP, VM):
@@ -169,20 +179,14 @@ class PathPlanner():
     if CP.lateralsRatom.learnerParams:
       pass
     else:
-      #angle_offset = 0
-      #angleOffsetAverage = 0
-
       # atom
       self.steer_rate_cost = sm['carParams'].steerRateCost   
       self.steerRatio = sm['carParams'].steerRatio
       if self.steer_rate_cost == 0:
         self.steer_rate_cost = CP.steerRateCost
    
-      self.steerRatio =  self.atom_tune( v_ego_kph, angle_steers, CP ) #interp( angle_steers, CP.atomTuning.sRBPV, CP.atomTuning.sRsteerRatioV)
+      self.steerRatio =  self.atom_tune( v_ego_kph, angle_steers, CP )
 
-      #str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format( self.steerRatio, CP.steerRatio, CP.atomTuning.sRBPV, CP.atomTuning.sRsteerRatioV )
-      #str_log2 = 'steerRateCost={:.2f}'.format( self.steer_rate_cost )
-      #self.trPATH.add( '{} {}'.format( str_log1, str_log2 ) )
       
 
     # Run MPC
@@ -235,7 +239,10 @@ class PathPlanner():
       # starting
       elif self.lane_change_state == LaneChangeState.laneChangeStarting:
         # fade out over .5s
-        self.lane_change_ll_prob = max(self.lane_change_ll_prob - 1.5*DT_MDL, 0.0)
+        xp = [40,60,70,80]
+        fp2 = [0.5,1,1.5,2]
+        lane_time = interp( v_ego_kph, xp, fp2 )        
+        self.lane_change_ll_prob = max(self.lane_change_ll_prob - lane_time*DT_MDL, 0.0)
         # 98% certainty
         if lane_change_prob < 0.02 and self.lane_change_ll_prob < 0.01:
           self.lane_change_state = LaneChangeState.laneChangeFinishing

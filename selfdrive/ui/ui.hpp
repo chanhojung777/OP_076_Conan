@@ -239,6 +239,9 @@ typedef struct UIScene {
     float rProb;
 
     float angleOffset;
+
+    float lPoly;
+    float rPoly;
   } pathPlan;  
 
   struct _CRUISE_STATE
