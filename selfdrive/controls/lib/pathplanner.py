@@ -189,7 +189,7 @@ class PathPlanner():
    
       
       self.steerRatio =  self.atom_tune( v_ego_kph, angle_steers, CP )
-      self.steerRatio = self.atom_steer( self.steerRatio, 1, 0.01 )
+      self.steerRatio = self.atom_steer( self.steerRatio, 2, 0.05 )
 
     # Run MPC
     self.angle_steers_des_prev = self.angle_steers_des_mpc
