@@ -119,6 +119,28 @@ class PathPlanner():
     self.angle_steers_des_prev = 0.0
     self.angle_steers_des_time = 0.0
 
+
+  def atom_tune( self, v_ego_kph, sr_value, CP ):  # 조향각에 따른 변화.
+    self.sr_KPH = CP.atomTuning.sRKPH
+    self.sr_BPV = CP.atomTuning.sRBPV
+    self.sr_steerRatioV  = CP.atomTuning.sRsteerRatioV
+
+
+    self.sr_SteerRatio = []
+
+
+    nPos = 0
+    for steerRatio in self.sr_BPV:  # steerRatio
+      self.sr_SteerRatio.append( interp( sr_value, steerRatio, self.sr_steerRatioV[nPos] ) )
+      nPos += 1
+      if nPos > 10:
+        break
+
+    steerRatio = interp( v_ego_kph, self.sr_KPH, self.sr_SteerRatio )
+
+     
+    return steerRatio
+
   def update(self, sm, pm, CP, VM):
     self.atom_timer_cnt += 1
     if self.atom_timer_cnt > 1000:
@@ -156,7 +178,7 @@ class PathPlanner():
       if self.steer_rate_cost == 0:
         self.steer_rate_cost = CP.steerRateCost
    
-      self.steerRatio = interp( angle_steers, CP.atomTuning.sRBPV, CP.atomTuning.sRsteerRatioV)
+      self.steerRatio =  self.atom_tune( v_ego_kph, angle_steers, CP ) #interp( angle_steers, CP.atomTuning.sRBPV, CP.atomTuning.sRsteerRatioV)
 
       #str_log1 = 'steerRatio={:.1f}/{:.1f} bp={} range={}'.format( self.steerRatio, CP.steerRatio, CP.atomTuning.sRBPV, CP.atomTuning.sRsteerRatioV )
       #str_log2 = 'steerRateCost={:.2f}'.format( self.steer_rate_cost )
