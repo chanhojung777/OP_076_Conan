@@ -172,7 +172,7 @@ class CarController():
       sec_mval = 0.5  # 오파 => 운전자.
       sec_pval = 10
 
-    if v_ego_kph > 3 and CS.out.steeringPressed:  #사용자 핸들 토크
+    if v_ego_kph > 5 and CS.out.steeringPressed:  #사용자 핸들 토크
       if abs_angle_steers > 5 and CS.out.steeringTorque < -STEER_THRESHOLD:   #right
         if dst_steer < 0:
           param.STEER_MAX = SteerLimitParams.STEER_MAX
@@ -263,7 +263,6 @@ class CarController():
     # Steering Torque
     param, dst_steer = self.steerParams_torque( CS, c.actuators, path_plan )
 
-
     new_steer = actuators.steer * param.STEER_MAX
     apply_steer = apply_std_steer_torque_limits(new_steer, self.apply_steer_last, CS.out.steeringTorque, param)
     self.steer_rate_limited = new_steer != apply_steer
@@ -281,25 +280,26 @@ class CarController():
     if not lkas_active:
       apply_steer = 0
 
-    steer_req = 1 if apply_steer else 0
-
-    self.apply_steer_last = apply_steer
 
     sys_warning, sys_state = self.process_hud_alert( lkas_active, c )
+
+    if sys_state == 1 and apply_steer and CS.out.steeringPressed:
+        apply_steer = CS.out.steeringTorque
+
+    steer_req = 1 if apply_steer else 0
+    self.apply_steer_last = apply_steer
 
     can_sends = []
     if frame == 0: # initialize counts from last received count signals
       self.lkas11_cnt = CS.lkas11["CF_Lkas_MsgCount"] + 1
     self.lkas11_cnt %= 0x10
 
-    # send mdps12 to LKAS to prevent LKAS error if no cancel cmd
-    can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
-
     can_sends.append(create_lkas11(self.packer, self.lkas11_cnt, self.car_fingerprint, apply_steer, steer_req,
                                    CS.lkas11, sys_warning, sys_state, c ))
 
     # send mdps12 to LKAS to prevent LKAS error if no cancel cmd
-    #can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
+    if CS.lkas_button_on and CS.lkas_button_on != 15:
+      can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
 
     str_log1 = 'torg:{:5.0f}/{:5.0f}/{:5.0f}  CV={:5.1f}'.format(  apply_steer, new_steer, dst_steer, self.model_speed  )
     str_log2 = 'limit={:.0f} tm={:.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
