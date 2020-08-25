@@ -68,6 +68,8 @@ class PathPlanner():
     self.setup_mpc()
     self.solution_invalid_cnt = 0
 
+    self.steerRatio_last = 0
+
     self.params = Params()
 
     # Lane change 
@@ -185,10 +187,9 @@ class PathPlanner():
       if self.steer_rate_cost == 0:
         self.steer_rate_cost = CP.steerRateCost
    
-      angle_steers = self.atom_steer( angle_steers, 1, 0.01 )
-      self.steerRatio =  self.atom_tune( v_ego_kph, angle_steers, CP )
-
       
+      self.steerRatio =  self.atom_tune( v_ego_kph, angle_steers, CP )
+      self.steerRatio = self.atom_steer( self.steerRatio, 1, 0.01 )
 
     # Run MPC
     self.angle_steers_des_prev = self.angle_steers_des_mpc
