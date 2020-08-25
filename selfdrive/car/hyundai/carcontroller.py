@@ -271,7 +271,7 @@ class CarController():
 
     if self.hud_sys_state == 1  and CS.out.steeringPressed:
         apply_steer = CS.out.steeringTorque
-
+        self.steer_torque_ratio = 1
     elif self.steer_torque_ratio < 1:
       apply_steer_limit = int(self.steer_torque_ratio * param.STEER_MAX)
       apply_steer = self.limit_ctrl( apply_steer, apply_steer_limit, 0 )
