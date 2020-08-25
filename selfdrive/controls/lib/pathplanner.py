@@ -145,10 +145,13 @@ class PathPlanner():
 
     sr_up = min( abs(delta), sr_up )
     sr_dn = min( abs(delta), sr_dn )
+    steerRatio = self.steerRatio_last
     if delta > 0:
-      steerRatio = self.steerRatio_last + sr_up
+      steerRatio += sr_up
     elif delta < 0:
-      steerRatio = self.steerRatio_last - sr_dn
+      steerRatio -= sr_dn
+
+
 
     self.steerRatio_last = steerRatio
     return steerRatio
@@ -188,8 +191,8 @@ class PathPlanner():
         self.steer_rate_cost = CP.steerRateCost
    
       
-      self.steerRatio =  self.atom_tune( v_ego_kph, angle_steers, CP )
-      self.steerRatio = self.atom_steer( self.steerRatio, 2, 0.05 )
+      steerRatio =  self.atom_tune( v_ego_kph, angle_steers, CP )
+      self.steerRatio = self.atom_steer( steerRatio, 2, 0.05 )
 
     # Run MPC
     self.angle_steers_des_prev = self.angle_steers_des_mpc
