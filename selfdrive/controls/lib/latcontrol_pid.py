@@ -31,25 +31,25 @@ class LatControlPID():
     self.sR_pid_KpV = CP.atomTuning.sRpidKpV
 
 
-    self.Ki = []
-    self.Kp = []
-    self.Ms = []
+    self.KiV = []
+    self.KpV = []
+    self.MsV = []
 
     nPos = 0
     for angle in self.sr_BPV:  # angle
-      self.Ki.append( interp( sr_value, angle, self.sR_pid_KiV[nPos] ) )
-      self.Kp.append( interp( sr_value, angle, self.sR_pid_KpV[nPos] ) )
+      self.KiV.append( interp( sr_value, angle, self.sR_pid_KiV[nPos] ) )
+      self.KpV.append( interp( sr_value, angle, self.sR_pid_KpV[nPos] ) )
       nPos += 1
       if nPos > 10:
         break
 
     for kph in self.sr_KPH:
-      self.Ms.append( kph * CV.KPH_TO_MS )
+      self.MsV.append( kph * CV.KPH_TO_MS )
 
     #rt_Ki = interp( v_ego_kph, self.sr_KPH, self.Ki )
     #rt_Kp  = interp( v_ego_kph, self.sr_KPH, self.Kp )
      
-    return self.Ms, self.Ki, self.Kp
+    return self.MsV, self.KiV, self.KpV
 
   def linear2_tune( self, CS, CP ):  # angle(조향각에 의한 변화)
     v_ego_kph = CS.vEgo * CV.MS_TO_KPH
