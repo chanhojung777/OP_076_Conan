@@ -51,7 +51,7 @@ class CarController():
     # hud
     self.hud_timer_left = 0
     self.hud_timer_right = 0
-
+    self.hud_sys_state = 0
 
 
     self.command_cnt = 0
@@ -268,26 +268,25 @@ class CarController():
     self.steer_rate_limited = new_steer != apply_steer
 
     apply_steer_limit = param.STEER_MAX
-    if self.steer_torque_ratio < 1:
+
+    if self.hud_sys_state == 1  and CS.out.steeringPressed:
+        apply_steer = CS.out.steeringTorque
+
+    elif self.steer_torque_ratio < 1:
       apply_steer_limit = int(self.steer_torque_ratio * param.STEER_MAX)
       apply_steer = self.limit_ctrl( apply_steer, apply_steer_limit, 0 )
 
 
     # disable if steer angle reach 90 deg, otherwise mdps fault in some models
-    lkas_active = enabled #and abs(CS.out.steeringAngle) < 90. #and self.lkas_button
-
+    lkas_active = enabled  and abs(CS.out.steeringAngle) < 180. #and self.lkas_button
 
     if not lkas_active:
       apply_steer = 0
 
-
-    sys_warning, sys_state = self.process_hud_alert( lkas_active, c )
-
-    if sys_state == 1 and apply_steer and CS.out.steeringPressed:
-        apply_steer = CS.out.steeringTorque
-
     steer_req = 1 if apply_steer else 0
     self.apply_steer_last = apply_steer
+
+    sys_warning, self.hud_sys_state = self.process_hud_alert( lkas_active, c )
 
     can_sends = []
     if frame == 0: # initialize counts from last received count signals
@@ -295,7 +294,7 @@ class CarController():
     self.lkas11_cnt %= 0x10
 
     can_sends.append(create_lkas11(self.packer, self.lkas11_cnt, self.car_fingerprint, apply_steer, steer_req,
-                                   CS.lkas11, sys_warning, sys_state, c ))
+                                   CS.lkas11, sys_warning, self.hud_sys_state, c ))
 
     # send mdps12 to LKAS to prevent LKAS error if no cancel cmd
     if CS.lkas_button_on and CS.lkas_button_on != 15:
