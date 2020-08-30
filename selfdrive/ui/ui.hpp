@@ -389,8 +389,6 @@ typedef struct UIState {
 
   track_vertices_data track_vertices[2];
 
-
-
 } UIState;
 
 // API
