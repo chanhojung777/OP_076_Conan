@@ -15,7 +15,7 @@
 #include "ui.hpp"
 #include "dashcam.h"
 
-int  is_awake_command = false;
+extern int  is_awake_command;
 int  old_cruiseSwState = 0;
 
 static int last_brightness = -1;
@@ -370,15 +370,15 @@ void handle_message(UIState *s, SubMaster &sm)
     if( scene.cruiseState.cruiseSwState != old_cruiseSwState )
     {
       old_cruiseSwState = scene.cruiseState.cruiseSwState;
-       is_awake_command = true;
+       ui_awake_aleat( s );
     } 
     else if( scene.canErrorCounter > 0)
     {
-       is_awake_command = true;
+       ui_awake_aleat( s );
     }
   
     if (alert_sound != s->alert_sound){
-      is_awake_command = true;
+      ui_awake_aleat( s );
       if (s->alert_sound != sound_none){
         stop_alert_sound(s->alert_sound);
       }
@@ -394,10 +394,10 @@ void handle_message(UIState *s, SubMaster &sm)
     scene.alert_size = data.getAlertSize();
     auto alertStatus = data.getAlertStatus();
     if (alertStatus == cereal::ControlsState::AlertStatus::USER_PROMPT) {
-      is_awake_command = true;
+      ui_awake_aleat( s );
       update_status(s, STATUS_WARNING);
     } else if (alertStatus == cereal::ControlsState::AlertStatus::CRITICAL) {
-      is_awake_command = true;
+      ui_awake_aleat( s );
       update_status(s, STATUS_ALERT);
     } else{
       update_status(s, scene.engaged ? STATUS_ENGAGED : STATUS_DISENGAGED);
@@ -405,6 +405,7 @@ void handle_message(UIState *s, SubMaster &sm)
 
     scene.alert_blinkingrate = data.getAlertBlinkingRate();
     if (scene.alert_blinkingrate > 0.) {
+      ui_awake_aleat( s );
       if (s->alert_blinked) {
         if (s->alert_blinking_alpha > 0.0 && s->alert_blinking_alpha < 1.0) {
           s->alert_blinking_alpha += (0.05*scene.alert_blinkingrate);
@@ -1070,13 +1071,13 @@ int main(int argc, char* argv[]) {
       if( maxspeed_calc != _maxspeed_calc)
       {
         _maxspeed_calc = maxspeed_calc;
-        is_awake_command = true;
+        ui_awake_aleat( s );
       //  LOGW("is_awake_command = true  speed = %d", maxspeed_calc );
       }         
 
       if( is_awake_command || nAwakeTime == 0 || scene.cruiseState.standstill  )
       {
-        is_awake_command = false;
+        ui_awake_aleat( s, false );
         set_awake(s, true, nTimeOff);
       }
         
@@ -1146,7 +1147,7 @@ int main(int argc, char* argv[]) {
 
         s->scene.alert_text1 = "TAKE CONTROL IMMEDIATELY";
         s->scene.alert_text2 = "Controls Unresponsive";
-
+        ui_awake_aleat( s );
         ui_draw_vision_alert(s, s->scene.alert_size, s->status, s->scene.alert_text1.c_str(), s->scene.alert_text2.c_str());
 
         s->alert_sound_timeout = 2 * UI_FREQ;

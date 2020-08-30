@@ -31,7 +31,7 @@ const uint8_t alert_colors[][4] = {
 };
 
 float  fFontSize = 0.8;
-
+int  is_awake_command = false;
 
 static void ui_print(UIState *s, int x, int y,  const char* fmt, ... )
 {
@@ -717,7 +717,7 @@ static void ui_draw_debug(UIState *s)
   nvgFontSize(s->vg, 30);
   switch( scene.params.nOpkrAccelProfile  )
   {
-    case 1: strcpy( str_msg, "1.ÎäêÎ¶º" ); nColor = nvgRGBA(100, 100, 255, 255); break;
+    case 1: strcpy( str_msg, "1.?äêÎ¶?" ); nColor = nvgRGBA(100, 100, 255, 255); break;
     case 2: strcpy( str_msg, "2.Î≥¥ÌÜµ" );    nColor = COLOR_WHITE;  break;
     case 3: strcpy( str_msg, "3.Îπ†Î¶Ñ" );  nColor = nvgRGBA(255, 100, 100, 255);  break;
     default :  sprintf( str_msg, "%d", scene.params.nOpkrAccelProfile ); nColor = COLOR_WHITE;  break;
@@ -728,10 +728,10 @@ static void ui_draw_debug(UIState *s)
   nvgFontSize(s->vg, 80);
   switch( scene.cruiseState.modeSel  )
   {
-    case 0: strcpy( str_msg, "0.Ïò§ÌååÎ™®Îìú" ); nColor = COLOR_WHITE; break;
+    case 0: strcpy( str_msg, "0.?ò§?ååÎ™®Îìú" ); nColor = COLOR_WHITE; break;
     case 1: strcpy( str_msg, "1.Ïª§Î∏åÎ™®Îìú" );    nColor = nvgRGBA(200, 200, 255, 255);  break;
-    case 2: strcpy( str_msg, "2.ÏÑ†ÌñâÏ∞®" );  nColor = nvgRGBA(200, 255, 255, 255);  break;
-    case 3: strcpy( str_msg, "3.ÏàúÏ†ïÎ™®Îìú" );  nColor = nvgRGBA(200, 255, 255, 255);  break;
+    case 2: strcpy( str_msg, "2.?Ñ†?ñâÏ∞?" );  nColor = nvgRGBA(200, 255, 255, 255);  break;
+    case 3: strcpy( str_msg, "3.?àú?†ïÎ™®Îìú" );  nColor = nvgRGBA(200, 255, 255, 255);  break;
     default :  sprintf( str_msg, "%d", scene.cruiseState.modeSel ); nColor = COLOR_WHITE;  break;
   }
   nvgFillColor(s->vg, nColor);  
@@ -978,7 +978,7 @@ static void bb_ui_draw_measures_left(UIState *s, int bb_x, int bb_y, int bb_w ) 
       // temp is alway in C * 10
       snprintf(val_str, sizeof(val_str), "%d¬∞C", (int)(scene->maxCpuTemp/10));
       snprintf(uom_str, sizeof(uom_str), "");
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "CPUÏò®ÎèÑ",
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "CPU?ò®?èÑ",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
@@ -999,7 +999,7 @@ static void bb_ui_draw_measures_left(UIState *s, int bb_x, int bb_y, int bb_w ) 
     // temp is alway in C * 1000
     snprintf(val_str, sizeof(val_str), "%d¬∞C", (int)(scene->maxBatTemp/1000));
     snprintf(uom_str, sizeof(uom_str), "");
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "Î∞∞ÌÑ∞Î¶¨Ïò®ÎèÑ",
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "Î∞∞ÌÑ∞Î¶¨Ïò®?èÑ",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
@@ -1034,7 +1034,7 @@ static void bb_ui_draw_measures_left(UIState *s, int bb_x, int bb_y, int bb_w ) 
 
     snprintf(val_str, sizeof(val_str), "%s%%", bat_lvl);
     snprintf(uom_str, sizeof(uom_str), "");
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "Î∞∞ÌÑ∞Î¶¨Î†àÎ≤®",
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "Î∞∞ÌÑ∞Î¶¨Î†àÎ≤?",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
@@ -1057,7 +1057,7 @@ static void bb_ui_draw_measures_left(UIState *s, int bb_x, int bb_y, int bb_w ) 
     // gps accuracy is always in meters
     snprintf(val_str, sizeof(val_str), "%.2f", (s->scene.gpsAccuracy));
     snprintf(uom_str, sizeof(uom_str), "m");;
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "GPSÏ†ïÌôïÎèÑ",
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "GPS?†ï?ôï?èÑ",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
@@ -1128,7 +1128,7 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
        snprintf(val_str, sizeof(val_str), "-");
     }
     snprintf(uom_str, sizeof(uom_str), "m   ");
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "ÏïûÏ∞®Í∞ÑÍ≤©",
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "?ïûÏ∞®Í∞ÑÍ≤?",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
@@ -1163,7 +1163,7 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
     } else {
       snprintf(uom_str, sizeof(uom_str), "mph");
     }
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "ÏÉÅÎåÄÏÜçÎèÑ",
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "?ÉÅ????Üç?èÑ",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
@@ -1187,7 +1187,7 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
       snprintf(val_str, sizeof(val_str), "%.1f¬∞",(scene->angleSteers));
 
       snprintf(uom_str, sizeof(uom_str), "");
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "Ï°∞Ìñ•Í∞Å",
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "Ï°∞Ìñ•Í∞?",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
@@ -1214,7 +1214,7 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
        snprintf(val_str, sizeof(val_str), "-");
     }
       snprintf(uom_str, sizeof(uom_str), "");
-      bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "ÌïÑÏöîÏ°∞Ìñ•Í∞Å",
+      bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "?ïÑ?öîÏ°∞Ìñ•Í∞?",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
@@ -1286,6 +1286,11 @@ static void ui_draw_vision_footer(UIState *s) {
 #endif
 }
 
+void ui_awake_aleat(UIState *s, bool awake)
+{
+   is_awake_command = awake;
+}
+
 void ui_draw_vision_alert(UIState *s, cereal::ControlsState::AlertSize va_size, int va_color,
                           const char* va_text1, const char* va_text2) {
   static std::map<cereal::ControlsState::AlertSize, const int> alert_size_map = {
@@ -1293,7 +1298,7 @@ void ui_draw_vision_alert(UIState *s, cereal::ControlsState::AlertSize va_size, 
       {cereal::ControlsState::AlertSize::SMALL, 241},
       {cereal::ControlsState::AlertSize::MID, 390},
       {cereal::ControlsState::AlertSize::FULL, vwp_h}};
-
+  
   const UIScene *scene = &s->scene;
   const bool hasSidebar = !scene->uilayout_sidebarcollapsed;
   const bool mapEnabled = scene->uilayout_mapenabled;
@@ -1307,6 +1312,7 @@ void ui_draw_vision_alert(UIState *s, cereal::ControlsState::AlertSize va_size, 
   const int alr_h = alr_s+(va_size==cereal::ControlsState::AlertSize::NONE?0:bdr_s);
   const int alr_y = vwp_h-alr_h;
 
+  is_awake_command = true;
   ui_draw_rect(s->vg, alr_x, alr_y, alr_w, alr_h, nvgRGBA(color[0],color[1],color[2],(color[3]*s->alert_blinking_alpha)));
 
   NVGpaint gradient = nvgLinearGradient(s->vg, alr_x, alr_y, alr_x, alr_y+alr_h,
