@@ -145,8 +145,8 @@ class PathPlanner():
     self.sr_ActuatorDelay = []
 
     nPos = 0
-    for ActuatorDelay in self.sr_BPV:
-      self.sr_ActuatorDelay.append( interp( sr_value, ActuatorDelay, self.sr_ActuatorDelayV[nPos] ) )
+    for steerRatio in self.sr_BPV:
+      self.sr_ActuatorDelay.append( interp( sr_value, steerRatio, self.sr_ActuatorDelayV[nPos] ) )
       nPos += 1
       if nPos > 10:
         break
