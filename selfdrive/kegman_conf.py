@@ -18,7 +18,6 @@ class kegman_conf():
         "sR_pid_deadzone": 0.1,
         "sR_lqr_kiV": [[0.01,0.01,0.01],[0.02,0.02,0.02]],
         "sR_lqr_scaleV": [[2000,2000,2000],[1900,2000,1900]],
-        
         "cv_KPH": [0],
         "cv_BPV": [[150,255]],
         "cv_sMaxV": [[255,200]],
@@ -27,7 +26,6 @@ class kegman_conf():
         "steerOffset": 0.0,
         "steerRateCost": 0.5,
         "steerLimitTimer": 0.8,
-        
         "cameraOffset":0.0
          }
 
