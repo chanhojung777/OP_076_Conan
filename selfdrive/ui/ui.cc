@@ -575,6 +575,7 @@ void handle_message(UIState *s, SubMaster &sm)
     scene.liveParams.yawRate = data.getYawRate();
     scene.liveParams.posenetSpeed = data.getPosenetSpeed();
   }
+  
   if( sm.updated("pathPlan") )
   {
     auto data = sm["pathPlan"].getPathPlan();
