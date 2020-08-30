@@ -233,6 +233,7 @@ typedef struct UIScene {
   {
     float laneWidth;
     float steerRatio;
+    float steerActuatorDelay;
 
     float cProb;
     float lProb;
