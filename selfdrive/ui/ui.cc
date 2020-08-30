@@ -585,7 +585,7 @@ void handle_message(UIState *s, SubMaster &sm)
     scene.pathPlan.lProb = data.getLProb();
     scene.pathPlan.rProb = data.getRProb();
     scene.pathPlan.angleOffset = data.getAngleOffset();
-
+    scene.pathPlan.steerActuatorDelay = data.getSteerActuatorDelay();
 
     auto l_list = data.getLPoly();
     auto r_list = data.getRPoly();

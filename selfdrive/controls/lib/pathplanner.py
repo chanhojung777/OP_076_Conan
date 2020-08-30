@@ -376,6 +376,7 @@ class PathPlanner():
     plan_send.pathPlan.laneChangeState = self.lane_change_state
     plan_send.pathPlan.laneChangeDirection = self.lane_change_direction
     plan_send.pathPlan.steerRatio = self.steerRatio
+    plan_send.pathPlan.steerActuatorDelay = steerActuatorDelay
     pm.send('pathPlan', plan_send)
 
     if self.solution_invalid_cnt > 0:
