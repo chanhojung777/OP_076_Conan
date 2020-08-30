@@ -60,7 +60,7 @@ class CarInterface(CarInterfaceBase):
     """
 
     tire_stiffness_factor = 1.
-    ret.steerActuatorDelay = 0.125  # Default delay
+    ret.steerActuatorDelay = 0.15  # Default delay
     ret.steerRateCost = 0.5
     ret.steerLimitTimer = 0.4
 
@@ -169,7 +169,6 @@ class CarInterface(CarInterfaceBase):
       #ret.lateralTuning.lqr.l = [0.3233671, 0.3185757]
       #ret.lateralTuning.lqr.dcGain = 0.002237852961363602
 
-
       # indi
       ret.lateralTuning.init('indi')
       ret.lateralTuning.indi.innerLoopGain = 3.0
@@ -207,7 +206,6 @@ class CarInterface(CarInterfaceBase):
       tire_stiffness_factor = 0.5
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
-
 
     if ATOMC.tun_type == 'pid':
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
@@ -249,7 +247,6 @@ class CarInterface(CarInterfaceBase):
     ret.lateralsRatom.cameraOffset = ATOMC.cameraOffset
 
     ret.steerRateCost = ATOMC.steerRateCost
-    ret.steerActuatorDelay = ATOMC.steerActuatorDelay
     ret.steerLimitTimer = ATOMC.steerLimitTimer
 
     ret.centerToFront = ret.wheelbase * 0.4
@@ -272,7 +269,6 @@ class CarInterface(CarInterfaceBase):
     global ATOMC 
 
     nOpkrTuneStartAt = int( params.get('OpkrTuneStartAt') ) 
-
     if read and nOpkrTuneStartAt:
       ATOMC.read_tune()
 
@@ -281,7 +277,7 @@ class CarInterface(CarInterfaceBase):
     CP.atomTuning.cvsMaxV  = ATOMC.cv_sMaxV
     CP.atomTuning.cvsdUpV  = ATOMC.cv_sdUPV
     CP.atomTuning.cvsdDnV  = ATOMC.cv_sdDNV
-    
+
     CP.atomTuning.sRKPH     = ATOMC.sR_KPH
     CP.atomTuning.sRBPV     = ATOMC.sR_BPV
     CP.atomTuning.sRlqrkiV      = ATOMC.sR_lqr_kiV
@@ -289,15 +285,15 @@ class CarInterface(CarInterfaceBase):
     CP.atomTuning.sRpidKiV      = ATOMC.sR_pid_KiV
     CP.atomTuning.sRpidKpV      = ATOMC.sR_pid_KpV
     CP.atomTuning.sRsteerRatioV = ATOMC.sR_steerRatioV
-  
+    CP.atomTuning.sRsteerActuatorDelayV = ATOMC.sR_ActuatorDelayV
+    
     CP.lateralsRatom.deadzone = ATOMC.sR_pid_deadzone      # OK
     CP.lateralsRatom.steerOffset = ATOMC.steerOffset       # OK
     CP.lateralsRatom.cameraOffset = ATOMC.cameraOffset
 
     CP.steerRateCost = ATOMC.steerRateCost
-    CP.steerActuatorDelay = ATOMC.steerActuatorDelay
     CP.steerLimitTimer = ATOMC.steerLimitTimer
- 
+    
     return CP
 
   def update(self, c, can_strings):
@@ -336,8 +332,6 @@ class CarInterface(CarInterfaceBase):
 
     events = self.create_common_events(ret)
 
-
-
     if not self.cruise_enabled_prev:
       self.meg_timer = 0
       self.meg_name =  None
@@ -371,12 +365,10 @@ class CarInterface(CarInterfaceBase):
       if meg_timer != 0:
         self.meg_timer = 100
 
-      if self.meg_timer and  self.meg_name != None:
+      if self.meg_timer and self.meg_name != None:
         events.add( self.meg_name )
-    
 
     #TODO: addd abs(self.CS.angle_steers) > 90 to 'steerTempUnavailable' event
-
     # low speed steer alert hysteresis logic (only for cars with steer cut off above 10 m/s)
     if ret.vEgo < (self.CP.minSteerSpeed + 2.) and self.CP.minSteerSpeed > 10.:
       self.low_speed_alert = True

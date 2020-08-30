@@ -76,8 +76,6 @@ class PathPlanner():
     self.lane_change_enabled = self.params.get('LaneChangeEnabled') == b'1'
     self.lane_change_auto_delay = self.params.get_OpkrAutoLanechangedelay()  #int( self.params.get('OpkrAutoLanechangedelay') )
 
-      
-
     self.lane_change_state = LaneChangeState.off
     self.lane_change_direction = LaneChangeDirection.none
     self.lane_change_run_timer = 0.0
@@ -89,7 +87,6 @@ class PathPlanner():
     self.trPATH = trace1.Loger("path")
     self.trLearner = trace1.Loger("Learner")
     self.trpathPlan = trace1.Loger("pathPlan")
-
 
     self.atom_timer_cnt = 0
     self.atom_steer_ratio = None
@@ -139,6 +136,25 @@ class PathPlanner():
     steerRatio = interp( v_ego_kph, self.sr_KPH, self.sr_SteerRatio )
 
     return steerRatio
+
+  def atom_actuatorDelay( self, v_ego_kph, sr_value, CP ):
+    self.sr_KPH = CP.atomTuning.sRKPH
+    self.sr_BPV = CP.atomTuning.sRBPV
+    self.sr_ActuatorDelayV  = CP.atomTuning.sRsteerActuatorDelayV
+
+    self.sr_ActuatorDelay = []
+
+    nPos = 0
+    for ActuatorDelay in self.sr_BPV:
+      self.sr_ActuatorDelay.append( interp( sr_value, ActuatorDelay, self.sr_ActuatorDelayV[nPos] ) )
+      nPos += 1
+      if nPos > 10:
+        break
+
+    actuatorDelay = interp( v_ego_kph, self.sr_KPH, self.sr_ActuatorDelay )
+
+    return actuatorDelay
+
 
   def  atom_steer( self, sr_value, sr_up, sr_dn ):
     delta =  sr_value - self.steerRatio_last
@@ -191,8 +207,11 @@ class PathPlanner():
         self.steer_rate_cost = CP.steerRateCost
    
       
-      steerRatio =  self.atom_tune( v_ego_kph, angle_steers, CP )
+      steerRatio = self.atom_tune( v_ego_kph, angle_steers, CP )
       self.steerRatio = self.atom_steer( steerRatio, 2, 0.05 )
+
+    #actuatorDelay = CP.steerActuatorDelay
+    steerActuatorDelay = self.atom_actuatorDelay( v_ego_kph, angle_steers, CP )
 
     # Run MPC
     self.angle_steers_des_prev = self.angle_steers_des_mpc
@@ -282,7 +301,7 @@ class PathPlanner():
     self.LP.update_d_poly(v_ego , CP.lateralsRatom.cameraOffset )
 
     # account for actuation delay
-    self.cur_state = calc_states_after_delay(self.cur_state, v_ego, angle_steers - angle_offset, curvature_factor, VM.sR, CP.steerActuatorDelay)
+    self.cur_state = calc_states_after_delay(self.cur_state, v_ego, angle_steers - angle_offset, curvature_factor, VM.sR, steerActuatorDelay )
 
     v_ego_mpc = max(v_ego, 5.0)  # avoid mpc roughness due to low speed
     self.libmpc.run_mpc(self.cur_state, self.mpc_solution,

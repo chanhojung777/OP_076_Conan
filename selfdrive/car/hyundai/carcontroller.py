@@ -32,8 +32,6 @@ class CarController():
     self.last_resume_frame = 0
     self.last_lead_distance = 0
 
-
-
     self.nBlinker = 0
     self.lane_change_torque_lower = 0
     self.steer_torque_over_timer = 0
@@ -53,7 +51,6 @@ class CarController():
     self.hud_timer_right = 0
     self.hud_sys_state = 0
 
-
     self.command_cnt = 0
     self.command_load = 0
     self.params = Params()
@@ -70,13 +67,13 @@ class CarController():
 
 
   def limit_ctrl(self, value, limit, offset ):
-      p_limit = offset + limit
-      m_limit = offset - limit
-      if value > p_limit:
-          value = p_limit
-      elif  value < m_limit:
-          value = m_limit
-      return value
+    p_limit = offset + limit
+    m_limit = offset - limit
+    if value > p_limit:
+        value = p_limit
+    elif  value < m_limit:
+        value = m_limit
+    return value
 
 
   def process_hud_alert(self, enabled, c ):
@@ -144,12 +141,11 @@ class CarController():
     return MAX, UP, DN
 
 
-
   def steerParams_torque(self, CS, actuators, path_plan ):
     param = SteerLimitParams()
     v_ego_kph = CS.out.vEgo * CV.MS_TO_KPH
-    abs_angle_steers =  abs(actuators.steerAngle)    
     dst_steer = actuators.steer * param.STEER_MAX
+    abs_angle_steers =  abs(actuators.steerAngle)        
 
     self.enable_time = self.timer1.sampleTime()
     if self.enable_time < 50:
@@ -204,11 +200,12 @@ class CarController():
     if self.steer_torque_ratio < 0:
       self.steer_torque_ratio = 0
     elif self.steer_torque_ratio > 1:
-      self.steer_torque_ratio = 1      
+      self.steer_torque_ratio = 1
 
     return  param, dst_steer
 
-  def param_load(self ):
+
+  def param_load(self):
     self.command_cnt += 1
     if self.command_cnt > 100:
       self.command_cnt = 0
@@ -234,7 +231,7 @@ class CarController():
       elif self.param_OpkrAccelProfile == 2:
         self.SC = SpdctrlNormal()
       else:
-        self.SC = SpdctrlNormal()      
+        self.SC = SpdctrlNormal()
 
 
 #  c:car.CarControl(car.capnp), CS:CarState  CP:CarInterface.get_params
@@ -243,17 +240,11 @@ class CarController():
       self.CP = CP
 
     self.param_load()
-
-
     enabled = c.enabled
     actuators = c.actuators
     pcm_cancel_cmd = c.cruiseControl.cancel
 
-
     path_plan = sm['pathPlan']
-
-
-
     self.dRel, self.yRel, self.vRel = SpdController.get_lead( sm )
     if self.SC is not None:
       self.model_speed, self.model_sum = self.SC.calc_va(  sm, CS.out.vEgo  )
@@ -262,18 +253,14 @@ class CarController():
 
     # Steering Torque
     param, dst_steer = self.steerParams_torque( CS, c.actuators, path_plan )
-
     new_steer = actuators.steer * param.STEER_MAX
     apply_steer = apply_std_steer_torque_limits(new_steer, self.apply_steer_last, CS.out.steeringTorque, param)
     self.steer_rate_limited = new_steer != apply_steer
 
     apply_steer_limit = param.STEER_MAX
-
-
     if self.steer_torque_ratio < 1:
       apply_steer_limit = int(self.steer_torque_ratio * param.STEER_MAX)
       apply_steer = self.limit_ctrl( apply_steer, apply_steer_limit, 0 )
-
 
     # disable if steer angle reach 90 deg, otherwise mdps fault in some models
     lkas_active = enabled and CS.main_on and CS.out.cruiseState.enabled and abs(CS.out.steeringAngle) < 180. #and self.lkas_button
@@ -291,11 +278,11 @@ class CarController():
       self.lkas11_cnt = CS.lkas11["CF_Lkas_MsgCount"] + 1
     self.lkas11_cnt %= 0x10
 
-    can_sends.append(create_lkas11(self.packer, self.lkas11_cnt, self.car_fingerprint, apply_steer, steer_req,
-                                   CS.lkas11, sys_warning, self.hud_sys_state, c ))
+    can_sends.append( create_lkas11(self.packer, self.lkas11_cnt, self.car_fingerprint, apply_steer, steer_req,
+                                    CS.lkas11, sys_warning, self.hud_sys_state, c ) )
 
     # send mdps12 to LKAS to prevent LKAS error if no cancel cmd
-    can_sends.append(create_mdps12(self.packer, frame, CS.mdps12))
+    can_sends.append( create_mdps12(self.packer, frame, CS.mdps12) )
 
     str_log1 = 'torg:{:5.0f}/{:5.0f}/{:5.0f}  CV={:5.1f}'.format(  apply_steer, new_steer, dst_steer, self.model_speed  )
     str_log2 = 'limit={:.0f} tm={:.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
@@ -307,7 +294,7 @@ class CarController():
       trace1.printf2( '{}'.format( str_log2 ) )
 
     if pcm_cancel_cmd and self.CP.longcontrolEnabled:
-      can_sends.append(create_clu11(self.packer, frame, CS.clu11, Buttons.CANCEL))
+      can_sends.append( create_clu11(self.packer, frame, CS.clu11, Buttons.CANCEL) )
 
     elif CS.out.cruiseState.standstill:
       # run only first time when the car stopped
@@ -338,7 +325,6 @@ class CarController():
       str2 = 'btn_type={:.0f} speed={:.1f} cnt={:.0f}'.format( self.SC.btn_type, self.SC.sc_clu_speed, self.resume_cnt )
       str_log  = str1 + str2
       self.traceCC.add( str_log )        
-
 
     # 20 Hz LFA MFA message
     if frame % 5 == 0 and self.car_fingerprint in [CAR.SONATA, CAR.PALISADE]:

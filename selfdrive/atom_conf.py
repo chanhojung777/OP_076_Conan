@@ -9,6 +9,7 @@ class AtomConf():
     self.sR_KPH         = [30, 40, 80]   # Speed  kph
     self.sR_BPV         = [[0.],      [0.],      [0.]     ]
     self.sR_steerRatioV = [[13.95,13.85,13.95],[13.95,13.85,13.95]]
+    self.sR_ActuatorDelayV = [[0.25,0.5,0.25],[0.25,0.8,0.25]]
     self.sR_pid_KiV     = [[0.02,0.01,0.02],[0.03,0.02,0.03]]
     self.sR_pid_KpV     = [[0.20,0.15,0.20],[0.25,0.20,0.25]]
     self.sR_pid_deadzone  = 0.1
@@ -36,6 +37,7 @@ class AtomConf():
     self.sR_KPH   = conf['sR_KPH']
     self.sR_BPV  = conf['sR_BPV']
     self.sR_steerRatioV  = conf['sR_steerRatioV']
+    self.sR_ActuatorDelayV = conf['sR_ActuatorDelayV']    
     self.sR_pid_KiV  = conf['sR_pid_KiV']
     self.sR_pid_KpV  = conf['sR_pid_KpV']
     self.sR_pid_deadzone  = conf['sR_pid_deadzone']
@@ -49,5 +51,4 @@ class AtomConf():
     self.steerOffset = conf['steerOffset']
     self.steerRateCost = conf['steerRateCost']
     self.steerLimitTimer = conf['steerLimitTimer']
-    self.steerActuatorDelay = conf['steerActuatorDelay']
     self.cameraOffset = conf['cameraOffset']

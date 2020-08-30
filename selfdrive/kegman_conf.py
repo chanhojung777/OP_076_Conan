@@ -12,20 +12,22 @@ class kegman_conf():
         "sR_KPH": [30,60],
         "sR_BPV": [[-5,0,5],[-10,0,10]],
         "sR_steerRatioV": [[13.95,13.85,13.95],[13.95,13.85,13.95]],
+        "sR_ActuatorDelayV": [[0.25,0.5,0.25],[0.25,0.8,0.25]],
         "sR_pid_KiV": [[0.02,0.01,0.02],[0.03,0.02,0.03]],
         "sR_pid_KpV": [[0.20,0.15,0.20],[0.25,0.20,0.25]],
         "sR_pid_deadzone": 0.1,
         "sR_lqr_kiV": [[0.01,0.01,0.01],[0.02,0.02,0.02]],
         "sR_lqr_scaleV": [[2000,2000,2000],[1900,2000,1900]],
-        "cv_KPH": [30,60],
-        "cv_BPV": [[150,255],[150,255]],
-        "cv_sMaxV": [[255,200],[255,200]],
-        "cv_sdUPV": [[3,3],[3,3]],
-        "cv_sdDNV": [[7,5],[7,5]],
+        
+        "cv_KPH": [0],
+        "cv_BPV": [[150,255]],
+        "cv_sMaxV": [[255,200]],
+        "cv_sdUPV": [[3,3]],
+        "cv_sdDNV": [[7,5]],
         "steerOffset": 0.0,
         "steerRateCost": 0.5,
         "steerLimitTimer": 0.8,
-        "steerActuatorDelay":0.2,
+        
         "cameraOffset":0.0
          }
 

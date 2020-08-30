@@ -428,6 +428,7 @@ struct CarParams {
     sRlqrscaleV @9 :List(List(Float32));
     sRpidKiV @10 :List(List(Float32));
     sRpidKpV @11 :List(List(Float32));
+    sRsteerActuatorDelayV @12 :List(Float32);
   }
 
 
