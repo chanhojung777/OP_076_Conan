@@ -680,14 +680,12 @@ static void ui_draw_debug(UIState *s)
 
   x_pos = ui_viz_rx + 300;
   y_pos = 100; 
+
   //ui_print( s, x_pos, y_pos+0, "B:%d,%.5f", scene.steerOverride, scene.output_scale );
   //#ui_print( s, x_pos, y_pos+150, "blindspot L:%d, R:%d", scene.leftBlindspot, scene.rightBlindspot  );
-
   //ui_print( s, x_pos, y_pos+150, "L1:%d, %.1f,%.1f,%.1f", (int)scene.lead_status, scene.lead_d_rel, scene.lead_y_rel , scene.lead_v_rel  );
   //ui_print( s, x_pos, y_pos+200, "L2:%d, %.1f,%.1f,%.1f", (int)scene.lead_status2, scene.lead_d_rel2, scene.lead_y_rel2 , scene.lead_v_rel2  );
-
   //ui_print( s, x_pos, y_pos+250, "Wheel:%.1f,%.1f,%.1f,%.1f", scene.wheel.fl, scene.wheel.fr, scene.wheel.rl, scene.wheel.rr );
-
   //ui_print( s, x_pos, y_pos+0, "%d, %d, %d, %d, %d", scene.params.nOpkrUIBrightness, scene.params.nLightSensor, scene.params.nSmoothBrightness, scene.params.nOpkrUIVolumeBoost, scene.params.nOpkrAutoLanechangedelay );
 
   
@@ -717,9 +715,9 @@ static void ui_draw_debug(UIState *s)
   nvgFontSize(s->vg, 30);
   switch( scene.params.nOpkrAccelProfile  )
   {
-    case 1: strcpy( str_msg, "1.?Šë¦?" ); nColor = nvgRGBA(100, 100, 255, 255); break;
-    case 2: strcpy( str_msg, "2.ë³´í†µ" );    nColor = COLOR_WHITE;  break;
-    case 3: strcpy( str_msg, "3.ë¹ ë¦„" );  nColor = nvgRGBA(255, 100, 100, 255);  break;
+    case 1: strcpy( str_msg, "1.´À¸²" ); nColor = nvgRGBA(100, 100, 255, 255); break;
+    case 2: strcpy( str_msg, "2.º¸Åë" );    nColor = COLOR_WHITE;  break;
+    case 3: strcpy( str_msg, "3.ºü¸§" );  nColor = nvgRGBA(255, 100, 100, 255);  break;
     default :  sprintf( str_msg, "%d", scene.params.nOpkrAccelProfile ); nColor = COLOR_WHITE;  break;
   }
   nvgFillColor(s->vg, nColor);
@@ -728,10 +726,10 @@ static void ui_draw_debug(UIState *s)
   nvgFontSize(s->vg, 80);
   switch( scene.cruiseState.modeSel  )
   {
-    case 0: strcpy( str_msg, "0.?˜¤?ŒŒëª¨ë“œ" ); nColor = COLOR_WHITE; break;
-    case 1: strcpy( str_msg, "1.ì»¤ë¸Œëª¨ë“œ" );    nColor = nvgRGBA(200, 200, 255, 255);  break;
-    case 2: strcpy( str_msg, "2.?„ ?–‰ì°?" );  nColor = nvgRGBA(200, 255, 255, 255);  break;
-    case 3: strcpy( str_msg, "3.?ˆœ? •ëª¨ë“œ" );  nColor = nvgRGBA(200, 255, 255, 255);  break;
+    case 0: strcpy( str_msg, "0.¿ÀÆÄ¸ðµå" ); nColor = COLOR_WHITE; break;
+    case 1: strcpy( str_msg, "1.Ä¿ºê¸ðµå" );    nColor = nvgRGBA(200, 200, 255, 255);  break;
+    case 2: strcpy( str_msg, "2.¼±ÇàÂ÷" );  nColor = nvgRGBA(200, 255, 255, 255);  break;
+    case 3: strcpy( str_msg, "3.¼øÁ¤¸ðµå" );  nColor = nvgRGBA(200, 255, 255, 255);  break;
     default :  sprintf( str_msg, "%d", scene.cruiseState.modeSel ); nColor = COLOR_WHITE;  break;
   }
   nvgFillColor(s->vg, nColor);  
@@ -976,9 +974,9 @@ static void bb_ui_draw_measures_left(UIState *s, int bb_x, int bb_y, int bb_w ) 
         val_color = nvgRGBA(255, 0, 0, 200);
       }
       // temp is alway in C * 10
-      snprintf(val_str, sizeof(val_str), "%dÂ°C", (int)(scene->maxCpuTemp/10));
+      snprintf(val_str, sizeof(val_str), "%d¡ÆC", (int)(scene->maxCpuTemp/10));
       snprintf(uom_str, sizeof(uom_str), "");
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "CPU?˜¨?„",
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "CPU¿Âµµ",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
@@ -997,9 +995,9 @@ static void bb_ui_draw_measures_left(UIState *s, int bb_x, int bb_y, int bb_w ) 
       val_color = nvgRGBA(255, 0, 0, 200);
     }
     // temp is alway in C * 1000
-    snprintf(val_str, sizeof(val_str), "%dÂ°C", (int)(scene->maxBatTemp/1000));
+    snprintf(val_str, sizeof(val_str), "%d¡ÆC", (int)(scene->maxBatTemp/1000));
     snprintf(uom_str, sizeof(uom_str), "");
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "ë°°í„°ë¦¬ì˜¨?„",
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "¹èÅÍ¸®¿Âµµ",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
@@ -1128,7 +1126,7 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
        snprintf(val_str, sizeof(val_str), "-");
     }
     snprintf(uom_str, sizeof(uom_str), "m   ");
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "?•žì°¨ê°„ê²?",
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "¾ÕÂ÷°£°Ý",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
@@ -1163,7 +1161,7 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
     } else {
       snprintf(uom_str, sizeof(uom_str), "mph");
     }
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "?ƒ????†?„",
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "»ó´ë¼Óµµ",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
@@ -1184,10 +1182,10 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
         val_color = nvgRGBA(255, 0, 0, 200);
       }
       // steering is in degrees
-      snprintf(val_str, sizeof(val_str), "%.1fÂ°",(scene->angleSteers));
+      snprintf(val_str, sizeof(val_str), "%.1f¡Æ",(scene->angleSteers));
 
       snprintf(uom_str, sizeof(uom_str), "");
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "ì¡°í–¥ê°?",
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "Á¶Çâ°¢",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
@@ -1209,12 +1207,12 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
         val_color = nvgRGBA(255, 255, 255, 200);
       }
       // steering is in degrees
-      snprintf(val_str, sizeof(val_str), "%.1fÂ°",(scene->angleSteersDes));
+      snprintf(val_str, sizeof(val_str), "%.1f¡Æ",(scene->angleSteersDes));
     } else {
        snprintf(val_str, sizeof(val_str), "-");
     }
       snprintf(uom_str, sizeof(uom_str), "");
-      bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "?•„?š”ì¡°í–¥ê°?",
+      bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "ÇÊ¿äÁ¶Çâ°¢",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
