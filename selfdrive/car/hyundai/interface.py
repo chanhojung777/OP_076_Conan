@@ -241,6 +241,7 @@ class CarInterface(CarInterfaceBase):
     ret.atomTuning.sRpidKiV      = ATOMC.sR_pid_KiV
     ret.atomTuning.sRpidKpV      = ATOMC.sR_pid_KpV
     ret.atomTuning.sRsteerRatioV = ATOMC.sR_steerRatioV
+    ret.atomTuning.sRsteerActuatorDelayV = ATOMC.sR_ActuatorDelayV
   
     ret.lateralsRatom.deadzone = ATOMC.sR_pid_deadzone
     ret.lateralsRatom.steerOffset = ATOMC.steerOffset
