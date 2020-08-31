@@ -55,7 +55,7 @@ class LatControlPID():
     v_ego_kph = CS.vEgo * CV.MS_TO_KPH
     sr_value = self.angle_steers_des
     MsV, KiV, KpV = self.atom_tune( v_ego_kph, sr_value, CP )
-    self.pid.gain( (MsV, KpV), (MsV, KiV), k_f=self.steerKf )
+    self.pid.gain( (MsV, KpV), (MsV, KiV), k_f=CP.lateralTuning.pid.kf )
 
 
 
