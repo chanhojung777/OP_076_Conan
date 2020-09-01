@@ -13,7 +13,7 @@ class LatControlPID():
   def __init__(self, CP):
     self.trPID = trace1.Loger("pid")
     self.angle_steers_des = 0.
-
+    self.deadzone = CP.lateralsRatom.deadzone
 
     self.pid = PIController((CP.lateralTuning.pid.kpBP, CP.lateralTuning.pid.kpV),
                             (CP.lateralTuning.pid.kiBP, CP.lateralTuning.pid.kiV),
@@ -59,8 +59,10 @@ class LatControlPID():
 
   def update(self, active, CS, CP, path_plan):
     self.angle_steers_des = path_plan.angleSteers    
+    self.deadzone = CP.lateralsRatom.deadzone
     self.linear2_tune( CS, CP )
 
+    
     pid_log = log.ControlsState.LateralPIDState.new_message()
     pid_log.steerAngle = float(CS.steeringAngle)
     pid_log.steerRate = float(CS.steeringRate)
