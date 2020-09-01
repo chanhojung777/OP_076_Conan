@@ -30,7 +30,6 @@ class LatControlPID():
     self.sR_pid_KiV  = CP.atomTuning.sRpidKiV
     self.sR_pid_KpV = CP.atomTuning.sRpidKpV
 
-
     self.KiV = []
     self.KpV = []
     self.MsV = []
@@ -48,7 +47,6 @@ class LatControlPID():
 
     #rt_Ki = interp( v_ego_kph, self.sr_KPH, self.Ki )
     #rt_Kp  = interp( v_ego_kph, self.sr_KPH, self.Kp )
-     
     return self.MsV, self.KiV, self.KpV
 
   def linear2_tune( self, CS, CP ):  # angle(조향각에 의한 변화)
