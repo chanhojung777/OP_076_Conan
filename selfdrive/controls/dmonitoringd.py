@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import gc
-import time
 from cereal import car
 from common.realtime import set_realtime_priority
 from common.params import Params
@@ -44,7 +43,6 @@ def dmonitoringd_thread(sm=None, pm=None):
 
   # 10Hz <- dmonitoringmodeld
   while True:
-    time.sleep(0.01)
     sm.update()
 
     # Handle calibration
@@ -54,24 +52,13 @@ def dmonitoringd_thread(sm=None, pm=None):
           cal_rpy = sm['liveCalibration'].rpyCalib
 
     # Get interaction
-    standstill = True
-    cruiseState_enabled = True
     if sm.updated['carState']:
-      vEgo = sm['carState'].vEgo
       v_cruise = sm['carState'].cruiseState.speed
       driver_engaged = len(sm['carState'].buttonEvents) > 0 or \
                         v_cruise != v_cruise_last or \
                         sm['carState'].steeringPressed
-
-
-
-      standstill = sm['carState'].standstill or vEgo < 5
-      cruiseState_enabled = sm['carState'].cruiseState.enabled and vEgo > 30
-
       if driver_engaged:
-        driver_status.update(Events(), True, cruiseState_enabled, standstill )
-        driver_status.terminal_alert_cnt = 0
-        driver_status.terminal_time = 0
+        driver_status.update(Events(), True, sm['carState'].cruiseState.enabled, sm['carState'].standstill)
       v_cruise_last = v_cruise
 
     # Get model meta
@@ -81,12 +68,12 @@ def dmonitoringd_thread(sm=None, pm=None):
     # Get data from dmonitoringmodeld
     if sm.updated['driverState']:
       events = Events()
-      driver_status.get_pose(sm['driverState'], cal_rpy, sm['carState'].vEgo, cruiseState_enabled)
+      driver_status.get_pose(sm['driverState'], cal_rpy, sm['carState'].vEgo, sm['carState'].cruiseState.enabled)
       # Block any engage after certain distrations
       if driver_status.terminal_alert_cnt >= MAX_TERMINAL_ALERTS or driver_status.terminal_time >= MAX_TERMINAL_DURATION:
         events.add(car.CarEvent.EventName.tooDistracted)
       # Update events from driver state
-      driver_status.update(events, driver_engaged, cruiseState_enabled, standstill )
+      driver_status.update(events, driver_engaged, sm['carState'].cruiseState.enabled, sm['carState'].standstill)
 
       # dMonitoringState packet
       dat = messaging.new_message('dMonitoringState')
