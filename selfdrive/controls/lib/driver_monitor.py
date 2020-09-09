@@ -19,7 +19,7 @@ _AWARENESS_PRE_TIME_TILL_TERMINAL = 15.  # a first alert is issued 25s(default 1
 _AWARENESS_PROMPT_TIME_TILL_TERMINAL = 6.  # a second alert is issued 15s(default 6) before start decelerating the car 
 _DISTRACTED_TIME = 15.    # default  11
 _DISTRACTED_PRE_TIME_TILL_TERMINAL = 8.
-_DISTRACTED_PROMPT_TIME_TILL_TERMINAL = 3.
+_DISTRACTED_PROMPT_TIME_TILL_TERMINAL = 6.
 
 _FACE_THRESHOLD = 0.4
 _EYE_THRESHOLD = 0.6
