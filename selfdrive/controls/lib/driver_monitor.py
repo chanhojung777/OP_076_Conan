@@ -245,7 +245,10 @@ class DriverStatus():
       self.awareness = max(self.awareness - self.step_change, -0.1)
 
     alert = None
-    if self.awareness <= 0.:
+    if standstill:
+      self.terminal_time = 0
+      self.terminal_alert_cnt = 0
+    elif self.awareness <= 0.:
       # terminal red alert: disengagement required
       alert = EventName.driverDistracted if self.active_monitoring_mode else EventName.driverUnresponsive
       self.terminal_time += 1
