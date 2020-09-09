@@ -42,6 +42,7 @@ def dmonitoringd_thread(sm=None, pm=None):
   driver_engaged = False
 
   # 10Hz <- dmonitoringmodeld
+  standstill = True
   while True:
     sm.update()
 
@@ -52,9 +53,7 @@ def dmonitoringd_thread(sm=None, pm=None):
           cal_rpy = sm['liveCalibration'].rpyCalib
 
     # Get interaction
-    standstill = True
     if sm.updated['carState']:
-      
       steeringPressed = sm['carState'].steeringPressed
       vEgo = sm['carState'].vEgo
       v_cruise = sm['carState'].cruiseState.speed
@@ -62,7 +61,7 @@ def dmonitoringd_thread(sm=None, pm=None):
                         v_cruise != v_cruise_last or \
                         steeringPressed
 
-      standstill = sm['carState'].standstill or steeringPressed or vEgo < 1
+      standstill = sm['carState'].standstill or steeringPressed   #or vEgo < 1
       if driver_engaged:
         driver_status.update(Events(), True, sm['carState'].cruiseState.enabled, standstill)
       v_cruise_last = v_cruise
