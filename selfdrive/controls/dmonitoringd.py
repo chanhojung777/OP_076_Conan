@@ -52,13 +52,17 @@ def dmonitoringd_thread(sm=None, pm=None):
           cal_rpy = sm['liveCalibration'].rpyCalib
 
     # Get interaction
+    standstill = True
     if sm.updated['carState']:
+      vEgo = sm['carState'].vEgo
       v_cruise = sm['carState'].cruiseState.speed
       driver_engaged = len(sm['carState'].buttonEvents) > 0 or \
                         v_cruise != v_cruise_last or \
                         sm['carState'].steeringPressed
+
+      standstill = sm['carState'].standstill or vEgo < 5
       if driver_engaged:
-        driver_status.update(Events(), True, sm['carState'].cruiseState.enabled, sm['carState'].standstill)
+        driver_status.update(Events(), True, sm['carState'].cruiseState.enabled, standstill)
       v_cruise_last = v_cruise
 
     # Get model meta
@@ -73,7 +77,7 @@ def dmonitoringd_thread(sm=None, pm=None):
       if driver_status.terminal_alert_cnt >= MAX_TERMINAL_ALERTS or driver_status.terminal_time >= MAX_TERMINAL_DURATION:
         events.add(car.CarEvent.EventName.tooDistracted)
       # Update events from driver state
-      driver_status.update(events, driver_engaged, sm['carState'].cruiseState.enabled, sm['carState'].standstill)
+      driver_status.update(events, driver_engaged, sm['carState'].cruiseState.enabled, standstill)
 
       # dMonitoringState packet
       dat = messaging.new_message('dMonitoringState')
