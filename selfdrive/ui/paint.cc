@@ -34,6 +34,11 @@ float  fFontSize = 0.8;
 int  is_awake_command = false;
 
 
+void ui_awake_aleat(UIState *s, bool awake)
+{
+   is_awake_command = awake;
+}
+
 static void ui_print(UIState *s, int x, int y,  const char* fmt, ... )
 {
   //char speed_str[512];  
@@ -768,10 +773,10 @@ static void ui_draw_gear( UIState *s )
   nvgFontSize(s->vg, 150 );
   switch( ngetGearShifter )
   {
-    case 1 : strcpy( str_msg, "P" ); nColor = nvgRGBA(200, 200, 255, 255); break;
+    case 1 : strcpy( str_msg, "P" ); nColor = nvgRGBA(200, 200, 255, 255); ui_awake_aleat( s ); break;
     case 2 : strcpy( str_msg, "D" ); nColor = nvgRGBA(200, 200, 255, 255); break;
     case 3 : strcpy( str_msg, "N" ); nColor = COLOR_WHITE; break;
-    case 4 : strcpy( str_msg, "R" ); nColor = COLOR_RED; break;
+    case 4 : strcpy( str_msg, "R" ); nColor = COLOR_RED; ui_awake_aleat( s ); break;
     case 7 : strcpy( str_msg, "B" ); break;
     default: sprintf( str_msg, "%d", ngetGearShifter ); break;
   }
@@ -1228,10 +1233,7 @@ static void ui_draw_vision_footer(UIState *s)
 #endif
 }
 
-void ui_awake_aleat(UIState *s, bool awake)
-{
-   is_awake_command = awake;
-}
+
 
 void ui_draw_vision_alert(UIState *s, cereal::ControlsState::AlertSize va_size, int va_color,
                           const char* va_text1, const char* va_text2) {
