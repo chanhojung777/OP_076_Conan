@@ -17,9 +17,9 @@ EventName = car.CarEvent.EventName
 _AWARENESS_TIME = 70.  # one minute limit without user touching steering wheels make the car enter a terminal status (default 70)
 _AWARENESS_PRE_TIME_TILL_TERMINAL = 15.  # a first alert is issued 25s(default 15) before expiration
 _AWARENESS_PROMPT_TIME_TILL_TERMINAL = 6.  # a second alert is issued 15s(default 6) before start decelerating the car 
-_DISTRACTED_TIME = 20.    # default  11
-_DISTRACTED_PRE_TIME_TILL_TERMINAL = 10.  # default 8
-_DISTRACTED_PROMPT_TIME_TILL_TERMINAL = 8.   #default 6
+_DISTRACTED_TIME = 30.    # default  11
+_DISTRACTED_PRE_TIME_TILL_TERMINAL = 16.  # default 8
+_DISTRACTED_PROMPT_TIME_TILL_TERMINAL = 12.   #default 6
 
 _FACE_THRESHOLD = 0.4
 _EYE_THRESHOLD = 0.6
@@ -46,8 +46,8 @@ _POSE_OFFSET_MAX_COUNT = 3600 # stop deweighting new data after 6 min, aka "shor
 _RECOVERY_FACTOR_MAX = 5. # relative to minus step change
 _RECOVERY_FACTOR_MIN = 1.25 # relative to minus step change
 
-MAX_TERMINAL_ALERTS = 20 # not allowed to engage after 3 terminal alerts
-MAX_TERMINAL_DURATION = 300 # 30s
+MAX_TERMINAL_ALERTS = 3 # not allowed to engage after 3 terminal alerts  (default 3)
+MAX_TERMINAL_DURATION = 300 # 30s    default 300
 
 # model output refers to center of cropped image, so need to apply the x displacement offset
 RESIZED_FOCAL = 320.0
@@ -219,6 +219,7 @@ class DriverStatus():
   def update(self, events, driver_engaged, ctrl_active, standstill):
     if (driver_engaged and self.awareness > 0) or not ctrl_active:
       # reset only when on disengagement if red reached
+      self.terminal_time = 0
       self.awareness = 1.
       self.awareness_active = 1.
       self.awareness_passive = 1.
@@ -247,15 +248,19 @@ class DriverStatus():
     alert = None
     if standstill:
       self.terminal_time = 0
-      self.terminal_alert_cnt = 0
       self.awareness = 1.
       self.awareness_active = 1.
       self.awareness_passive = 1.
 
     if self.awareness <= 0.:
       # terminal red alert: disengagement required
-      alert = EventName.driverDistracted if self.active_monitoring_mode else EventName.driverUnresponsive
-      self.terminal_time += 1
+
+      if self.terminal_time > 3:
+        alert = EventName.driverDistracted if self.active_monitoring_mode else EventName.driverUnresponsive
+      else:
+        self.awareness = self.threshold_prompt
+        self.terminal_time += 1
+
       if awareness_prev > 0.:
         self.terminal_alert_cnt += 1
     elif self.awareness <= self.threshold_prompt:
