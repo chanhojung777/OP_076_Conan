@@ -82,6 +82,7 @@ class PathPlanner():
     self.lane_change_wait_timer = 0.0
     self.lane_change_ll_prob = 1.0
     self.prev_one_blinker = False
+    self.prev_cruiseState_enable = False
 
     # atom
     self.trPATH = trace1.Loger("path")
@@ -177,7 +178,7 @@ class PathPlanner():
     if self.atom_timer_cnt > 1000:
       self.atom_timer_cnt = 0
 
-
+    cruiseState  = sm['carState'].cruiseState
     leftBlindspot = sm['carState'].leftBlindspot
     rightBlindspot = sm['carState'].rightBlindspot
 
@@ -194,6 +195,10 @@ class PathPlanner():
     stiffnessFactor = sm['liveParameters'].stiffnessFactor
 
     if (self.atom_timer_cnt % 100) == 0:
+      if cruiseState.enabled and self.prev_cruiseState_enable:
+        self.prev_cruiseState_enable = cruiseState.enabled
+        CP = CarInterface.live_tune( CP, True )
+
       str_log3 = 'angleOffset={:.1f} angleOffsetAverage={:.3f} steerRatio={:.2f} stiffnessFactor={:.3f} '.format( angle_offset, angleOffsetAverage, self.steerRatio, stiffnessFactor )
       self.trLearner.add( 'LearnerParam {}'.format( str_log3 ) )       
 
