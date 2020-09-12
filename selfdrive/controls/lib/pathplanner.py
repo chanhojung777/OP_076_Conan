@@ -123,14 +123,18 @@ class PathPlanner():
     self.sr_KPH = CP.atomTuning.sRKPH
     self.sr_BPV = CP.atomTuning.sRBPV
     self.sr_steerRatioV  = sm['carParams'].atomTuning.sRsteerRatioV
+    nMax = len(self.sr_steerRatioV)    
+    if nMax <= 0:
+      self.sr_steerRatioV  = CP.atomTuning.sRsteerRatioV
 
     self.sr_SteerRatio = []
+
 
     nPos = 0
     for steerRatio in self.sr_BPV:  # steerRatio
       self.sr_SteerRatio.append( interp( sr_value, steerRatio, self.sr_steerRatioV[nPos] ) )
       nPos += 1
-      if nPos > 10:
+      if nPos > 10 or nPos > nMax:
         break
 
     steerRatio = interp( v_ego_kph, self.sr_KPH, self.sr_SteerRatio )
