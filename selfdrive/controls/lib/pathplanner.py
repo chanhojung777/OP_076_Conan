@@ -195,7 +195,7 @@ class PathPlanner():
     stiffnessFactor = sm['liveParameters'].stiffnessFactor
 
     if (self.atom_timer_cnt % 100) == 0:
-      if cruiseState.enabled and self.prev_cruiseState_enable:
+      if cruiseState.enabled and not self.prev_cruiseState_enable:
         self.prev_cruiseState_enable = cruiseState.enabled
         CP = CarInterface.live_tune( CP, True )
 
