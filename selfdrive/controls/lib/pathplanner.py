@@ -119,13 +119,11 @@ class PathPlanner():
     self.angle_steers_des_time = 0.0
 
 
-  def atom_tune( self, v_ego_kph, sr_value,  CP ):  # 조향각에 따른 변화.
-    self.sr_KPH = CP.atomTuning.sRKPH
-    self.sr_BPV = CP.atomTuning.sRBPV
-    self.sr_steerRatioV = CP.atomTuning.sRsteerRatioV
-
+  def atom_tune( self, v_ego_kph, sr_value,  atomTuning ):  # 조향각에 따른 변화.
+    self.sr_KPH = atomTuning.sRKPH
+    self.sr_BPV = atomTuning.sRBPV
+    self.sr_steerRatioV = atomTuning.sRsteerRatioV
     self.sr_SteerRatio = []
-
 
     nPos = 0
     for steerRatio in self.sr_BPV:  # steerRatio
@@ -138,11 +136,10 @@ class PathPlanner():
 
     return steerRatio
 
-  def atom_actuatorDelay( self, v_ego_kph, sr_value, CP ):
-    self.sr_KPH = CP.atomTuning.sRKPH
-    self.sr_BPV = CP.atomTuning.sRBPV
-    self.sr_ActuatorDelayV  = CP.atomTuning.sRsteerActuatorDelayV
-
+  def atom_actuatorDelay( self, v_ego_kph, sr_value, atomTuning ):
+    self.sr_KPH = atomTuning.sRKPH
+    self.sr_BPV = atomTuning.sRBPV
+    self.sr_ActuatorDelayV = atomTuning.sRsteerActuatorDelayV
     self.sr_ActuatorDelay = []
 
     nPos = 0
@@ -181,6 +178,12 @@ class PathPlanner():
     cruiseState  = sm['carState'].cruiseState
     leftBlindspot = sm['carState'].leftBlindspot
     rightBlindspot = sm['carState'].rightBlindspot
+    lateralsRatom = sm['carParams'].lateralsRatom
+    atomTuning = sm['carParams'].atomTuning
+
+    if atomTuning is None or lateralsRatom is None:
+      lateralsRatom = CP.lateralsRatom
+      atomTuning = CP.atomTuning
 
     v_ego = sm['carState'].vEgo
     angle_steers = sm['carState'].steeringAngle
@@ -194,11 +197,11 @@ class PathPlanner():
     angleOffsetAverage = sm['liveParameters'].angleOffsetAverage
     stiffnessFactor = sm['liveParameters'].stiffnessFactor
 
-    if (self.atom_timer_cnt % 100) == 0:
-      str_log3 = 'angleOffset={:.1f} angleOffsetAverage={:.3f} steerRatio={:.2f} stiffnessFactor={:.3f} '.format( angle_offset, angleOffsetAverage, self.steerRatio, stiffnessFactor )
-      self.trLearner.add( 'LearnerParam {}'.format( str_log3 ) )       
+    #if (self.atom_timer_cnt % 100) == 0:
+    #  str_log3 = 'angleOffset={:.1f} angleOffsetAverage={:.3f} steerRatio={:.2f} stiffnessFactor={:.3f} '.format( angle_offset, angleOffsetAverage, self.steerRatio, stiffnessFactor )
+    #  self.trLearner.add( 'LearnerParam {}'.format( str_log3 ) )       
 
-    if CP.lateralsRatom.learnerParams:
+    if lateralsRatom.learnerParams:
       pass
     else:
       # atom
@@ -208,11 +211,11 @@ class PathPlanner():
         self.steer_rate_cost = CP.steerRateCost
    
       
-      steerRatio = self.atom_tune( v_ego_kph, angle_steers, CP )
+      steerRatio = self.atom_tune( v_ego_kph, angle_steers, atomTuning )
       self.steerRatio = self.atom_steer( steerRatio, 2, 0.05 )
 
     #actuatorDelay = CP.steerActuatorDelay
-    steerActuatorDelay = self.atom_actuatorDelay( v_ego_kph, angle_steers, CP )
+    steerActuatorDelay = self.atom_actuatorDelay( v_ego_kph, angle_steers, atomTuning )
 
     # Run MPC
     self.angle_steers_des_prev = self.angle_steers_des_mpc
@@ -299,7 +302,7 @@ class PathPlanner():
     if desire == log.PathPlan.Desire.laneChangeRight or desire == log.PathPlan.Desire.laneChangeLeft:
       self.LP.l_prob *= self.lane_change_ll_prob
       self.LP.r_prob *= self.lane_change_ll_prob
-    self.LP.update_d_poly(v_ego , CP.lateralsRatom.cameraOffset )
+    self.LP.update_d_poly(v_ego , lateralsRatom.cameraOffset )
 
     # account for actuation delay
     self.cur_state = calc_states_after_delay(self.cur_state, v_ego, angle_steers - angle_offset, curvature_factor, VM.sR, steerActuatorDelay )

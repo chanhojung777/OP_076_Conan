@@ -111,7 +111,7 @@ class CarController():
     return sys_warning, sys_state
 
 
-  def atom_tune( self, v_ego, cv_value ):  # cV(곡률에 의한 변화)
+  def atom_tune( self, v_ego_kph, cv_value ):  # cV(곡률에 의한 변화)
     self.cv_KPH = self.CP.atomTuning.cvKPH
     self.cv_BPV = self.CP.atomTuning.cvBPV
     self.cv_sMaxV  = self.CP.atomTuning.cvsMaxV
@@ -132,11 +132,11 @@ class CarController():
       if nPos > 10:
         break
 
-    MAX = interp( v_ego, self.cv_KPH, self.steerMAX )
-    UP  = interp( v_ego, self.cv_KPH, self.steerdUP )
-    DN  = interp( v_ego, self.cv_KPH, self.steerdDN )
+    MAX = interp( v_ego_kph, self.cv_KPH, self.steerMAX )
+    UP  = interp( v_ego_kph, self.cv_KPH, self.steerdUP )
+    DN  = interp( v_ego_kph, self.cv_KPH, self.steerdDN )
 
-    #str_log1 = 'ego={:.1f} /{:.1f}/{:.1f}/{:.1f} {}'.format(v_ego,  MAX, UP, DN, self.steerMAX )
+    #str_log1 = 'ego={:.1f} /{:.1f}/{:.1f}/{:.1f} {}'.format(v_ego_kph,  MAX, UP, DN, self.steerMAX )
     #trace1.printf2( '{}'.format( str_log1 ) )      
     return MAX, UP, DN
 
@@ -154,7 +154,7 @@ class CarController():
       return param, dst_steer
 
 
-    nMAX, nUP, nDN = self.atom_tune( CS.out.vEgo, self.model_speed )
+    nMAX, nUP, nDN = self.atom_tune( v_ego_kph, self.model_speed )
     param.STEER_MAX = min( param.STEER_MAX, nMAX)
     param.STEER_DELTA_UP = min( param.STEER_DELTA_UP, nUP)
     param.STEER_DELTA_DOWN = min( param.STEER_DELTA_DOWN, nDN )
