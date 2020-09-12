@@ -122,10 +122,11 @@ class PathPlanner():
   def atom_tune( self, v_ego_kph, sr_value, sm, CP ):  # 조향각에 따른 변화.
     self.sr_KPH = CP.atomTuning.sRKPH
     self.sr_BPV = CP.atomTuning.sRBPV
-    self.sr_steerRatioV  = sm['carParams'].atomTuning.sRsteerRatioV
+    #self.sr_steerRatioV  = sm['carParams'].atomTuning.sRsteerRatioV
+    self.sr_steerRatioV  = CP.atomTuning.sRsteerRatioV
     nMax = len(self.sr_steerRatioV)    
-    if nMax <= 0:
-      self.sr_steerRatioV  = CP.atomTuning.sRsteerRatioV
+    #if nMax <= 0:
+    #  self.sr_steerRatioV  = CP.atomTuning.sRsteerRatioV
 
     self.sr_SteerRatio = []
 
