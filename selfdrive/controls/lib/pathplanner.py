@@ -82,8 +82,7 @@ class PathPlanner():
     self.lane_change_wait_timer = 0.0
     self.lane_change_ll_prob = 1.0
     self.prev_one_blinker = False
-    self.prev_cruiseState_enable = False
-
+ 
     # atom
     self.trPATH = trace1.Loger("path")
     self.trLearner = trace1.Loger("Learner")
@@ -120,10 +119,10 @@ class PathPlanner():
     self.angle_steers_des_time = 0.0
 
 
-  def atom_tune( self, v_ego_kph, sr_value, CP ):  # 조향각에 따른 변화.
+  def atom_tune( self, v_ego_kph, sr_value, sm, CP ):  # 조향각에 따른 변화.
     self.sr_KPH = CP.atomTuning.sRKPH
     self.sr_BPV = CP.atomTuning.sRBPV
-    self.sr_steerRatioV  = CP.atomTuning.sRsteerRatioV
+    self.sr_steerRatioV  = sm['carParams'].atomTuning.sRsteerRatioV
 
     self.sr_SteerRatio = []
 
@@ -195,10 +194,6 @@ class PathPlanner():
     stiffnessFactor = sm['liveParameters'].stiffnessFactor
 
     if (self.atom_timer_cnt % 100) == 0:
-      if cruiseState.enabled and not self.prev_cruiseState_enable:
-        self.prev_cruiseState_enable = cruiseState.enabled
-        CP = CarInterface.live_tune( CP, True )
-
       str_log3 = 'angleOffset={:.1f} angleOffsetAverage={:.3f} steerRatio={:.2f} stiffnessFactor={:.3f} '.format( angle_offset, angleOffsetAverage, self.steerRatio, stiffnessFactor )
       self.trLearner.add( 'LearnerParam {}'.format( str_log3 ) )       
 
@@ -212,7 +207,7 @@ class PathPlanner():
         self.steer_rate_cost = CP.steerRateCost
    
       
-      steerRatio = self.atom_tune( v_ego_kph, angle_steers, CP )
+      steerRatio = self.atom_tune( v_ego_kph, angle_steers, sm, CP )
       self.steerRatio = self.atom_steer( steerRatio, 2, 0.05 )
 
     #actuatorDelay = CP.steerActuatorDelay

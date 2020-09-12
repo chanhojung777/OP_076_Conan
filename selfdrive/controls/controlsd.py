@@ -614,7 +614,7 @@ class Controls:
     elif CS.cruiseState.enabled and self.hyundai_lkas:
       self.CP = CarInterface.live_tune( self.CP, True )      
       self.hyundai_lkas = False
-      self.init_flag = 1
+      self.init_flag = True
 
     self.update_events(CS)
 
