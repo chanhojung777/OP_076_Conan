@@ -617,6 +617,10 @@ class Controls:
       self.hyundai_lkas = False
       self.init_flag = True
 
+      cp_send = messaging.new_message('carParams')
+      cp_send.carParams = self.CP
+      self.pm.send('carParams', cp_send)      
+
     self.update_events(CS)
 
     if not self.hyundai_lkas:
