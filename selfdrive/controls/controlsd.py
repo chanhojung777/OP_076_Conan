@@ -81,6 +81,10 @@ class Controls:
 
     self.CI, self.CP = get_car(self.can_sock, self.pm.sock['sendcan'], has_relay)
 
+    cp_send = messaging.new_message('carParams')
+    cp_send.carParams = self.CP
+    self.pm.send('carParams', cp_send)
+
     # read params
     params = Params()
     self.is_metric = params.get("IsMetric", encoding='utf8') == "1"

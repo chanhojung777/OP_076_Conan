@@ -178,12 +178,16 @@ class PathPlanner():
     cruiseState  = sm['carState'].cruiseState
     leftBlindspot = sm['carState'].leftBlindspot
     rightBlindspot = sm['carState'].rightBlindspot
-    lateralsRatom = sm['carParams'].lateralsRatom
-    atomTuning = sm['carParams'].atomTuning
 
-    if atomTuning is None or lateralsRatom is None:
-      lateralsRatom = CP.lateralsRatom
-      atomTuning = CP.atomTuning
+    lateralsRatom = CP.lateralsRatom
+    atomTuning = CP.atomTuning
+
+    #if atomTuning is None or lateralsRatom is None:
+    carParams_valid = bool(sm['carParams'].valid)
+    if carParams_valid:
+      lateralsRatom = sm['carParams'].lateralsRatom
+      atomTuning = sm['carParams'].atomTuning
+
 
     v_ego = sm['carState'].vEgo
     angle_steers = sm['carState'].steeringAngle
@@ -197,9 +201,9 @@ class PathPlanner():
     angleOffsetAverage = sm['liveParameters'].angleOffsetAverage
     stiffnessFactor = sm['liveParameters'].stiffnessFactor
 
-    #if (self.atom_timer_cnt % 100) == 0:
-    #  str_log3 = 'angleOffset={:.1f} angleOffsetAverage={:.3f} steerRatio={:.2f} stiffnessFactor={:.3f} '.format( angle_offset, angleOffsetAverage, self.steerRatio, stiffnessFactor )
-    #  self.trLearner.add( 'LearnerParam {}'.format( str_log3 ) )       
+    if (self.atom_timer_cnt % 100) == 0:
+      str_log3 = 'angleOffset={:.1f} angleOffsetAverage={:.3f} steerRatio={:.2f} stiffnessFactor={:.3f} '.format( angle_offset, angleOffsetAverage, self.steerRatio, stiffnessFactor )
+      self.trLearner.add( 'LearnerParam {}  carParams={}'.format( str_log3, carParams_valid ) )       
 
     if lateralsRatom.learnerParams:
       pass
