@@ -53,16 +53,16 @@ class CarInterface(CarInterfaceBase):
 
     """
       0.7.3
-      ret.steerActuatorDelay = 0.10  # Default delay   0.15
+      ret.steerActuatorDelay = 0.1  # Default delay   0.15
       ret.steerRateCost = 0.45
       ret.steerLimitTimer = 0.8
       tire_stiffness_factor = 0.7
     """
 
     tire_stiffness_factor = 1.
-    ret.steerActuatorDelay = 0.15  # Default delay
+    ret.steerActuatorDelay = 0.325  # Default delay
     ret.steerRateCost = 0.5
-    ret.steerLimitTimer = 0.4
+    ret.steerLimitTimer = 0.8
 
 
 
@@ -219,7 +219,7 @@ class CarInterface(CarInterfaceBase):
     elif ATOMC.tun_type == 'lqr':
       ret.lateralTuning.init('lqr')
       ret.lateralTuning.lqr.scale = 2000.0
-      ret.lateralTuning.lqr.ki = 0.02
+      ret.lateralTuning.lqr.ki = 0.01
       ret.lateralTuning.lqr.a = [0., 1., -0.22619643, 1.21822268]
       ret.lateralTuning.lqr.b = [-1.92006585e-04, 3.95603032e-05]
       ret.lateralTuning.lqr.c = [1., 0.]
