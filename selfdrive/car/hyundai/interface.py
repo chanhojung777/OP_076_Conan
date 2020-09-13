@@ -272,6 +272,7 @@ class CarInterface(CarInterfaceBase):
     nOpkrTuneStartAt = int( params.get('OpkrTuneStartAt') ) 
     if read and nOpkrTuneStartAt:
       ATOMC.read_tune()
+      CP.lateralsRatom.learnerParams = int( params.get('OpkrEnableLearner') )       
 
     CP.atomTuning.cvKPH    = ATOMC.cv_KPH
     CP.atomTuning.cvBPV    = ATOMC.cv_BPV
