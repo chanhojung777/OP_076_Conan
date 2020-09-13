@@ -183,7 +183,7 @@ class PathPlanner():
     atomTuning = CP.atomTuning
 
     #if atomTuning is None or lateralsRatom is None:
-    carParams_valid = bool(sm['carParams'].valid)
+    carParams_valid = sm['carParams'].steerRatio
     if carParams_valid:
       lateralsRatom = sm['carParams'].lateralsRatom
       atomTuning = sm['carParams'].atomTuning
@@ -209,10 +209,12 @@ class PathPlanner():
       pass
     else:
       # atom
-      self.steer_rate_cost = sm['carParams'].steerRateCost   
-      self.steerRatio = sm['carParams'].steerRatio
-      if self.steer_rate_cost == 0:
+      if carParams_valid:
+        self.steer_rate_cost = sm['carParams'].steerRateCost   
+        self.steerRatio = sm['carParams'].steerRatio        
+      else:
         self.steer_rate_cost = CP.steerRateCost
+        self.steerRatio = CP.steerRatio
    
       
       steerRatio = self.atom_tune( v_ego_kph, angle_steers, atomTuning )
