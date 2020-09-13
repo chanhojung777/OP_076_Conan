@@ -184,7 +184,7 @@ class PathPlanner():
     atomTuning = CP.atomTuning
 
     #if atomTuning is None or lateralsRatom is None:
-    print('carparams={} steerRatio={}  carParams_valid={}'.format(sm.updated['carParams'], sm['carParams'].steerRatio, self.carParams_valid ) )
+    #print('carparams={} steerRatio={}  carParams_valid={}'.format(sm.updated['carParams'], sm['carParams'].steerRatio, self.carParams_valid ) )
 
     if not self.carParams_valid and sm['carParams'].steerRatio:  # sm.updated['carParams']:
       self.carParams_valid = True
