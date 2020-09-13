@@ -184,7 +184,7 @@ class PathPlanner():
     atomTuning = CP.atomTuning
 
     #if atomTuning is None or lateralsRatom is None:
-    if not self.carParams_valid  and sm.updated['carParams']:
+    if not self.carParams_valid and sm['carParams'].steerRatio:  # sm.updated['carParams']:
       self.carParams_valid = True
 
     if self.carParams_valid:
@@ -349,7 +349,7 @@ class PathPlanner():
 
     elif v_ego_kph < 30:  # 30
         xp = [5,15,30]
-        fp2 = [1,3,5]
+        fp2 = [1,5,7]
         limit_steers = interp( v_ego_kph, xp, fp2 )
         self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
 
