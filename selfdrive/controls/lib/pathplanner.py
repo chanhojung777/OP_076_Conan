@@ -93,6 +93,8 @@ class PathPlanner():
     self.atom_sr_boost_bp = [0., 0.]
     self.atom_sr_boost_range = [0., 0.]
 
+    self.carParams_valid = False
+
   def limit_ctrl(self, value, limit, offset ):
       p_limit = offset + limit
       m_limit = offset - limit
@@ -166,7 +168,6 @@ class PathPlanner():
       steerRatio -= sr_dn
 
 
-
     self.steerRatio_last = steerRatio
     return steerRatio
 
@@ -183,8 +184,10 @@ class PathPlanner():
     atomTuning = CP.atomTuning
 
     #if atomTuning is None or lateralsRatom is None:
-    carParams_valid = sm['carParams'].steerRatio
-    if carParams_valid:
+    if not self.carParams_valid  and sm.updated['carParams']:
+      self.carParams_valid = True
+
+    if self.carParams_valid:
       lateralsRatom = sm['carParams'].lateralsRatom
       atomTuning = sm['carParams'].atomTuning
 
@@ -203,13 +206,13 @@ class PathPlanner():
 
     if (self.atom_timer_cnt % 100) == 0:
       str_log3 = 'angleOffset={:.1f} angleOffsetAverage={:.3f} steerRatio={:.2f} stiffnessFactor={:.3f} '.format( angle_offset, angleOffsetAverage, self.steerRatio, stiffnessFactor )
-      self.trLearner.add( 'LearnerParam {}  carParams={}'.format( str_log3, carParams_valid ) )       
+      self.trLearner.add( 'LearnerParam {}  carParams={}'.format( str_log3, self.carParams_valid ) )       
 
     if lateralsRatom.learnerParams:
       pass
     else:
       # atom
-      if carParams_valid:
+      if self.carParams_valid:
         self.steer_rate_cost = sm['carParams'].steerRateCost   
         self.steerRatio = sm['carParams'].steerRatio        
       else:
