@@ -591,6 +591,7 @@ class Controls:
       cp_send = messaging.new_message('carParams')
       cp_send.carParams = self.CP
       self.pm.send('carParams', cp_send)
+      print('carParams send steerRatio={}  '.format( self.sm.frame ) )
 
     # carControl
     cc_send = messaging.new_message('carControl')
