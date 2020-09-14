@@ -226,7 +226,7 @@ if ANDROID:
     'tombstoned',
     'updated',
     'deleter',
-    #'appd',    
+    'appd',
   ]
 
 car_started_processes = [
