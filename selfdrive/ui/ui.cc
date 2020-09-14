@@ -1049,6 +1049,11 @@ int main(int argc, char* argv[]) {
       
     }
 
+    if( s->is_awake_command )
+    {
+      LOGW( "s->is_awake_command = %d s->started=>%d", s->is_awake_command, s->started );  
+    }
+    
 
     if (!s->started) {
       // always process events offroad
