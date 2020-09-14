@@ -346,6 +346,7 @@ typedef struct UIState {
   bool awake;
 
   // timeouts
+  int is_awake_command;
   int awake_timeout;
   int volume_timeout;
   int controls_timeout;

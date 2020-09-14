@@ -15,7 +15,7 @@
 #include "ui.hpp"
 #include "dashcam.h"
 
-extern int  is_awake_command;
+
 int  old_cruiseSwState = 0;
 
 static int last_brightness = -1;
@@ -1073,10 +1073,10 @@ int main(int argc, char* argv[]) {
       {
         _maxspeed_calc = maxspeed_calc;
         ui_awake_aleat( s );
-      //  LOGW("is_awake_command = true  speed = %d", maxspeed_calc );
+      //  LOGW("s->is_awake_command = true  speed = %d", maxspeed_calc );
       }         
 
-      if( is_awake_command || nAwakeTime == 0 || scene.cruiseState.standstill  )
+      if( s->is_awake_command || nAwakeTime == 0 || scene.cruiseState.standstill  )
       {
         ui_awake_aleat( s, false );
         set_awake(s, true, nTimeOff);

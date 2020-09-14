@@ -31,12 +31,11 @@ const uint8_t alert_colors[][4] = {
 };
 
 float  fFontSize = 0.8;
-int  is_awake_command = false;
 
 
 void ui_awake_aleat(UIState *s, bool awake)
 {
-   is_awake_command = awake;
+   s->is_awake_command = awake;
 }
 
 static void ui_print(UIState *s, int x, int y,  const char* fmt, ... )
@@ -1255,7 +1254,7 @@ void ui_draw_vision_alert(UIState *s, cereal::ControlsState::AlertSize va_size, 
   const int alr_w = scene->ui_viz_rw+(mapEnabled?(hasSidebar?nav_w:(nav_ww)):0)+(bdr_s*2);
   const int alr_h = alr_s+(va_size==cereal::ControlsState::AlertSize::NONE?0:bdr_s);
   const int alr_y = vwp_h-alr_h;
-  is_awake_command = true;
+  s->is_awake_command = true;
   ui_draw_rect(s->vg, alr_x, alr_y, alr_w, alr_h, nvgRGBA(color[0],color[1],color[2],(color[3]*s->alert_blinking_alpha)));
 
   NVGpaint gradient = nvgLinearGradient(s->vg, alr_x, alr_y, alr_x, alr_y+alr_h,
