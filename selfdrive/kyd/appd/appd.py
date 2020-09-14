@@ -29,12 +29,15 @@ def main(gctx=None):
   while True:
     for x in program:
       opkr_enable = int(params.get( x[1], encoding='utf8'))
+      nPos = x[0]      
       if opkr_enable:
-          nPos = x[0]
-          print( '1:{} 2:{}'.format( x[1], x[2], program_runing[nPos] ) )        
-          put_nonblocking( x[1], '0')        
-          if not program_runing[nPos]:
-            program_runing[nPos] = exec_app( opkr_enable, x[2], x[3])
+        print( '1:{} 2:{}'.format( x[1], x[2], program_runing[nPos] ) )        
+        put_nonblocking( x[1], '0')
+        if not program_runing[nPos]:
+          program_runing[nPos] = exec_app( opkr_enable, x[2], x[3])
+      elif program_runing[nPos]:
+        program_runing[nPos] = 0
+        exec_app( opkr_enable, x[2], x[3])
 
 
 
