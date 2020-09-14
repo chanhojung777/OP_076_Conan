@@ -772,10 +772,10 @@ static void ui_draw_gear( UIState *s )
   nvgFontSize(s->vg, 150 );
   switch( ngetGearShifter )
   {
-    case 1 : strcpy( str_msg, "P" ); nColor = nvgRGBA(200, 200, 255, 255); ui_awake_aleat( s ); break;
+    case 1 : strcpy( str_msg, "P" ); nColor = nvgRGBA(200, 200, 255, 255); break;
     case 2 : strcpy( str_msg, "D" ); nColor = nvgRGBA(200, 200, 255, 255); break;
     case 3 : strcpy( str_msg, "N" ); nColor = COLOR_WHITE; break;
-    case 4 : strcpy( str_msg, "R" ); nColor = COLOR_RED; ui_awake_aleat( s ); break;
+    case 4 : strcpy( str_msg, "R" ); nColor = COLOR_RED;  break;
     case 7 : strcpy( str_msg, "B" ); break;
     default: sprintf( str_msg, "%d", ngetGearShifter ); break;
   }

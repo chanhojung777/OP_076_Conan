@@ -549,7 +549,14 @@ void handle_message(UIState *s, SubMaster &sm)
     scene.wheel.fl = getWheelSpeeds.getFl();
     scene.wheel.fr = getWheelSpeeds.getFr();
     scene.wheel.rl = getWheelSpeeds.getRl();
-    scene.wheel.rr = getWheelSpeeds.getRr();    
+    scene.wheel.rr = getWheelSpeeds.getRr();
+
+    int  ngetGearShifter = int(scene.getGearShifter);
+  switch( ngetGearShifter )
+  {
+    case 1 :  ui_awake_aleat( s ); break;  // D
+    case 4 :  ui_awake_aleat( s ); break;  // R
+  }        
   }
 
   if (sm.updated("carParams")) {
@@ -1048,10 +1055,7 @@ int main(int argc, char* argv[]) {
       }
       
     }
-
-
-      LOGW( "s->is_awake_command = %d s->started=>%d", s->is_awake_command, s->started );  
-      
+    
 
     if (!s->started) {
       // always process events offroad
