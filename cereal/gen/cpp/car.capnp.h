@@ -88,7 +88,7 @@ enum class EventName_baa8c5d505f727de: uint16_t {
   DRIVER_MONITOR_LOW_ACC,
   INVALID_LKAS_SETTING,
   SPEED_TOO_HIGH,
-  LANE_CHANGE_BLOCKED_D_E_P_R_E_C_A_T_E_D,
+  LANE_CHANGE_BLOCKED,
   RELAY_MALFUNCTION,
   GAS_PRESSED,
   STOCK_FCW,
@@ -106,6 +106,10 @@ enum class EventName_baa8c5d505f727de: uint16_t {
   FOCUS_RECOVER_ACTIVE,
   WRONG_CRUISE_MODE,
   NEOS_UPDATE_REQUIRED,
+  STEER_TORQUE_OVER,
+  STEER_TORQUE_LOW,
+  LANE_CHANGE_MANUAL,
+  EMG_BUTTON_MANUAL,
 };
 CAPNP_DECLARE_ENUM(EventName, baa8c5d505f727de);
 CAPNP_DECLARE_SCHEMA(9da4fa09e052903c);
@@ -181,6 +185,8 @@ enum class AudibleAlert_f5a5e26c954e339e: uint16_t {
 };
 CAPNP_DECLARE_ENUM(AudibleAlert, f5a5e26c954e339e);
 CAPNP_DECLARE_SCHEMA(8c69372490aaa9da);
+CAPNP_DECLARE_SCHEMA(b4f813401ebc1e6e);
+CAPNP_DECLARE_SCHEMA(9fb015ee746dc691);
 CAPNP_DECLARE_SCHEMA(b581b23b1c89dda3);
 CAPNP_DECLARE_SCHEMA(9622723fcbd14c2e);
 CAPNP_DECLARE_SCHEMA(c342cefc303e9b8e);
@@ -459,6 +465,8 @@ struct CarParams {
   class Reader;
   class Builder;
   class Pipeline;
+  struct AtomTuning;
+  struct LateralsRatom;
   struct LateralParams;
   struct LateralPIDTuning;
   struct LongitudinalPIDTuning;
@@ -480,7 +488,37 @@ struct CarParams {
   struct LateralTuning;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(8c69372490aaa9da, 11, 13)
+    CAPNP_DECLARE_STRUCT_HEADER(8c69372490aaa9da, 11, 15)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct CarParams::AtomTuning {
+  AtomTuning() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(b4f813401ebc1e6e, 0, 13)
+    #if !CAPNP_LITE
+    static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
+    #endif  // !CAPNP_LITE
+  };
+};
+
+struct CarParams::LateralsRatom {
+  LateralsRatom() = delete;
+
+  class Reader;
+  class Builder;
+  class Pipeline;
+
+  struct _capnpPrivate {
+    CAPNP_DECLARE_STRUCT_HEADER(9fb015ee746dc691, 2, 0)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
@@ -590,7 +628,7 @@ struct CarParams::LateralTuning {
   };
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(93fc580a35339568, 11, 13)
+    CAPNP_DECLARE_STRUCT_HEADER(93fc580a35339568, 11, 15)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
@@ -1123,6 +1161,10 @@ public:
 
   inline bool getStandstill() const;
 
+  inline  ::int16_t getModeSel() const;
+
+  inline  ::int16_t getCruiseSwState() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -1165,6 +1207,12 @@ public:
 
   inline bool getStandstill();
   inline void setStandstill(bool value);
+
+  inline  ::int16_t getModeSel();
+  inline void setModeSel( ::int16_t value);
+
+  inline  ::int16_t getCruiseSwState();
+  inline void setCruiseSwState( ::int16_t value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -2041,6 +2089,14 @@ public:
 
   inline  ::cereal::CarParams::NetworkLocation getNetworkLocation() const;
 
+  inline bool getLongcontrolEnabled() const;
+
+  inline bool hasLateralsRatom() const;
+  inline  ::cereal::CarParams::LateralsRatom::Reader getLateralsRatom() const;
+
+  inline bool hasAtomTuning() const;
+  inline  ::cereal::CarParams::AtomTuning::Reader getAtomTuning() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -2270,6 +2326,23 @@ public:
   inline  ::cereal::CarParams::NetworkLocation getNetworkLocation();
   inline void setNetworkLocation( ::cereal::CarParams::NetworkLocation value);
 
+  inline bool getLongcontrolEnabled();
+  inline void setLongcontrolEnabled(bool value);
+
+  inline bool hasLateralsRatom();
+  inline  ::cereal::CarParams::LateralsRatom::Builder getLateralsRatom();
+  inline void setLateralsRatom( ::cereal::CarParams::LateralsRatom::Reader value);
+  inline  ::cereal::CarParams::LateralsRatom::Builder initLateralsRatom();
+  inline void adoptLateralsRatom(::capnp::Orphan< ::cereal::CarParams::LateralsRatom>&& value);
+  inline ::capnp::Orphan< ::cereal::CarParams::LateralsRatom> disownLateralsRatom();
+
+  inline bool hasAtomTuning();
+  inline  ::cereal::CarParams::AtomTuning::Builder getAtomTuning();
+  inline void setAtomTuning( ::cereal::CarParams::AtomTuning::Reader value);
+  inline  ::cereal::CarParams::AtomTuning::Builder initAtomTuning();
+  inline void adoptAtomTuning(::capnp::Orphan< ::cereal::CarParams::AtomTuning>&& value);
+  inline ::capnp::Orphan< ::cereal::CarParams::AtomTuning> disownAtomTuning();
+
 private:
   ::capnp::_::StructBuilder _builder;
   template <typename, ::capnp::Kind>
@@ -2291,6 +2364,313 @@ public:
   inline  ::cereal::CarParams::LongitudinalPIDTuning::Pipeline getLongitudinalTuning();
   inline typename LateralTuning::Pipeline getLateralTuning();
   inline  ::cereal::CarParams::LateralParams::Pipeline getLateralParams();
+  inline  ::cereal::CarParams::LateralsRatom::Pipeline getLateralsRatom();
+  inline  ::cereal::CarParams::AtomTuning::Pipeline getAtomTuning();
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
+class CarParams::AtomTuning::Reader {
+public:
+  typedef AtomTuning Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
+  }
+#endif  // !CAPNP_LITE
+
+  inline bool hasCvKPH() const;
+  inline  ::capnp::List<float>::Reader getCvKPH() const;
+
+  inline bool hasCvBPV() const;
+  inline  ::capnp::List< ::capnp::List<float>>::Reader getCvBPV() const;
+
+  inline bool hasCvsMaxV() const;
+  inline  ::capnp::List< ::capnp::List<float>>::Reader getCvsMaxV() const;
+
+  inline bool hasCvsdUpV() const;
+  inline  ::capnp::List< ::capnp::List<float>>::Reader getCvsdUpV() const;
+
+  inline bool hasCvsdDnV() const;
+  inline  ::capnp::List< ::capnp::List<float>>::Reader getCvsdDnV() const;
+
+  inline bool hasSRKPH() const;
+  inline  ::capnp::List<float>::Reader getSRKPH() const;
+
+  inline bool hasSRBPV() const;
+  inline  ::capnp::List< ::capnp::List<float>>::Reader getSRBPV() const;
+
+  inline bool hasSRsteerRatioV() const;
+  inline  ::capnp::List< ::capnp::List<float>>::Reader getSRsteerRatioV() const;
+
+  inline bool hasSRlqrkiV() const;
+  inline  ::capnp::List< ::capnp::List<float>>::Reader getSRlqrkiV() const;
+
+  inline bool hasSRlqrscaleV() const;
+  inline  ::capnp::List< ::capnp::List<float>>::Reader getSRlqrscaleV() const;
+
+  inline bool hasSRpidKiV() const;
+  inline  ::capnp::List< ::capnp::List<float>>::Reader getSRpidKiV() const;
+
+  inline bool hasSRpidKpV() const;
+  inline  ::capnp::List< ::capnp::List<float>>::Reader getSRpidKpV() const;
+
+  inline bool hasSRsteerActuatorDelayV() const;
+  inline  ::capnp::List< ::capnp::List<float>>::Reader getSRsteerActuatorDelayV() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class CarParams::AtomTuning::Builder {
+public:
+  typedef AtomTuning Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline bool hasCvKPH();
+  inline  ::capnp::List<float>::Builder getCvKPH();
+  inline void setCvKPH( ::capnp::List<float>::Reader value);
+  inline void setCvKPH(::kj::ArrayPtr<const float> value);
+  inline  ::capnp::List<float>::Builder initCvKPH(unsigned int size);
+  inline void adoptCvKPH(::capnp::Orphan< ::capnp::List<float>>&& value);
+  inline ::capnp::Orphan< ::capnp::List<float>> disownCvKPH();
+
+  inline bool hasCvBPV();
+  inline  ::capnp::List< ::capnp::List<float>>::Builder getCvBPV();
+  inline void setCvBPV( ::capnp::List< ::capnp::List<float>>::Reader value);
+  inline void setCvBPV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value);
+  inline  ::capnp::List< ::capnp::List<float>>::Builder initCvBPV(unsigned int size);
+  inline void adoptCvBPV(::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> disownCvBPV();
+
+  inline bool hasCvsMaxV();
+  inline  ::capnp::List< ::capnp::List<float>>::Builder getCvsMaxV();
+  inline void setCvsMaxV( ::capnp::List< ::capnp::List<float>>::Reader value);
+  inline void setCvsMaxV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value);
+  inline  ::capnp::List< ::capnp::List<float>>::Builder initCvsMaxV(unsigned int size);
+  inline void adoptCvsMaxV(::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> disownCvsMaxV();
+
+  inline bool hasCvsdUpV();
+  inline  ::capnp::List< ::capnp::List<float>>::Builder getCvsdUpV();
+  inline void setCvsdUpV( ::capnp::List< ::capnp::List<float>>::Reader value);
+  inline void setCvsdUpV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value);
+  inline  ::capnp::List< ::capnp::List<float>>::Builder initCvsdUpV(unsigned int size);
+  inline void adoptCvsdUpV(::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> disownCvsdUpV();
+
+  inline bool hasCvsdDnV();
+  inline  ::capnp::List< ::capnp::List<float>>::Builder getCvsdDnV();
+  inline void setCvsdDnV( ::capnp::List< ::capnp::List<float>>::Reader value);
+  inline void setCvsdDnV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value);
+  inline  ::capnp::List< ::capnp::List<float>>::Builder initCvsdDnV(unsigned int size);
+  inline void adoptCvsdDnV(::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> disownCvsdDnV();
+
+  inline bool hasSRKPH();
+  inline  ::capnp::List<float>::Builder getSRKPH();
+  inline void setSRKPH( ::capnp::List<float>::Reader value);
+  inline void setSRKPH(::kj::ArrayPtr<const float> value);
+  inline  ::capnp::List<float>::Builder initSRKPH(unsigned int size);
+  inline void adoptSRKPH(::capnp::Orphan< ::capnp::List<float>>&& value);
+  inline ::capnp::Orphan< ::capnp::List<float>> disownSRKPH();
+
+  inline bool hasSRBPV();
+  inline  ::capnp::List< ::capnp::List<float>>::Builder getSRBPV();
+  inline void setSRBPV( ::capnp::List< ::capnp::List<float>>::Reader value);
+  inline void setSRBPV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value);
+  inline  ::capnp::List< ::capnp::List<float>>::Builder initSRBPV(unsigned int size);
+  inline void adoptSRBPV(::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> disownSRBPV();
+
+  inline bool hasSRsteerRatioV();
+  inline  ::capnp::List< ::capnp::List<float>>::Builder getSRsteerRatioV();
+  inline void setSRsteerRatioV( ::capnp::List< ::capnp::List<float>>::Reader value);
+  inline void setSRsteerRatioV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value);
+  inline  ::capnp::List< ::capnp::List<float>>::Builder initSRsteerRatioV(unsigned int size);
+  inline void adoptSRsteerRatioV(::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> disownSRsteerRatioV();
+
+  inline bool hasSRlqrkiV();
+  inline  ::capnp::List< ::capnp::List<float>>::Builder getSRlqrkiV();
+  inline void setSRlqrkiV( ::capnp::List< ::capnp::List<float>>::Reader value);
+  inline void setSRlqrkiV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value);
+  inline  ::capnp::List< ::capnp::List<float>>::Builder initSRlqrkiV(unsigned int size);
+  inline void adoptSRlqrkiV(::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> disownSRlqrkiV();
+
+  inline bool hasSRlqrscaleV();
+  inline  ::capnp::List< ::capnp::List<float>>::Builder getSRlqrscaleV();
+  inline void setSRlqrscaleV( ::capnp::List< ::capnp::List<float>>::Reader value);
+  inline void setSRlqrscaleV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value);
+  inline  ::capnp::List< ::capnp::List<float>>::Builder initSRlqrscaleV(unsigned int size);
+  inline void adoptSRlqrscaleV(::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> disownSRlqrscaleV();
+
+  inline bool hasSRpidKiV();
+  inline  ::capnp::List< ::capnp::List<float>>::Builder getSRpidKiV();
+  inline void setSRpidKiV( ::capnp::List< ::capnp::List<float>>::Reader value);
+  inline void setSRpidKiV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value);
+  inline  ::capnp::List< ::capnp::List<float>>::Builder initSRpidKiV(unsigned int size);
+  inline void adoptSRpidKiV(::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> disownSRpidKiV();
+
+  inline bool hasSRpidKpV();
+  inline  ::capnp::List< ::capnp::List<float>>::Builder getSRpidKpV();
+  inline void setSRpidKpV( ::capnp::List< ::capnp::List<float>>::Reader value);
+  inline void setSRpidKpV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value);
+  inline  ::capnp::List< ::capnp::List<float>>::Builder initSRpidKpV(unsigned int size);
+  inline void adoptSRpidKpV(::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> disownSRpidKpV();
+
+  inline bool hasSRsteerActuatorDelayV();
+  inline  ::capnp::List< ::capnp::List<float>>::Builder getSRsteerActuatorDelayV();
+  inline void setSRsteerActuatorDelayV( ::capnp::List< ::capnp::List<float>>::Reader value);
+  inline void setSRsteerActuatorDelayV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value);
+  inline  ::capnp::List< ::capnp::List<float>>::Builder initSRsteerActuatorDelayV(unsigned int size);
+  inline void adoptSRsteerActuatorDelayV(::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value);
+  inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> disownSRsteerActuatorDelayV();
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class CarParams::AtomTuning::Pipeline {
+public:
+  typedef AtomTuning Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
+private:
+  ::capnp::AnyPointer::Pipeline _typeless;
+  friend class ::capnp::PipelineHook;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+};
+#endif  // !CAPNP_LITE
+
+class CarParams::LateralsRatom::Reader {
+public:
+  typedef LateralsRatom Reads;
+
+  Reader() = default;
+  inline explicit Reader(::capnp::_::StructReader base): _reader(base) {}
+
+  inline ::capnp::MessageSize totalSize() const {
+    return _reader.totalSize().asPublic();
+  }
+
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const {
+    return ::capnp::_::structString(_reader, *_capnpPrivate::brand());
+  }
+#endif  // !CAPNP_LITE
+
+  inline  ::int16_t getLearnerParams() const;
+
+  inline float getDeadzone() const;
+
+  inline float getSteerOffset() const;
+
+  inline float getCameraOffset() const;
+
+private:
+  ::capnp::_::StructReader _reader;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::List;
+  friend class ::capnp::MessageBuilder;
+  friend class ::capnp::Orphanage;
+};
+
+class CarParams::LateralsRatom::Builder {
+public:
+  typedef LateralsRatom Builds;
+
+  Builder() = delete;  // Deleted to discourage incorrect usage.
+                       // You can explicitly initialize to nullptr instead.
+  inline Builder(decltype(nullptr)) {}
+  inline explicit Builder(::capnp::_::StructBuilder base): _builder(base) {}
+  inline operator Reader() const { return Reader(_builder.asReader()); }
+  inline Reader asReader() const { return *this; }
+
+  inline ::capnp::MessageSize totalSize() const { return asReader().totalSize(); }
+#if !CAPNP_LITE
+  inline ::kj::StringTree toString() const { return asReader().toString(); }
+#endif  // !CAPNP_LITE
+
+  inline  ::int16_t getLearnerParams();
+  inline void setLearnerParams( ::int16_t value);
+
+  inline float getDeadzone();
+  inline void setDeadzone(float value);
+
+  inline float getSteerOffset();
+  inline void setSteerOffset(float value);
+
+  inline float getCameraOffset();
+  inline void setCameraOffset(float value);
+
+private:
+  ::capnp::_::StructBuilder _builder;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::ToDynamic_;
+  friend class ::capnp::Orphanage;
+  template <typename, ::capnp::Kind>
+  friend struct ::capnp::_::PointerHelpers;
+};
+
+#if !CAPNP_LITE
+class CarParams::LateralsRatom::Pipeline {
+public:
+  typedef LateralsRatom Pipelines;
+
+  inline Pipeline(decltype(nullptr)): _typeless(nullptr) {}
+  inline explicit Pipeline(::capnp::AnyPointer::Pipeline&& typeless)
+      : _typeless(kj::mv(typeless)) {}
+
 private:
   ::capnp::AnyPointer::Pipeline _typeless;
   friend class ::capnp::PipelineHook;
@@ -3996,6 +4376,34 @@ inline void CarState::CruiseState::Builder::setStandstill(bool value) {
       ::capnp::bounded<2>() * ::capnp::ELEMENTS, value);
 }
 
+inline  ::int16_t CarState::CruiseState::Reader::getModeSel() const {
+  return _reader.getDataField< ::int16_t>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
+}
+
+inline  ::int16_t CarState::CruiseState::Builder::getModeSel() {
+  return _builder.getDataField< ::int16_t>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
+}
+inline void CarState::CruiseState::Builder::setModeSel( ::int16_t value) {
+  _builder.setDataField< ::int16_t>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, value);
+}
+
+inline  ::int16_t CarState::CruiseState::Reader::getCruiseSwState() const {
+  return _reader.getDataField< ::int16_t>(
+      ::capnp::bounded<6>() * ::capnp::ELEMENTS);
+}
+
+inline  ::int16_t CarState::CruiseState::Builder::getCruiseSwState() {
+  return _builder.getDataField< ::int16_t>(
+      ::capnp::bounded<6>() * ::capnp::ELEMENTS);
+}
+inline void CarState::CruiseState::Builder::setCruiseSwState( ::int16_t value) {
+  _builder.setDataField< ::int16_t>(
+      ::capnp::bounded<6>() * ::capnp::ELEMENTS, value);
+}
+
 inline bool CarState::ButtonEvent::Reader::getPressed() const {
   return _reader.getDataField<bool>(
       ::capnp::bounded<0>() * ::capnp::ELEMENTS);
@@ -5631,6 +6039,648 @@ inline  ::cereal::CarParams::NetworkLocation CarParams::Builder::getNetworkLocat
 inline void CarParams::Builder::setNetworkLocation( ::cereal::CarParams::NetworkLocation value) {
   _builder.setDataField< ::cereal::CarParams::NetworkLocation>(
       ::capnp::bounded<40>() * ::capnp::ELEMENTS, value);
+}
+
+inline bool CarParams::Reader::getLongcontrolEnabled() const {
+  return _reader.getDataField<bool>(
+      ::capnp::bounded<13>() * ::capnp::ELEMENTS);
+}
+
+inline bool CarParams::Builder::getLongcontrolEnabled() {
+  return _builder.getDataField<bool>(
+      ::capnp::bounded<13>() * ::capnp::ELEMENTS);
+}
+inline void CarParams::Builder::setLongcontrolEnabled(bool value) {
+  _builder.setDataField<bool>(
+      ::capnp::bounded<13>() * ::capnp::ELEMENTS, value);
+}
+
+inline bool CarParams::Reader::hasLateralsRatom() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<13>() * ::capnp::POINTERS).isNull();
+}
+inline bool CarParams::Builder::hasLateralsRatom() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<13>() * ::capnp::POINTERS).isNull();
+}
+inline  ::cereal::CarParams::LateralsRatom::Reader CarParams::Reader::getLateralsRatom() const {
+  return ::capnp::_::PointerHelpers< ::cereal::CarParams::LateralsRatom>::get(_reader.getPointerField(
+      ::capnp::bounded<13>() * ::capnp::POINTERS));
+}
+inline  ::cereal::CarParams::LateralsRatom::Builder CarParams::Builder::getLateralsRatom() {
+  return ::capnp::_::PointerHelpers< ::cereal::CarParams::LateralsRatom>::get(_builder.getPointerField(
+      ::capnp::bounded<13>() * ::capnp::POINTERS));
+}
+#if !CAPNP_LITE
+inline  ::cereal::CarParams::LateralsRatom::Pipeline CarParams::Pipeline::getLateralsRatom() {
+  return  ::cereal::CarParams::LateralsRatom::Pipeline(_typeless.getPointerField(13));
+}
+#endif  // !CAPNP_LITE
+inline void CarParams::Builder::setLateralsRatom( ::cereal::CarParams::LateralsRatom::Reader value) {
+  ::capnp::_::PointerHelpers< ::cereal::CarParams::LateralsRatom>::set(_builder.getPointerField(
+      ::capnp::bounded<13>() * ::capnp::POINTERS), value);
+}
+inline  ::cereal::CarParams::LateralsRatom::Builder CarParams::Builder::initLateralsRatom() {
+  return ::capnp::_::PointerHelpers< ::cereal::CarParams::LateralsRatom>::init(_builder.getPointerField(
+      ::capnp::bounded<13>() * ::capnp::POINTERS));
+}
+inline void CarParams::Builder::adoptLateralsRatom(
+    ::capnp::Orphan< ::cereal::CarParams::LateralsRatom>&& value) {
+  ::capnp::_::PointerHelpers< ::cereal::CarParams::LateralsRatom>::adopt(_builder.getPointerField(
+      ::capnp::bounded<13>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::cereal::CarParams::LateralsRatom> CarParams::Builder::disownLateralsRatom() {
+  return ::capnp::_::PointerHelpers< ::cereal::CarParams::LateralsRatom>::disown(_builder.getPointerField(
+      ::capnp::bounded<13>() * ::capnp::POINTERS));
+}
+
+inline bool CarParams::Reader::hasAtomTuning() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<14>() * ::capnp::POINTERS).isNull();
+}
+inline bool CarParams::Builder::hasAtomTuning() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<14>() * ::capnp::POINTERS).isNull();
+}
+inline  ::cereal::CarParams::AtomTuning::Reader CarParams::Reader::getAtomTuning() const {
+  return ::capnp::_::PointerHelpers< ::cereal::CarParams::AtomTuning>::get(_reader.getPointerField(
+      ::capnp::bounded<14>() * ::capnp::POINTERS));
+}
+inline  ::cereal::CarParams::AtomTuning::Builder CarParams::Builder::getAtomTuning() {
+  return ::capnp::_::PointerHelpers< ::cereal::CarParams::AtomTuning>::get(_builder.getPointerField(
+      ::capnp::bounded<14>() * ::capnp::POINTERS));
+}
+#if !CAPNP_LITE
+inline  ::cereal::CarParams::AtomTuning::Pipeline CarParams::Pipeline::getAtomTuning() {
+  return  ::cereal::CarParams::AtomTuning::Pipeline(_typeless.getPointerField(14));
+}
+#endif  // !CAPNP_LITE
+inline void CarParams::Builder::setAtomTuning( ::cereal::CarParams::AtomTuning::Reader value) {
+  ::capnp::_::PointerHelpers< ::cereal::CarParams::AtomTuning>::set(_builder.getPointerField(
+      ::capnp::bounded<14>() * ::capnp::POINTERS), value);
+}
+inline  ::cereal::CarParams::AtomTuning::Builder CarParams::Builder::initAtomTuning() {
+  return ::capnp::_::PointerHelpers< ::cereal::CarParams::AtomTuning>::init(_builder.getPointerField(
+      ::capnp::bounded<14>() * ::capnp::POINTERS));
+}
+inline void CarParams::Builder::adoptAtomTuning(
+    ::capnp::Orphan< ::cereal::CarParams::AtomTuning>&& value) {
+  ::capnp::_::PointerHelpers< ::cereal::CarParams::AtomTuning>::adopt(_builder.getPointerField(
+      ::capnp::bounded<14>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::cereal::CarParams::AtomTuning> CarParams::Builder::disownAtomTuning() {
+  return ::capnp::_::PointerHelpers< ::cereal::CarParams::AtomTuning>::disown(_builder.getPointerField(
+      ::capnp::bounded<14>() * ::capnp::POINTERS));
+}
+
+inline bool CarParams::AtomTuning::Reader::hasCvKPH() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
+}
+inline bool CarParams::AtomTuning::Builder::hasCvKPH() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List<float>::Reader CarParams::AtomTuning::Reader::getCvKPH() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List<float>>::get(_reader.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
+}
+inline  ::capnp::List<float>::Builder CarParams::AtomTuning::Builder::getCvKPH() {
+  return ::capnp::_::PointerHelpers< ::capnp::List<float>>::get(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
+}
+inline void CarParams::AtomTuning::Builder::setCvKPH( ::capnp::List<float>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<float>>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
+}
+inline void CarParams::AtomTuning::Builder::setCvKPH(::kj::ArrayPtr<const float> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<float>>::set(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List<float>::Builder CarParams::AtomTuning::Builder::initCvKPH(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List<float>>::init(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), size);
+}
+inline void CarParams::AtomTuning::Builder::adoptCvKPH(
+    ::capnp::Orphan< ::capnp::List<float>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<float>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List<float>> CarParams::AtomTuning::Builder::disownCvKPH() {
+  return ::capnp::_::PointerHelpers< ::capnp::List<float>>::disown(_builder.getPointerField(
+      ::capnp::bounded<0>() * ::capnp::POINTERS));
+}
+
+inline bool CarParams::AtomTuning::Reader::hasCvBPV() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
+}
+inline bool CarParams::AtomTuning::Builder::hasCvBPV() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List< ::capnp::List<float>>::Reader CarParams::AtomTuning::Reader::getCvBPV() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_reader.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::getCvBPV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
+}
+inline void CarParams::AtomTuning::Builder::setCvBPV( ::capnp::List< ::capnp::List<float>>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
+}
+inline void CarParams::AtomTuning::Builder::setCvBPV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::initCvBPV(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::init(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), size);
+}
+inline void CarParams::AtomTuning::Builder::adoptCvBPV(
+    ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> CarParams::AtomTuning::Builder::disownCvBPV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::disown(_builder.getPointerField(
+      ::capnp::bounded<1>() * ::capnp::POINTERS));
+}
+
+inline bool CarParams::AtomTuning::Reader::hasCvsMaxV() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
+}
+inline bool CarParams::AtomTuning::Builder::hasCvsMaxV() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List< ::capnp::List<float>>::Reader CarParams::AtomTuning::Reader::getCvsMaxV() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_reader.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::getCvsMaxV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
+}
+inline void CarParams::AtomTuning::Builder::setCvsMaxV( ::capnp::List< ::capnp::List<float>>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), value);
+}
+inline void CarParams::AtomTuning::Builder::setCvsMaxV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::initCvsMaxV(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::init(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), size);
+}
+inline void CarParams::AtomTuning::Builder::adoptCvsMaxV(
+    ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> CarParams::AtomTuning::Builder::disownCvsMaxV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::disown(_builder.getPointerField(
+      ::capnp::bounded<2>() * ::capnp::POINTERS));
+}
+
+inline bool CarParams::AtomTuning::Reader::hasCvsdUpV() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS).isNull();
+}
+inline bool CarParams::AtomTuning::Builder::hasCvsdUpV() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List< ::capnp::List<float>>::Reader CarParams::AtomTuning::Reader::getCvsdUpV() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_reader.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS));
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::getCvsdUpV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS));
+}
+inline void CarParams::AtomTuning::Builder::setCvsdUpV( ::capnp::List< ::capnp::List<float>>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS), value);
+}
+inline void CarParams::AtomTuning::Builder::setCvsdUpV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::initCvsdUpV(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::init(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS), size);
+}
+inline void CarParams::AtomTuning::Builder::adoptCvsdUpV(
+    ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> CarParams::AtomTuning::Builder::disownCvsdUpV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::disown(_builder.getPointerField(
+      ::capnp::bounded<3>() * ::capnp::POINTERS));
+}
+
+inline bool CarParams::AtomTuning::Reader::hasCvsdDnV() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<4>() * ::capnp::POINTERS).isNull();
+}
+inline bool CarParams::AtomTuning::Builder::hasCvsdDnV() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<4>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List< ::capnp::List<float>>::Reader CarParams::AtomTuning::Reader::getCvsdDnV() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_reader.getPointerField(
+      ::capnp::bounded<4>() * ::capnp::POINTERS));
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::getCvsdDnV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_builder.getPointerField(
+      ::capnp::bounded<4>() * ::capnp::POINTERS));
+}
+inline void CarParams::AtomTuning::Builder::setCvsdDnV( ::capnp::List< ::capnp::List<float>>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<4>() * ::capnp::POINTERS), value);
+}
+inline void CarParams::AtomTuning::Builder::setCvsdDnV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<4>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::initCvsdDnV(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::init(_builder.getPointerField(
+      ::capnp::bounded<4>() * ::capnp::POINTERS), size);
+}
+inline void CarParams::AtomTuning::Builder::adoptCvsdDnV(
+    ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<4>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> CarParams::AtomTuning::Builder::disownCvsdDnV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::disown(_builder.getPointerField(
+      ::capnp::bounded<4>() * ::capnp::POINTERS));
+}
+
+inline bool CarParams::AtomTuning::Reader::hasSRKPH() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<5>() * ::capnp::POINTERS).isNull();
+}
+inline bool CarParams::AtomTuning::Builder::hasSRKPH() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<5>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List<float>::Reader CarParams::AtomTuning::Reader::getSRKPH() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List<float>>::get(_reader.getPointerField(
+      ::capnp::bounded<5>() * ::capnp::POINTERS));
+}
+inline  ::capnp::List<float>::Builder CarParams::AtomTuning::Builder::getSRKPH() {
+  return ::capnp::_::PointerHelpers< ::capnp::List<float>>::get(_builder.getPointerField(
+      ::capnp::bounded<5>() * ::capnp::POINTERS));
+}
+inline void CarParams::AtomTuning::Builder::setSRKPH( ::capnp::List<float>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<float>>::set(_builder.getPointerField(
+      ::capnp::bounded<5>() * ::capnp::POINTERS), value);
+}
+inline void CarParams::AtomTuning::Builder::setSRKPH(::kj::ArrayPtr<const float> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<float>>::set(_builder.getPointerField(
+      ::capnp::bounded<5>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List<float>::Builder CarParams::AtomTuning::Builder::initSRKPH(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List<float>>::init(_builder.getPointerField(
+      ::capnp::bounded<5>() * ::capnp::POINTERS), size);
+}
+inline void CarParams::AtomTuning::Builder::adoptSRKPH(
+    ::capnp::Orphan< ::capnp::List<float>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List<float>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<5>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List<float>> CarParams::AtomTuning::Builder::disownSRKPH() {
+  return ::capnp::_::PointerHelpers< ::capnp::List<float>>::disown(_builder.getPointerField(
+      ::capnp::bounded<5>() * ::capnp::POINTERS));
+}
+
+inline bool CarParams::AtomTuning::Reader::hasSRBPV() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS).isNull();
+}
+inline bool CarParams::AtomTuning::Builder::hasSRBPV() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List< ::capnp::List<float>>::Reader CarParams::AtomTuning::Reader::getSRBPV() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_reader.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS));
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::getSRBPV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS));
+}
+inline void CarParams::AtomTuning::Builder::setSRBPV( ::capnp::List< ::capnp::List<float>>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS), value);
+}
+inline void CarParams::AtomTuning::Builder::setSRBPV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::initSRBPV(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::init(_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS), size);
+}
+inline void CarParams::AtomTuning::Builder::adoptSRBPV(
+    ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> CarParams::AtomTuning::Builder::disownSRBPV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::disown(_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS));
+}
+
+inline bool CarParams::AtomTuning::Reader::hasSRsteerRatioV() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS).isNull();
+}
+inline bool CarParams::AtomTuning::Builder::hasSRsteerRatioV() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List< ::capnp::List<float>>::Reader CarParams::AtomTuning::Reader::getSRsteerRatioV() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_reader.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS));
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::getSRsteerRatioV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS));
+}
+inline void CarParams::AtomTuning::Builder::setSRsteerRatioV( ::capnp::List< ::capnp::List<float>>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS), value);
+}
+inline void CarParams::AtomTuning::Builder::setSRsteerRatioV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::initSRsteerRatioV(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::init(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS), size);
+}
+inline void CarParams::AtomTuning::Builder::adoptSRsteerRatioV(
+    ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> CarParams::AtomTuning::Builder::disownSRsteerRatioV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::disown(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS));
+}
+
+inline bool CarParams::AtomTuning::Reader::hasSRlqrkiV() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS).isNull();
+}
+inline bool CarParams::AtomTuning::Builder::hasSRlqrkiV() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List< ::capnp::List<float>>::Reader CarParams::AtomTuning::Reader::getSRlqrkiV() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_reader.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS));
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::getSRlqrkiV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_builder.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS));
+}
+inline void CarParams::AtomTuning::Builder::setSRlqrkiV( ::capnp::List< ::capnp::List<float>>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS), value);
+}
+inline void CarParams::AtomTuning::Builder::setSRlqrkiV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::initSRlqrkiV(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::init(_builder.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS), size);
+}
+inline void CarParams::AtomTuning::Builder::adoptSRlqrkiV(
+    ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> CarParams::AtomTuning::Builder::disownSRlqrkiV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::disown(_builder.getPointerField(
+      ::capnp::bounded<8>() * ::capnp::POINTERS));
+}
+
+inline bool CarParams::AtomTuning::Reader::hasSRlqrscaleV() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS).isNull();
+}
+inline bool CarParams::AtomTuning::Builder::hasSRlqrscaleV() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List< ::capnp::List<float>>::Reader CarParams::AtomTuning::Reader::getSRlqrscaleV() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_reader.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS));
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::getSRlqrscaleV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_builder.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS));
+}
+inline void CarParams::AtomTuning::Builder::setSRlqrscaleV( ::capnp::List< ::capnp::List<float>>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS), value);
+}
+inline void CarParams::AtomTuning::Builder::setSRlqrscaleV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::initSRlqrscaleV(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::init(_builder.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS), size);
+}
+inline void CarParams::AtomTuning::Builder::adoptSRlqrscaleV(
+    ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> CarParams::AtomTuning::Builder::disownSRlqrscaleV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::disown(_builder.getPointerField(
+      ::capnp::bounded<9>() * ::capnp::POINTERS));
+}
+
+inline bool CarParams::AtomTuning::Reader::hasSRpidKiV() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS).isNull();
+}
+inline bool CarParams::AtomTuning::Builder::hasSRpidKiV() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List< ::capnp::List<float>>::Reader CarParams::AtomTuning::Reader::getSRpidKiV() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_reader.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS));
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::getSRpidKiV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_builder.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS));
+}
+inline void CarParams::AtomTuning::Builder::setSRpidKiV( ::capnp::List< ::capnp::List<float>>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS), value);
+}
+inline void CarParams::AtomTuning::Builder::setSRpidKiV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::initSRpidKiV(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::init(_builder.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS), size);
+}
+inline void CarParams::AtomTuning::Builder::adoptSRpidKiV(
+    ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> CarParams::AtomTuning::Builder::disownSRpidKiV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::disown(_builder.getPointerField(
+      ::capnp::bounded<10>() * ::capnp::POINTERS));
+}
+
+inline bool CarParams::AtomTuning::Reader::hasSRpidKpV() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<11>() * ::capnp::POINTERS).isNull();
+}
+inline bool CarParams::AtomTuning::Builder::hasSRpidKpV() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<11>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List< ::capnp::List<float>>::Reader CarParams::AtomTuning::Reader::getSRpidKpV() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_reader.getPointerField(
+      ::capnp::bounded<11>() * ::capnp::POINTERS));
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::getSRpidKpV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_builder.getPointerField(
+      ::capnp::bounded<11>() * ::capnp::POINTERS));
+}
+inline void CarParams::AtomTuning::Builder::setSRpidKpV( ::capnp::List< ::capnp::List<float>>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<11>() * ::capnp::POINTERS), value);
+}
+inline void CarParams::AtomTuning::Builder::setSRpidKpV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<11>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::initSRpidKpV(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::init(_builder.getPointerField(
+      ::capnp::bounded<11>() * ::capnp::POINTERS), size);
+}
+inline void CarParams::AtomTuning::Builder::adoptSRpidKpV(
+    ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<11>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> CarParams::AtomTuning::Builder::disownSRpidKpV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::disown(_builder.getPointerField(
+      ::capnp::bounded<11>() * ::capnp::POINTERS));
+}
+
+inline bool CarParams::AtomTuning::Reader::hasSRsteerActuatorDelayV() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<12>() * ::capnp::POINTERS).isNull();
+}
+inline bool CarParams::AtomTuning::Builder::hasSRsteerActuatorDelayV() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<12>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::List< ::capnp::List<float>>::Reader CarParams::AtomTuning::Reader::getSRsteerActuatorDelayV() const {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_reader.getPointerField(
+      ::capnp::bounded<12>() * ::capnp::POINTERS));
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::getSRsteerActuatorDelayV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::get(_builder.getPointerField(
+      ::capnp::bounded<12>() * ::capnp::POINTERS));
+}
+inline void CarParams::AtomTuning::Builder::setSRsteerActuatorDelayV( ::capnp::List< ::capnp::List<float>>::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<12>() * ::capnp::POINTERS), value);
+}
+inline void CarParams::AtomTuning::Builder::setSRsteerActuatorDelayV(::kj::ArrayPtr<const  ::capnp::List<float>::Reader> value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::set(_builder.getPointerField(
+      ::capnp::bounded<12>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::List< ::capnp::List<float>>::Builder CarParams::AtomTuning::Builder::initSRsteerActuatorDelayV(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::init(_builder.getPointerField(
+      ::capnp::bounded<12>() * ::capnp::POINTERS), size);
+}
+inline void CarParams::AtomTuning::Builder::adoptSRsteerActuatorDelayV(
+    ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::adopt(_builder.getPointerField(
+      ::capnp::bounded<12>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::List< ::capnp::List<float>>> CarParams::AtomTuning::Builder::disownSRsteerActuatorDelayV() {
+  return ::capnp::_::PointerHelpers< ::capnp::List< ::capnp::List<float>>>::disown(_builder.getPointerField(
+      ::capnp::bounded<12>() * ::capnp::POINTERS));
+}
+
+inline  ::int16_t CarParams::LateralsRatom::Reader::getLearnerParams() const {
+  return _reader.getDataField< ::int16_t>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
+}
+
+inline  ::int16_t CarParams::LateralsRatom::Builder::getLearnerParams() {
+  return _builder.getDataField< ::int16_t>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS);
+}
+inline void CarParams::LateralsRatom::Builder::setLearnerParams( ::int16_t value) {
+  _builder.setDataField< ::int16_t>(
+      ::capnp::bounded<0>() * ::capnp::ELEMENTS, value);
+}
+
+inline float CarParams::LateralsRatom::Reader::getDeadzone() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
+}
+
+inline float CarParams::LateralsRatom::Builder::getDeadzone() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS);
+}
+inline void CarParams::LateralsRatom::Builder::setDeadzone(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<1>() * ::capnp::ELEMENTS, value);
+}
+
+inline float CarParams::LateralsRatom::Reader::getSteerOffset() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<2>() * ::capnp::ELEMENTS);
+}
+
+inline float CarParams::LateralsRatom::Builder::getSteerOffset() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<2>() * ::capnp::ELEMENTS);
+}
+inline void CarParams::LateralsRatom::Builder::setSteerOffset(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<2>() * ::capnp::ELEMENTS, value);
+}
+
+inline float CarParams::LateralsRatom::Reader::getCameraOffset() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<3>() * ::capnp::ELEMENTS);
+}
+
+inline float CarParams::LateralsRatom::Builder::getCameraOffset() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<3>() * ::capnp::ELEMENTS);
+}
+inline void CarParams::LateralsRatom::Builder::setCameraOffset(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<3>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool CarParams::LateralParams::Reader::hasTorqueBP() const {

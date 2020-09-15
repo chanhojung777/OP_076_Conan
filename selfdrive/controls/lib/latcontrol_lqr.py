@@ -1,13 +1,17 @@
 import numpy as np
+import random
+import datetime
 from selfdrive.controls.lib.drive_helpers import get_steer_max
 from common.numpy_fast import clip
 from common.realtime import DT_CTRL
 from cereal import log
 from common.numpy_fast import interp
 from selfdrive.config import Conversions as CV
+import common.log as trace1
 
 class LatControlLQR():
   def __init__(self, CP):
+    self.trLQR = trace1.Loger("076_conan_LQR_ctrl")   
     self.scale = CP.lateralTuning.lqr.scale
     self.ki = CP.lateralTuning.lqr.ki
 
@@ -72,11 +76,28 @@ class LatControlLQR():
 
     steers_max = get_steer_max(CP, CS.vEgo)
     torque_scale = (0.45 + CS.vEgo / 60.0)**2  # Scale actuator model with speed
+    #neokii
+    torque_scale = min(torque_scale, 0.65) 
 
     steering_angle = CS.steeringAngle
+    steeringTQ = CS.steeringTorque
 
     v_ego_kph = CS.vEgo * CV.MS_TO_KPH
     self.ki, self.scale = self.atom_tune( v_ego_kph, CS.steeringAngle, CP )
+
+    # ###  설정값 최적화 분석을 위한 랜덤화 임시 코드
+    #now = datetime.datetime.now() # current date and time
+    #micro_S = int(now.microsecond)
+    #if micro_S < 10000 : #1초에 한번만 랜덤변환
+    #  self.ki = random.uniform(0.015, 0.025)    #self.ki - (self.ki*0.5), self.ki + (self.ki*0.5) )
+    #  self.scale = random.uniform(1750, 1950)     #int(self.scale) - int(self.scale*0.055), int(self.scale) + int(self.scale*0.055) ) )
+    #  self.dc_gain = random.uniform(0.0028, 0.0032)  #self.dc_gain - (self.dc_gain*0.1), self.dc_gain + (self.dc_gain*0.1) )    
+    #  steers_max = random.uniform(1.0, 1.2)
+    # ########################### 
+
+    log_ki = self.ki
+    log_scale = self.scale
+    log_dc_gain = self.dc_gain   
 
     # Subtract offset. Zero angle should correspond to zero torque
     self.angle_steers_des = path_plan.angleSteers - path_plan.angleOffset
@@ -86,6 +107,8 @@ class LatControlLQR():
     angle_steers_k = float(self.C.dot(self.x_hat))
     e = steering_angle - angle_steers_k
     self.x_hat = self.A.dot(self.x_hat) + self.B.dot(CS.steeringTorqueEps / torque_scale) + self.L.dot(e)
+    error = self.angle_steers_des - angle_steers_k
+    u_lqr = float(self.angle_steers_des / self.dc_gain - self.K.dot(self.x_hat))
 
     if CS.vEgo < 0.3 or not active:
       lqr_log.active = False
@@ -93,16 +116,15 @@ class LatControlLQR():
       self.reset()
     else:
       lqr_log.active = True
-
       # LQR
-      u_lqr = float(self.angle_steers_des / self.dc_gain - self.K.dot(self.x_hat))
+      #u_lqr = float(self.angle_steers_des / self.dc_gain - self.K.dot(self.x_hat))
       lqr_output = torque_scale * u_lqr / self.scale
 
       # Integrator
       if CS.steeringPressed:
         self.i_lqr -= self.i_unwind_rate * float(np.sign(self.i_lqr))
       else:
-        error = self.angle_steers_des - angle_steers_k
+        #error = self.angle_steers_des - angle_steers_k
         i = self.i_lqr + self.ki * self.i_rate * error
         control = lqr_output + i
 
@@ -115,6 +137,11 @@ class LatControlLQR():
 
     check_saturation = (CS.vEgo > 10) and not CS.steeringRateLimited and not CS.steeringPressed
     saturated = self._check_saturation(self.output_steer, check_saturation, steers_max)
+
+    if not CS.steeringPressed:
+      str2 = '/{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{}'.format(   
+              v_ego_kph, steering_angle, self.angle_steers_des, angle_steers_k, error, steeringTQ, torque_scale, log_scale, log_ki, log_dc_gain, u_lqr, lqr_output, self.i_lqr, steers_max, self.output_steer, saturated )
+      self.trLQR.add( str2 )
 
     lqr_log.steerAngle = angle_steers_k + path_plan.angleOffset
     lqr_log.i = self.i_lqr

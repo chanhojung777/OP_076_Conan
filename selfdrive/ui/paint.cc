@@ -564,7 +564,7 @@ static void ui_draw_vision_maxspeed(UIState *s) {
   bool is_set_over_limit = is_speedlim_valid && s->scene.engaged &&
                        is_cruise_set && maxspeed_calc > (speedlim_calc + speed_lim_off);
 
-  int viz_maxspeed_w = 184;
+  int viz_maxspeed_w = 218;
   int viz_maxspeed_h = 202;
   int viz_maxspeed_x = (s->scene.ui_viz_rx + (bdr_s*2));
   int viz_maxspeed_y = (box_y + (bdr_s*1.5));
@@ -943,17 +943,17 @@ static int bb_ui_draw_measure(UIState *s,  const char* bb_value, const char* bb_
   nvgFontFace(s->vg, "sans-semibold");
   nvgFontSize(s->vg, bb_valueFontSize*2*fFontSize);
   nvgFillColor(s->vg, bb_valueColor);
-  nvgText(s->vg, bb_x-dx/2, bb_y+ (int)(bb_valueFontSize*2.5)+5, bb_value, NULL);
+  nvgText(s->vg, bb_x-dx/2, bb_y+ (int)(bb_valueFontSize*2.0)+0, bb_value, NULL);
   //print label
   nvgFontFace(s->vg, "sans-regular");
   nvgFontSize(s->vg, bb_labelFontSize*2*fFontSize);
   nvgFillColor(s->vg, bb_labelColor);
-  nvgText(s->vg, bb_x, bb_y + (int)(bb_valueFontSize*2.5)+5 + (int)(bb_labelFontSize*2.5)+5, bb_label, NULL);
+  nvgText(s->vg, bb_x, bb_y + (int)(bb_valueFontSize*2.0)+1 + (int)(bb_labelFontSize*2.0)+1, bb_label, NULL);
   //print uom
   if (strlen(bb_uom) > 0) {
       nvgSave(s->vg);
-    int rx =bb_x + bb_uom_dx + bb_valueFontSize -3;
-    int ry = bb_y + (int)(bb_valueFontSize*2.5/2)+25;
+    int rx =bb_x + bb_uom_dx + bb_valueFontSize -15;
+    int ry = bb_y + (int)(bb_valueFontSize*2.0/2)+18;
     nvgTranslate(s->vg,rx,ry);
     nvgRotate(s->vg, -1.5708); //-90deg in radians
     nvgFontFace(s->vg, "sans-regular");
@@ -962,22 +962,22 @@ static int bb_ui_draw_measure(UIState *s,  const char* bb_value, const char* bb_
     nvgText(s->vg, 0, 0, bb_uom, NULL);
     nvgRestore(s->vg);
   }
-  return (int)((bb_valueFontSize + bb_labelFontSize)*2.5) + 5;
+  return (int)((bb_valueFontSize + bb_labelFontSize)*2.0) + 1;
 }
 
 
-static void bb_ui_draw_measures_left(UIState *s, int bb_x, int bb_y, int bb_w ) 
+static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w ) 
 {
   const UIScene *scene = &s->scene;
   int bb_rx = bb_x + (int)(bb_w/2);
   int bb_ry = bb_y;
-  int bb_h = 5;
+  int bb_h = 1;
   NVGcolor lab_color = nvgRGBA(255, 255, 255, 200);
   NVGcolor uom_color = nvgRGBA(255, 255, 255, 200);
-  int value_fontSize=25;
-  int label_fontSize=15;
+  int value_fontSize=45;
+  int label_fontSize=18;
   int uom_fontSize = 15;
-  int bb_uom_dx =  (int)(bb_w /2 - uom_fontSize*2.5) ;
+  int bb_uom_dx =  (int)(bb_w /2 - uom_fontSize*2.0) ;
 
   //add CPU temperature
   if( true ) 
@@ -1033,18 +1033,18 @@ static void bb_ui_draw_measures_left(UIState *s, int bb_x, int bb_y, int bb_w )
 }
 
 
-static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w ) 
+static void bb_ui_draw_measures_left(UIState *s, int bb_x, int bb_y, int bb_w ) 
 {
   const UIScene *scene = &s->scene;
   int bb_rx = bb_x + (int)(bb_w/2);
   int bb_ry = bb_y;
-  int bb_h = 5;
+  int bb_h = 1;
   NVGcolor lab_color = nvgRGBA(255, 255, 255, 200);
   NVGcolor uom_color = nvgRGBA(255, 255, 255, 200);
-  int value_fontSize=25;
-  int label_fontSize=15;
+  int value_fontSize=45;
+  int label_fontSize=18;
   int uom_fontSize = 15;
-  int bb_uom_dx =  (int)(bb_w /2 - uom_fontSize*2.5) ;
+  int bb_uom_dx =  (int)(bb_w /2 - uom_fontSize*2.0) ;
 
   //add visual radar relative distance
   if( true )
@@ -1067,7 +1067,7 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
        snprintf(val_str, sizeof(val_str), "-");
     }
     snprintf(uom_str, sizeof(uom_str), "m   ");
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "FRONT INTER",
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "앞차거리",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
@@ -1103,7 +1103,7 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
     } else {
       snprintf(uom_str, sizeof(uom_str), "mph");
     }
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "RELATIVE VEL",
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "상대속도",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
@@ -1128,7 +1128,7 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
       snprintf(val_str, sizeof(val_str), "%.1f",(scene->angleSteers));
 
       snprintf(uom_str, sizeof(uom_str), "");
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "STEERING",
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "현재조향각",
         bb_rx, bb_ry, bb_uom_dx,
         val_color, lab_color, uom_color,
         value_fontSize, label_fontSize, uom_fontSize );
@@ -1158,7 +1158,7 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
        snprintf(val_str, sizeof(val_str), "-");
     }
     snprintf(uom_str, sizeof(uom_str), "");
-    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "REQ STEER",
+    bb_h +=bb_ui_draw_measure(s,  val_str, uom_str, "필요조향각",
       bb_rx, bb_ry, bb_uom_dx,
       val_color, lab_color, uom_color,
       value_fontSize, label_fontSize, uom_fontSize );
@@ -1179,16 +1179,16 @@ static void bb_ui_draw_measures_right(UIState *s, int bb_x, int bb_y, int bb_w )
 static void bb_ui_draw_UI(UIState *s)
 {
   const UIScene *scene = &s->scene;
-  const int bb_dml_w = 180;
+  const int bb_dml_w = 220;
   const int bb_dml_x = (scene->ui_viz_rx + (bdr_is * 2));
   const int bb_dml_y = (box_y + (bdr_is * 1.5)) + 220;
 
-  const int bb_dmr_w = 180;
+  const int bb_dmr_w = 220;
   const int bb_dmr_x = scene->ui_viz_rx + scene->ui_viz_rw - bb_dmr_w - (bdr_is * 2);
   const int bb_dmr_y = (box_y + (bdr_is * 1.5)) + 220;
 
-  bb_ui_draw_measures_right(s, bb_dml_x, bb_dml_y, bb_dml_w);
-  bb_ui_draw_measures_left(s, bb_dmr_x, bb_dmr_y, bb_dmr_w);
+  bb_ui_draw_measures_left(s, bb_dml_x, bb_dml_y, bb_dml_w);
+  bb_ui_draw_measures_right(s, bb_dmr_x, bb_dmr_y, bb_dmr_w);
 }
 //BB END: functions added for the display of various items
 

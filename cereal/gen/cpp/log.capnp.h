@@ -240,6 +240,7 @@ enum class LaneChangeState_fac297f195ce56d2: uint16_t {
   PRE_LANE_CHANGE,
   LANE_CHANGE_STARTING,
   LANE_CHANGE_FINISHING,
+  LANE_CHANGE_DONE,
 };
 CAPNP_DECLARE_ENUM(LaneChangeState, fac297f195ce56d2);
 CAPNP_DECLARE_SCHEMA(f7396311bcbad303);
@@ -919,7 +920,7 @@ struct ControlsState {
   struct LateralControlState;
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(97ff69c53601abf1, 22, 6)
+    CAPNP_DECLARE_STRUCT_HEADER(97ff69c53601abf1, 23, 8)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
@@ -984,7 +985,7 @@ struct ControlsState::LateralControlState {
   };
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(fd5b914d6b444695, 22, 6)
+    CAPNP_DECLARE_STRUCT_HEADER(fd5b914d6b444695, 23, 8)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
@@ -1210,7 +1211,7 @@ struct PathPlan {
 
 
   struct _capnpPrivate {
-    CAPNP_DECLARE_STRUCT_HEADER(e1e9318e2ae8b51e, 5, 4)
+    CAPNP_DECLARE_STRUCT_HEADER(e1e9318e2ae8b51e, 6, 4)
     #if !CAPNP_LITE
     static constexpr ::capnp::_::RawBrandedSchema const* brand() { return &schema->defaultBrand; }
     #endif  // !CAPNP_LITE
@@ -5733,6 +5734,14 @@ public:
 
   inline  ::uint32_t getCanErrorCounter() const;
 
+  inline float getOutput() const;
+
+  inline bool hasAlertTextMsg1() const;
+  inline  ::capnp::Text::Reader getAlertTextMsg1() const;
+
+  inline bool hasAlertTextMsg2() const;
+  inline  ::capnp::Text::Reader getAlertTextMsg2() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -5949,6 +5958,23 @@ public:
 
   inline  ::uint32_t getCanErrorCounter();
   inline void setCanErrorCounter( ::uint32_t value);
+
+  inline float getOutput();
+  inline void setOutput(float value);
+
+  inline bool hasAlertTextMsg1();
+  inline  ::capnp::Text::Builder getAlertTextMsg1();
+  inline void setAlertTextMsg1( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initAlertTextMsg1(unsigned int size);
+  inline void adoptAlertTextMsg1(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownAlertTextMsg1();
+
+  inline bool hasAlertTextMsg2();
+  inline  ::capnp::Text::Builder getAlertTextMsg2();
+  inline void setAlertTextMsg2( ::capnp::Text::Reader value);
+  inline  ::capnp::Text::Builder initAlertTextMsg2(unsigned int size);
+  inline void adoptAlertTextMsg2(::capnp::Orphan< ::capnp::Text>&& value);
+  inline ::capnp::Orphan< ::capnp::Text> disownAlertTextMsg2();
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -8091,6 +8117,10 @@ public:
 
   inline  ::cereal::PathPlan::LaneChangeDirection getLaneChangeDirection() const;
 
+  inline float getSteerRatio() const;
+
+  inline float getSteerActuatorDelay() const;
+
 private:
   ::capnp::_::StructReader _reader;
   template <typename, ::capnp::Kind>
@@ -8198,6 +8228,12 @@ public:
 
   inline  ::cereal::PathPlan::LaneChangeDirection getLaneChangeDirection();
   inline void setLaneChangeDirection( ::cereal::PathPlan::LaneChangeDirection value);
+
+  inline float getSteerRatio();
+  inline void setSteerRatio(float value);
+
+  inline float getSteerActuatorDelay();
+  inline void setSteerActuatorDelay(float value);
 
 private:
   ::capnp::_::StructBuilder _builder;
@@ -23806,6 +23842,88 @@ inline void ControlsState::Builder::setCanErrorCounter( ::uint32_t value) {
       ::capnp::bounded<43>() * ::capnp::ELEMENTS, value);
 }
 
+inline float ControlsState::Reader::getOutput() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<44>() * ::capnp::ELEMENTS);
+}
+
+inline float ControlsState::Builder::getOutput() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<44>() * ::capnp::ELEMENTS);
+}
+inline void ControlsState::Builder::setOutput(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<44>() * ::capnp::ELEMENTS, value);
+}
+
+inline bool ControlsState::Reader::hasAlertTextMsg1() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS).isNull();
+}
+inline bool ControlsState::Builder::hasAlertTextMsg1() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader ControlsState::Reader::getAlertTextMsg1() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder ControlsState::Builder::getAlertTextMsg1() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS));
+}
+inline void ControlsState::Builder::setAlertTextMsg1( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder ControlsState::Builder::initAlertTextMsg1(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS), size);
+}
+inline void ControlsState::Builder::adoptAlertTextMsg1(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> ControlsState::Builder::disownAlertTextMsg1() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<6>() * ::capnp::POINTERS));
+}
+
+inline bool ControlsState::Reader::hasAlertTextMsg2() const {
+  return !_reader.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS).isNull();
+}
+inline bool ControlsState::Builder::hasAlertTextMsg2() {
+  return !_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS).isNull();
+}
+inline  ::capnp::Text::Reader ControlsState::Reader::getAlertTextMsg2() const {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_reader.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS));
+}
+inline  ::capnp::Text::Builder ControlsState::Builder::getAlertTextMsg2() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::get(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS));
+}
+inline void ControlsState::Builder::setAlertTextMsg2( ::capnp::Text::Reader value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::set(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS), value);
+}
+inline  ::capnp::Text::Builder ControlsState::Builder::initAlertTextMsg2(unsigned int size) {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::init(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS), size);
+}
+inline void ControlsState::Builder::adoptAlertTextMsg2(
+    ::capnp::Orphan< ::capnp::Text>&& value) {
+  ::capnp::_::PointerHelpers< ::capnp::Text>::adopt(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS), kj::mv(value));
+}
+inline ::capnp::Orphan< ::capnp::Text> ControlsState::Builder::disownAlertTextMsg2() {
+  return ::capnp::_::PointerHelpers< ::capnp::Text>::disown(_builder.getPointerField(
+      ::capnp::bounded<7>() * ::capnp::POINTERS));
+}
+
 inline bool ControlsState::LateralINDIState::Reader::getActive() const {
   return _reader.getDataField<bool>(
       ::capnp::bounded<0>() * ::capnp::ELEMENTS);
@@ -26854,6 +26972,34 @@ inline  ::cereal::PathPlan::LaneChangeDirection PathPlan::Builder::getLaneChange
 inline void PathPlan::Builder::setLaneChangeDirection( ::cereal::PathPlan::LaneChangeDirection value) {
   _builder.setDataField< ::cereal::PathPlan::LaneChangeDirection>(
       ::capnp::bounded<17>() * ::capnp::ELEMENTS, value);
+}
+
+inline float PathPlan::Reader::getSteerRatio() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<9>() * ::capnp::ELEMENTS);
+}
+
+inline float PathPlan::Builder::getSteerRatio() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<9>() * ::capnp::ELEMENTS);
+}
+inline void PathPlan::Builder::setSteerRatio(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<9>() * ::capnp::ELEMENTS, value);
+}
+
+inline float PathPlan::Reader::getSteerActuatorDelay() const {
+  return _reader.getDataField<float>(
+      ::capnp::bounded<10>() * ::capnp::ELEMENTS);
+}
+
+inline float PathPlan::Builder::getSteerActuatorDelay() {
+  return _builder.getDataField<float>(
+      ::capnp::bounded<10>() * ::capnp::ELEMENTS);
+}
+inline void PathPlan::Builder::setSteerActuatorDelay(float value) {
+  _builder.setDataField<float>(
+      ::capnp::bounded<10>() * ::capnp::ELEMENTS, value);
 }
 
 inline bool LiveLocationKalman::Reader::hasPositionECEF() const {
