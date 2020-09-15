@@ -149,3 +149,7 @@ class LatControlLQR():
     lqr_log.lqrOutput = lqr_output
     lqr_log.saturated = saturated
     return self.output_steer, float(self.angle_steers_des), lqr_log
+
+  def update_log(self):
+    str5 = 'LQR 설정값 : scale={:06.1f} / dc_gain={:06.4f} / ki={:05.3f} / O_ST={:5.3f}'.format(self.scale, self.dc_gain, self.ki, self.output_steer )
+    trace1.printf2( str5 )
