@@ -142,14 +142,17 @@ class LatControlLQR():
       str2 = '/{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{}'.format(   
               v_ego_kph, steering_angle, self.angle_steers_des, angle_steers_k, error, steeringTQ, torque_scale, log_scale, log_ki, log_dc_gain, u_lqr, lqr_output, self.i_lqr, steers_max, self.output_steer, saturated )
       self.trLQR.add( str2 )
+    
+    str5 = 'LQR 설정값 : scale={:06.1f} / dc_gain={:06.4f} / ki={:05.3f} / O_ST={:5.3f}'.format(self.scale, self.dc_gain, self.ki, self.output_steer )
+    trace1.printf2( str5 )
 
     lqr_log.steerAngle = angle_steers_k + path_plan.angleOffset
     lqr_log.i = self.i_lqr
     lqr_log.output = self.output_steer
     lqr_log.lqrOutput = lqr_output
     lqr_log.saturated = saturated
+
     return self.output_steer, float(self.angle_steers_des), lqr_log
 
-  def update_log(self):
-    str5 = 'LQR 설정값 : scale={:06.1f} / dc_gain={:06.4f} / ki={:05.3f} / O_ST={:5.3f}'.format(self.scale, self.dc_gain, self.ki, self.output_steer )
-    trace1.printf2( str5 )
+
+
