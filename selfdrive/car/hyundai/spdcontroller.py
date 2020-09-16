@@ -308,7 +308,7 @@ class SpdController():
             btn_type = Buttons.NONE
 
 
-        self.update_log( CS, set_speed, target_set_speed, long_wait_cmd )
+        #self.update_log( CS, set_speed, target_set_speed, long_wait_cmd )
 
 
         return btn_type, set_speed, active_time
