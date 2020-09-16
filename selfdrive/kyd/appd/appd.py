@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 import time
-import cereal.messaging as messaging
 import subprocess
 import cereal
-ThermalStatus = cereal.log.ThermalData.ThermalStatus
+import threading
 from selfdrive.swaglog import cloudlog
 from common.params import Params, put_nonblocking
+
+
 params = Params()
 
 program = (
@@ -19,67 +20,83 @@ program = (
 
 program_runing = [0,0,0,0]
 
-def all_kill( enable = 0 ):
+class AsyncTask:
+  def __init__(self):
+    self.softkey_is_running = False
+    self.opkr_enable_softkey = False
+    self.navigation_is_running = int( params.get("OpkrBootNavigation", encoding='utf8') )
+
+  def all_kill(self, enable = 0 ):
+    put_nonblocking('OpkrRunSoftkey', '0')
     for x in program:
       nPos = x[0]
+      put_nonblocking( x[1], '0')
       if program_runing[nPos]:
         program_runing[nPos] = 0
-        exec_app( enable, x[2], x[3])
+        self.exec_app( enable, x[2], x[3])
 
-def main(gctx=None):
-  softkey_is_running = False
-  opkr_enable_softkey = False
-  navigation_is_running = True if params.get("OpkrBootNavigation", encoding='utf8') == "1" else False
 
-  while True:
-    opkr_enable_softkey = int(params.get('OpkrRunSoftkey', encoding='utf8'))
+  def exec_app(self, status, app, app_main):
+    if status == 1:
+      self.system("pm enable %s" % app)
+      self.system("am start -n %s/%s" % (app, app_main))
+      return True
+    if status == 0:
+      self.system("pm disable %s" % app)
+      return False
+
+
+  def system(self, cmd):
+    try:
+      # cloudlog.info("running %s" % cmd)
+      subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+    except subprocess.CalledProcessError as e:
+      cloudlog.event("running failed",
+                    cmd=e.cmd,
+                    output=e.output[-1024:],
+                    returncode=e.returncode)
+
+
+  def Task(self, gctx=None):
+    self.opkr_enable_softkey = int(params.get('OpkrRunSoftkey', encoding='utf8'))
     for x in program:
       nPos = x[0]        
       opkr_enable = int(params.get( x[1], encoding='utf8'))
-      if navigation_is_running:
+      if self.navigation_is_running:
         if nPos == 2:
           opkr_enable = True
 
       if opkr_enable:
-        print( '1:{} 2:{}'.format( x[1], x[2], program_runing[nPos] ) )        
-        put_nonblocking( x[1], '0')
-        all_kill()
-        program_runing[nPos] = exec_app( opkr_enable, x[2], x[3])
+        print( '1:{} 2:{}'.format( x[1], x[2], program_runing[nPos] ) )
+        self.all_kill()
+        program_runing[nPos] = self.exec_app( opkr_enable, x[2], x[3])
         time.sleep(1)
+        put_nonblocking( x[1], '0')
         if nPos == 2:
-          opkr_enable_softkey = True
+          self.opkr_enable_softkey = True
+      else:
+        time.sleep(0.1)
 
-    navigation_is_running = False
+
+    self.navigation_is_running = 0
     # allow user to manually start/stop app
-    if opkr_enable_softkey:
+    if self.opkr_enable_softkey:
       put_nonblocking('OpkrRunSoftkey', '0')
-      if not softkey_is_running:
-        softkey_is_running = exec_app(opkr_enable_softkey, "com.gmd.hidesoftkeys", "com.gmd.hidesoftkeys.MainActivity")
-       
-
-    # every 3 seconds, we re-check status
-    time.sleep(0.2)
-
-
-def exec_app(status, app, app_main):
-  if status == 1:
-    system("pm enable %s" % app)
-    system("am start -n %s/%s" % (app, app_main))
-    return True
-  if status == 0:
-    system("pm disable %s" % app)
-    return False
+      if not self.softkey_is_running:
+        self.softkey_is_running = self.exec_app(self.opkr_enable_softkey, "com.gmd.hidesoftkeys", "com.gmd.hidesoftkeys.MainActivity")
+      
+    #threading.Timer( 0.3, self.Task ).start()
+    time.sleep(0.3)
 
 
-def system(cmd):
-  try:
-    # cloudlog.info("running %s" % cmd)
-    subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
-  except subprocess.CalledProcessError as e:
-    cloudlog.event("running failed",
-                   cmd=e.cmd,
-                   output=e.output[-1024:],
-                   returncode=e.returncode)
+
+
+app = AsyncTask()
+def main(gctx=None):
+  app.all_kill()
+
+  while True:
+    app.Task()
 
 if __name__ == "__main__":
   main()
