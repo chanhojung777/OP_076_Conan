@@ -136,8 +136,6 @@ class CarController():
     UP  = interp( v_ego_kph, self.cv_KPH, self.steerdUP )
     DN  = interp( v_ego_kph, self.cv_KPH, self.steerdDN )
 
-    #str_log1 = 'ego={:.1f} /{:.1f}/{:.1f}/{:.1f} {}'.format(v_ego_kph,  MAX, UP, DN, self.steerMAX )
-    #trace1.printf2( '{}'.format( str_log1 ) )      
     return MAX, UP, DN
 
 
@@ -284,14 +282,18 @@ class CarController():
     # send mdps12 to LKAS to prevent LKAS error if no cancel cmd
     can_sends.append( create_mdps12(self.packer, frame, CS.mdps12) )
 
-    str_log1 = 'torg:{:5.0f}/{:5.0f}/{:5.0f}  CV={:5.1f}'.format(  apply_steer, new_steer, dst_steer, self.model_speed  )
-    str_log2 = 'limit={:.0f} tm={:.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
+    # str_log1 = 'torg:{:5.0f}/{:5.0f}/{:5.0f}  CV={:5.1f}'.format(  apply_steer, new_steer, dst_steer, self.model_speed  )
+    # str_log2 = 'limit={:.0f} tm={:.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
+    # trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
+
+    str_log1 = '곡률={:5.1f} 조향토크값:적용[{:5.0f}]/목표[{:5.0f}]'.format(  self.model_speed , apply_steer, dst_steer )
+    str_log2 = '  limit={:.0f}  tm={:.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
     run_speed_ctrl = self.param_OpkrAccelProfile and CS.acc_active and self.SC != None
-    if not run_speed_ctrl:
-      str_log2 = 'LKAS={:.0f}  steer={:5.0f} '.format(  CS.lkas_button_on,  CS.out.steeringTorque  )
-      trace1.printf2( '{}'.format( str_log2 ) )
+    # if not run_speed_ctrl:
+    #   str_log2 = 'LKAS={:.0f}  steer={:5.0f} '.format(  CS.lkas_button_on,  CS.out.steeringTorque  )
+    #   trace1.printf2( '{}'.format( str_log2 ) )
 
     if pcm_cancel_cmd and self.CP.longcontrolEnabled:
       can_sends.append( create_clu11(self.packer, frame, CS.clu11, Buttons.CANCEL) )
