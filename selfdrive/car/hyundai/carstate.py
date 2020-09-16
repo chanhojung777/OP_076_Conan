@@ -28,7 +28,7 @@ class CarState(CarStateBase):
 
     self.main_on = False
     self.acc_active = False
-    self.cruiseState_modeSel = 0
+    self.cruiseState_modeSel = 2
 
     self.Mdps_ToiUnavail = 0
 

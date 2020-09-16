@@ -80,7 +80,7 @@ class LatControlLQR():
     torque_scale = min(torque_scale, 0.65) 
 
     steering_angle = CS.steeringAngle
-    steeringTQ = CS.steeringTorque
+    steeringTQ = CS.steeringTorqueEps
 
     v_ego_kph = CS.vEgo * CV.MS_TO_KPH
     self.ki, self.scale = self.atom_tune( v_ego_kph, CS.steeringAngle, CP )
@@ -139,11 +139,11 @@ class LatControlLQR():
     saturated = self._check_saturation(self.output_steer, check_saturation, steers_max)
 
     if not CS.steeringPressed:
-      str2 = '/{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{}'.format(   
-              v_ego_kph, steering_angle, self.angle_steers_des, angle_steers_k, error, steeringTQ, torque_scale, log_scale, log_ki, log_dc_gain, u_lqr, lqr_output, self.i_lqr, steers_max, self.output_steer, saturated )
+      str2 = '/{} /{} /{} /{} /{} /{} /{} /{} /{} /{}'.format(   
+              v_ego_kph, steering_angle, self.angle_steers_des, angle_steers_k, steeringTQ, torque_scale, log_scale, log_ki, log_dc_gain, self.output_steer)
       self.trLQR.add( str2 )
     
-    str5 = 'LQR_Set : dc_gain={:06.4f}/scale={:06.1f}/ki={:05.3f}/OutputSteer={:5.3f}/Angle={:5.1f}/{:5.1f}'.format(self.scale, self.dc_gain, self.ki, self.output_steer, steering_angle, angle_steers_k )
+    str5 = 'LQR_Set:dc_gain={:06.4f}/scale={:06.1f}/ki={:05.3f}/OutputSteer={:5.3f}/Angle={:5.1f}|{:5.1f}'.format(self.scale, self.dc_gain, self.ki, self.output_steer, steering_angle, angle_steers_k )
     trace1.printf2( str5 )
 
     lqr_log.steerAngle = angle_steers_k + path_plan.angleOffset
