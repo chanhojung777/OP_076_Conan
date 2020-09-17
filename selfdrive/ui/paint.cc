@@ -712,6 +712,7 @@ static void ui_draw_debug(UIState *s)
   //ui_print( s, x_pos, y_pos+150, "sF:%.2f", scene.liveParams.stiffnessFactor );
 
   ui_print( s, x_pos, y_pos+250, "aD:%.2f", scene.pathPlan.steerActuatorDelay );
+  ui_print( s, x_pos, y_pos+300, "model_speed:%.1f" , scene.model_speed);
   //ui_print( s, x_pos, y_pos+400, "awareness:%.2f" , scene.awareness_status);
 
 

@@ -157,7 +157,7 @@ class CarController():
     param.STEER_DELTA_UP = min( param.STEER_DELTA_UP, nUP)
     param.STEER_DELTA_DOWN = min( param.STEER_DELTA_DOWN, nDN )
 
-    sec_mval = 10  # 오파 => 운전자.  (sec)
+    sec_mval = 3  # 오파 => 운전자.  (sec)
     sec_pval = 3  # 운전자 => 오파  (sec)
     # streer over check
     if path_plan.laneChangeState != LaneChangeState.off:
