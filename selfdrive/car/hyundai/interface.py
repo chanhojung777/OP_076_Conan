@@ -81,7 +81,22 @@ class CarInterface(CarInterfaceBase):
       ret.steerRatio = 13.27 * 1.15  # 15% higher at the center seems 15.26
       ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
       ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]    
-
+    elif candidate == CAR.IONIQ_HEV:
+      ret.lateralTuning.pid.kf = 0.00006
+      ret.mass = 1275. + STD_CARGO_KG
+      ret.wheelbase = 2.7
+      ret.steerRatio = 13.73   #Spec
+      tire_stiffness_factor = 0.385
+      ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
+      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
+    elif candidate == CAR.IONIQ_EV:
+      ret.lateralTuning.pid.kf = 0.00005
+      ret.mass = 1490. + STD_CARGO_KG   #weight per hyundai site https://www.hyundaiusa.com/ioniq-electric/specifications.aspx
+      ret.wheelbase = 2.7
+      ret.steerRatio = 13.25   #Spec
+      ret.steerRateCost = 0.4
+      ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
+      ret.lateralTuning.pid.kpV, ret.lateralTuning.pid.kiV = [[0.25], [0.05]]
     elif candidate == CAR.SANTA_FE:
       ret.lateralTuning.pid.kf = 0.00005
       ret.mass = 3982. * CV.LB_TO_KG + STD_CARGO_KG

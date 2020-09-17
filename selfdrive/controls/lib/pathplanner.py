@@ -342,7 +342,7 @@ class PathPlanner():
       delta_desired = math.radians(angle_steers - angle_offset) / VM.sR
       rate_desired = 0.0
 
-    self.cur_state[0].delta = delta_desired
+    self.cur_state[0].delta = delta_desired1
 
     self.angle_steers_des_mpc = float(math.degrees(delta_desired * VM.sR) + angle_offset)
     org_angle_steers_des = self.angle_steers_des_mpc
@@ -362,7 +362,7 @@ class PathPlanner():
 
     elif v_ego_kph < 10:  # 30
       xp = [5,10]
-      fp2 = [3,5]
+      fp2 = [1,3] # 1,3이 더 좋지 않을까???? 해서 1,5에서 1,3으로 바꿈
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
 
