@@ -135,8 +135,8 @@ class DriverStatus():
     if active_monitoring:
       # when falling back from passive mode to active mode, reset awareness to avoid false alert
       if not self.active_monitoring_mode:
-        self.awareness_passive = self.awareness
-        self.awareness = self.awareness_active
+        self.awareness_passive = 1   # self.awareness
+        self.awareness = 1           # self.awareness_active
 
       self.threshold_pre = _DISTRACTED_PRE_TIME_TILL_TERMINAL / _DISTRACTED_TIME
       self.threshold_prompt = _DISTRACTED_PROMPT_TIME_TILL_TERMINAL / _DISTRACTED_TIME
@@ -144,8 +144,8 @@ class DriverStatus():
       self.active_monitoring_mode = True
     else:
       if self.active_monitoring_mode:
-        self.awareness_active = self.awareness
-        self.awareness = self.awareness_passive
+        self.awareness_active = 1 # self.awareness
+        self.awareness = 1        # self.awareness_passive
 
       self.threshold_pre = _AWARENESS_PRE_TIME_TILL_TERMINAL / _AWARENESS_TIME
       self.threshold_prompt = _AWARENESS_PROMPT_TIME_TILL_TERMINAL / _AWARENESS_TIME
