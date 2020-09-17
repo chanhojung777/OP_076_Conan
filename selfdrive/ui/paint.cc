@@ -727,9 +727,9 @@ static void ui_draw_debug(UIState *s)
   nvgFontSize(s->vg, 30);
   switch( scene.params.nOpkrAccelProfile  )
   {
-    case 1: strcpy( str_msg, "1.slow" ); nColor = nvgRGBA(100, 100, 255, 255); break;
-    case 2: strcpy( str_msg, "2.normal" );    nColor = COLOR_WHITE;  break;
-    case 3: strcpy( str_msg, "3.fast" );  nColor = nvgRGBA(255, 100, 100, 255);  break;
+    case 1: strcpy( str_msg, "1.느리게" ); nColor = nvgRGBA(100, 100, 255, 255); break;
+    case 2: strcpy( str_msg, "2.보통" );    nColor = COLOR_WHITE;  break;
+    case 3: strcpy( str_msg, "3.빠르게" );  nColor = nvgRGBA(255, 100, 100, 255);  break;
     default :  sprintf( str_msg, "%d", scene.params.nOpkrAccelProfile ); nColor = COLOR_WHITE;  break;
   }
   nvgFillColor(s->vg, nColor);
@@ -738,10 +738,10 @@ static void ui_draw_debug(UIState *s)
   nvgFontSize(s->vg, 80);
   switch( scene.cruiseState.modeSel  )
   {
-    case 0: strcpy( str_msg, "0.OP MODE" ); nColor = COLOR_WHITE; break;
-    case 1: strcpy( str_msg, "1.CURVE" );    nColor = nvgRGBA(200, 200, 255, 255);  break;
-    case 2: strcpy( str_msg, "2.FWD CAR" );  nColor = nvgRGBA(200, 255, 255, 255);  break;
-    case 3: strcpy( str_msg, "3.HYUNDAI" );  nColor = nvgRGBA(200, 255, 255, 255);  break;
+    case 0: strcpy( str_msg, "0.오파모드" ); nColor = COLOR_WHITE; break;
+    case 1: strcpy( str_msg, "1.커브모드" );    nColor = nvgRGBA(200, 200, 255, 255);  break;
+    case 2: strcpy( str_msg, "2.차간거리" );  nColor = nvgRGBA(200, 255, 255, 255);  break;
+    case 3: strcpy( str_msg, "3.순정모드" );  nColor = nvgRGBA(200, 255, 255, 255);  break;
     default :  sprintf( str_msg, "%d.NORMAL", scene.cruiseState.modeSel ); nColor = COLOR_WHITE;  break;
   }
   nvgFillColor(s->vg, nColor);  
@@ -940,7 +940,7 @@ static int bb_ui_draw_measure(UIState *s,  const char* bb_value, const char* bb_
     dx = (int)(bb_uomFontSize*2.5/2);
    }
   //print value
-  nvgFontFace(s->vg, "sans-semibold");
+  nvgFontFace(s->vg, "sans-bold");
   nvgFontSize(s->vg, bb_valueFontSize*2*fFontSize);
   nvgFillColor(s->vg, bb_valueColor);
   nvgText(s->vg, bb_x-dx/2, bb_y+ (int)(bb_valueFontSize*2.0)+0, bb_value, NULL);
@@ -952,7 +952,7 @@ static int bb_ui_draw_measure(UIState *s,  const char* bb_value, const char* bb_
   //print uom
   if (strlen(bb_uom) > 0) {
       nvgSave(s->vg);
-    int rx =bb_x + bb_uom_dx + bb_valueFontSize -15;
+    int rx =bb_x + bb_uom_dx + bb_valueFontSize -20;
     int ry = bb_y + (int)(bb_valueFontSize*2.0/2)+18;
     nvgTranslate(s->vg,rx,ry);
     nvgRotate(s->vg, -1.5708); //-90deg in radians
@@ -962,7 +962,7 @@ static int bb_ui_draw_measure(UIState *s,  const char* bb_value, const char* bb_
     nvgText(s->vg, 0, 0, bb_uom, NULL);
     nvgRestore(s->vg);
   }
-  return (int)((bb_valueFontSize + bb_labelFontSize)*2.0) + 1;
+  return (int)((bb_valueFontSize + bb_labelFontSize)*2.0) + 0;
 }
 
 
