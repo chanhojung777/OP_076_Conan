@@ -208,6 +208,8 @@ class PathPlanner():
     steeringPressed  = sm['carState'].steeringPressed
     steeringTorque = sm['carState'].steeringTorque
     active = sm['controlsState'].active
+    model_sum = sm['controlsState'].modelSpeed
+
     v_ego_kph = v_ego * CV.MS_TO_KPH
 
     self.steerRatio = sm['liveParameters'].steerRatio
@@ -359,18 +361,20 @@ class PathPlanner():
           self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
 
     elif v_ego_kph < 10:  # 30
-        xp = [5,10]
-        fp2 = [1,5]
-        limit_steers = interp( v_ego_kph, xp, fp2 )
-        self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
+      xp = [5,10]
+      fp2 = [3,5]
+      limit_steers = interp( v_ego_kph, xp, fp2 )
+      self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
 
-    elif angle_steers > 10: # angle steer > 10 
-        limit_steers = 5
-        self.angle_steers_des_mpc = self.limit_ctrl1( org_angle_steers_des, limit_steers, 2, angle_steers )
-
-    elif angle_steers < -10: # angle steer < -10 
-        limit_steers = 5
-        self.angle_steers_des_mpc = self.limit_ctrl1( org_angle_steers_des, 2, limit_steers, angle_steers )
+    #elif v_ego_kph > 60: 
+    #  pass
+    elif abs(angle_steers) > 10: # angle steer > 10
+        xp = [-5,0,5]
+        fp1 = [5,5,50]  # +
+        fp2 = [50,5,5]   # -
+        limit_steers1 = interp( model_sum, xp, fp1 )  # +
+        limit_steers2 = interp( model_sum, xp, fp2 )  # -
+        self.angle_steers_des_mpc = self.limit_ctrl1( org_angle_steers_des, limit_steers1, limit_steers2, angle_steers )
 
     #  Check for infeasable MPC solution
     mpc_nans = any(math.isnan(x) for x in self.mpc_solution[0].delta)

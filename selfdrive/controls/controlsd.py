@@ -510,7 +510,7 @@ class Controls:
     if not self.hyundai_lkas:
       # send car controls over can
       can_sends = self.CI.apply(CC, self.sm, self.CP )
-      self.model_speed  = self.CI.CC.model_speed      
+      self.model_speed  = self.CI.CC.model_sum    
       self.pm.send('sendcan', can_list_to_can_capnp(can_sends, msgtype='sendcan', valid=CS.canValid))
 
     force_decel = (self.sm['dMonitoringState'].awarenessStatus < 0.) or \
