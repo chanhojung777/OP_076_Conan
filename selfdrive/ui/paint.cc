@@ -602,7 +602,7 @@ static void ui_draw_vision_maxspeed(UIState *s) {
   if (is_cruise_set) {
  
     snprintf(maxspeed_str, sizeof(maxspeed_str), "%d", maxspeed_calc);
-    ui_draw_text(s->vg, text_x, 242, maxspeed_str, 42 * 2.5 COLOR_WHITE, s->font_sans_bold);
+    ui_draw_text(s->vg, text_x, 242, maxspeed_str, 42 * 2.5, COLOR_WHITE, s->font_sans_bold);
   } else {
     ui_draw_text(s->vg, text_x, 242, "-", 42 * 2.5, COLOR_WHITE_ALPHA(100), s->font_sans_semibold);
   }
