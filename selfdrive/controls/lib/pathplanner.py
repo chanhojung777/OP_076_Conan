@@ -208,7 +208,7 @@ class PathPlanner():
     steeringPressed  = sm['carState'].steeringPressed
     steeringTorque = sm['carState'].steeringTorque
     active = sm['controlsState'].active
-    model_sum = sm['controlsState'].modelSpeed
+    model_sum = sm['controlsState'].modelsum
 
     v_ego_kph = v_ego * CV.MS_TO_KPH
 
@@ -342,7 +342,7 @@ class PathPlanner():
       delta_desired = math.radians(angle_steers - angle_offset) / VM.sR
       rate_desired = 0.0
 
-    self.cur_state[0].delta = delta_desired1
+    self.cur_state[0].delta = delta_desired
 
     self.angle_steers_des_mpc = float(math.degrees(delta_desired * VM.sR) + angle_offset)
     org_angle_steers_des = self.angle_steers_des_mpc
@@ -362,19 +362,25 @@ class PathPlanner():
 
     elif v_ego_kph < 10:  # 30
       xp = [5,10]
-      fp2 = [1,3] # 1,3이 더 좋지 않을까???? 해서 1,5에서 1,3으로 바꿈
+      fp2 = [1,5]
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
 
-    #elif v_ego_kph > 60: 
-    #  pass
-    elif abs(angle_steers) > 10: # angle steer > 10
-        xp = [-5,0,5]
-        fp1 = [3,5,30]  # +
-        fp2 = [30,5,3]   # -
+    elif v_ego_kph > 40: 
+      pass
+    elif abs(angle_steers) > 10: # angle steer > 10 
+        xp = [-50,-30,-15,-10,-5,0,5,10,15,30,50]
+        fp1 = [-90,-52,-35,-28,-12,0,12,28,35,52,90]
+        self.angle_steers_des_mpc = interp( model_sum, xp, fp1 )  # +
+
+        """
+        xp = [-10,-5,0,5,10]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
+        fp1 = [1,3,10,20,10]    # +
+        fp2 = [10,20,10,3,1]    # -
         limit_steers1 = interp( model_sum, xp, fp1 )  # +
         limit_steers2 = interp( model_sum, xp, fp2 )  # -
         self.angle_steers_des_mpc = self.limit_ctrl1( org_angle_steers_des, limit_steers1, limit_steers2, angle_steers )
+        """
 
     #  Check for infeasable MPC solution
     mpc_nans = any(math.isnan(x) for x in self.mpc_solution[0].delta)

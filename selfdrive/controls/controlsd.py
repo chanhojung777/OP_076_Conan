@@ -126,7 +126,7 @@ class Controls:
     elif self.CP.lateralTuning.which() == 'lqr':
       self.LaC = LatControlLQR(self.CP)
 
-    self.model_speed = 0
+    self.model_sum = 0
     self.state = State.disabled
     self.enabled = False
     self.active = False
@@ -510,7 +510,7 @@ class Controls:
     if not self.hyundai_lkas:
       # send car controls over can
       can_sends = self.CI.apply(CC, self.sm, self.CP )
-      self.model_speed  = self.CI.CC.model_sum    
+      self.model_sum  = self.CI.CC.model_sum  
       self.pm.send('sendcan', can_list_to_can_capnp(can_sends, msgtype='sendcan', valid=CS.canValid))
 
     force_decel = (self.sm['dMonitoringState'].awarenessStatus < 0.) or \
@@ -563,7 +563,7 @@ class Controls:
     controlsState.output = float(lac_log.output)
     controlsState.alertTextMsg1 = str(log_alertTextMsg1)
     controlsState.alertTextMsg2 = str(log_alertTextMsg2)
-    controlsState.modelSpeed = float(self.model_speed)  # self.CI.CC.model_speed   #, self.model_sum    
+    controlsState.modelSum = float(self.model_sum)  # self.CI.CC.model_speed   #, self.model_sum    
 
     if self.CP.lateralTuning.which() == 'pid':
       controlsState.lateralControlState.pidState = lac_log

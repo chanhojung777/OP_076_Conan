@@ -353,7 +353,7 @@ void handle_message(UIState *s, SubMaster &sm)
       scene.v_cruise_update_ts = event.getLogMonoTime();
     }
 
-    scene.model_speed = data.getModelSpeed();
+    scene.model_sum = data.getModelSum();
     scene.canErrorCounter = data.getCanErrorCounter();
     scene.v_cruise = data.getVCruise();
     scene.v_ego = data.getVEgo();
