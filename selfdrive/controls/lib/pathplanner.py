@@ -377,8 +377,8 @@ class PathPlanner():
       """
       # 2.방법
       xp = [-10,-5,0,5,10]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
-      fp1 = [1,3,10,20,10]    # +
-      fp2 = [10,20,10,3,1]    # -
+      fp1 = [1,3,5,10,5]    # +
+      fp2 = [5,10,5,3,1]    # -
       limit_steers1 = interp( model_sum, xp, fp1 )  # +
       limit_steers2 = interp( model_sum, xp, fp2 )  # -
       self.angle_steers_des_mpc = self.limit_ctrl1( org_angle_steers_des, limit_steers1, limit_steers2, angle_steers )
