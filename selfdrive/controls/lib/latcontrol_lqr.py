@@ -77,7 +77,7 @@ class LatControlLQR():
     steers_max = get_steer_max(CP, CS.vEgo)
     torque_scale = (0.45 + CS.vEgo / 60.0)**2  # Scale actuator model with speed
     #neokii
-    torque_scale = min(torque_scale, 0.65) 
+    #torque_scale = min(torque_scale, 0.65) 
 
     steering_angle = CS.steeringAngle
     steeringTQ = CS.steeringTorqueEps
@@ -143,7 +143,8 @@ class LatControlLQR():
               v_ego_kph, steering_angle, self.angle_steers_des, angle_steers_k, steeringTQ, torque_scale, log_scale, log_ki, log_dc_gain, self.output_steer)
       self.trLQR.add( str2 )
     
-    str5 = 'LQR_Set:dc_gain={:06.4f}/scale={:06.4f}/ki={:05.3f}/O={:5.3f}/Angle={:5.1f}|{:5.1f}/TQ={}'.format(self.scale, self.dc_gain, self.ki, self.output_steer, steering_angle, angle_steers_k, steeringTQ )
+    str5 = 'LQR_Set:dc_gain={:06.4f}/scale={:06.4f}/ki={:05.3f}/tq={:4.1f}/u_lqr={:5.3f}/i={:5.3f}/O={:5.3f}'.format(
+              self.dc_gain, self.scale, self.ki, steeringTQ, u_lqr, self.i_lqr, self.output_steer )
     trace1.printf2( str5 )
 
     lqr_log.steerAngle = angle_steers_k + path_plan.angleOffset
