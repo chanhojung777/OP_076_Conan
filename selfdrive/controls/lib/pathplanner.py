@@ -87,6 +87,7 @@ class PathPlanner():
     self.trPATH = trace1.Loger("path")
     self.trLearner = trace1.Loger("Learner")
     self.trpathPlan = trace1.Loger("pathPlan")
+    self.trRapidCurv = trace1.Loger("076_conan_RapidCurv")   
 
     self.atom_timer_cnt = 0
     self.atom_steer_ratio = None
@@ -385,7 +386,10 @@ class PathPlanner():
       limit_steers1 = interp( model_sum, xp, fp1 )  # +
       limit_steers2 = interp( model_sum, xp, fp2 )  # -
       self.angle_steers_des_mpc = self.limit_ctrl1( org_angle_steers_des, limit_steers1, limit_steers2, angle_steers )
-      
+
+      str1 = '/{} /{} /{} /{} /{} /{} /{} /{} /{}'.format(   
+              angle_steers, org_angle_steers_des, model_sum, xp, fp1, fp2, limit_steers1, limit_steers2, self.angle_steers_des_mpc)
+      self.trRapidCurv.add( str1 )      
 
     #  Check for infeasable MPC solution
     mpc_nans = any(math.isnan(x) for x in self.mpc_solution[0].delta)
