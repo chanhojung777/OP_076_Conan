@@ -158,7 +158,7 @@ class CarController():
     param.STEER_DELTA_DOWN = min( param.STEER_DELTA_DOWN, nDN )
 
     sec_mval = 2 # 오파 => 운전자.  (sec)
-    sec_pval = 2 # 운전자 => 오파  (sec)
+    sec_pval = 5 # 운전자 => 오파  (sec)
     # streer over check
     if path_plan.laneChangeState != LaneChangeState.off:
       self.steer_torque_over_timer = 0
