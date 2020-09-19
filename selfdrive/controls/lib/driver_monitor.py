@@ -220,6 +220,7 @@ class DriverStatus():
     if (driver_engaged and self.awareness > 0) or not ctrl_active:
       # reset only when on disengagement if red reached
       self.terminal_time = 0
+      self.terminal_alert_cnt = 0      
       self.awareness = 1.
       self.awareness_active = 1.
       self.awareness_passive = 1.
