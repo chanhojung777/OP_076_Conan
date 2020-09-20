@@ -367,26 +367,26 @@ class PathPlanner():
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
 
-    # elif v_ego_kph > 60 or v_ego_kph < 20: 
-    #   pass
-    # elif abs(angle_steers) > 10: # angle steer > 10
-    #   """
-    #   #1.방법
-    #   xp = [-50,-30,-15,-10,-5,0,5,10,15,30,50]
-    #   fp1 = [-90,-52,-35,-28,-12,0,12,28,35,52,90]
-    #   self.angle_steers_des_mpc = interp( model_sum, xp, fp1 )  # +
-    #   """
-    #   # 2.방법
-    #   xp = [-10,-5,0,5,10]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
-    #   fp1 = [3,8,10,20,10]    # +
-    #   fp2 = [10,20,10,8,3]    # -
-    #   limit_steers1 = interp( model_sum, xp, fp1 )  # +
-    #   limit_steers2 = interp( model_sum, xp, fp2 )  # -
-    #   self.angle_steers_des_mpc = self.limit_ctrl1( org_angle_steers_des, limit_steers1, limit_steers2, angle_steers )
+    elif v_ego_kph > 80 or v_ego_kph < 20: 
+      pass
+    elif abs(angle_steers) > 10: # angle steer > 10
+      """
+      #1.방법
+      xp = [-50,-30,-15,-10,-5,0,5,10,15,30,50]
+      fp1 = [-90,-52,-35,-28,-12,0,12,28,35,52,90]
+      self.angle_steers_des_mpc = interp( model_sum, xp, fp1 )  # +
+      """
+      # 2.방법
+      xp = [-10,-5,0,5,10]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
+      fp1 = [3,8,10,15,9]    # +
+      fp2 = [9,15,10,8,3]    # -
+      limit_steers1 = interp( model_sum, xp, fp1 )  # +
+      limit_steers2 = interp( model_sum, xp, fp2 )  # -
+      self.angle_steers_des_mpc = self.limit_ctrl1( org_angle_steers_des, limit_steers1, limit_steers2, angle_steers )
 
-    #   str1 = '/{} /{} /{} /{} /{} /{}'.format(   
-    #           angle_steers, org_angle_steers_des, model_sum, limit_steers1, limit_steers2, self.angle_steers_des_mpc)
-    #   self.trRapidCurv.add( str1 )      
+      str1 = '/{} /{} /{} /{} /{} /{}'.format(   
+              angle_steers, org_angle_steers_des, model_sum, limit_steers1, limit_steers2, self.angle_steers_des_mpc)
+      self.trRapidCurv.add( str1 )      
 
     #  Check for infeasable MPC solution
     mpc_nans = any(math.isnan(x) for x in self.mpc_solution[0].delta)
