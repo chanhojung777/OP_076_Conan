@@ -89,9 +89,9 @@ class LatControlLQR():
     #now = datetime.datetime.now() # current date and time
     #micro_S = int(now.microsecond)
     #if micro_S < 10000 : #1초에 한번만 랜덤변환
-    #  self.ki = random.uniform(0.015, 0.025)    #self.ki - (self.ki*0.5), self.ki + (self.ki*0.5) )
-    #  self.scale = random.uniform(1750, 1950)     #int(self.scale) - int(self.scale*0.055), int(self.scale) + int(self.scale*0.055) ) )
-    #  self.dc_gain = random.uniform(0.0028, 0.0032)  #self.dc_gain - (self.dc_gain*0.1), self.dc_gain + (self.dc_gain*0.1) )    
+    #  self.ki = random.uniform(0.015, 0.025)   
+    #  self.scale = random.uniform(1750, 1950)     
+    #  self.dc_gain = random.uniform(0.0028, 0.0032)  
     #  steers_max = random.uniform(1.0, 1.2)
     # ########################### 
 
@@ -143,7 +143,7 @@ class LatControlLQR():
               v_ego_kph, steering_angle, self.angle_steers_des, angle_steers_k, steeringTQ, torque_scale, log_scale, log_ki, log_dc_gain, self.output_steer)
       self.trLQR.add( str2 )
     
-    str5 = 'LQR_Set:dc_gain={:06.4f}/scale={:06.4f}/ki={:05.3f}/tq={:4.1f}/u_lqr={:5.3f}/i={:5.3f}/O={:5.3f}'.format(
+    str5 = 'LQR_Set:dcgain={:06.4f}/scale={:06.1f}/ki={:05.3f}/tq={:4.1f}/u_lqr={:5.1}/i={:5.3f}/O={:5.3f}'.format(
               self.dc_gain, self.scale, self.ki, steeringTQ, u_lqr, self.i_lqr, self.output_steer )
     trace1.printf2( str5 )
 

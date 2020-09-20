@@ -157,7 +157,7 @@ class CarController():
     param.STEER_DELTA_UP = min( param.STEER_DELTA_UP, nUP)
     param.STEER_DELTA_DOWN = min( param.STEER_DELTA_DOWN, nDN )
 
-    sec_mval = 5 # 오파 => 운전자.  (sec)
+    sec_mval = 3 # 오파 => 운전자.  (sec)
     sec_pval = 3 # 운전자 => 오파  (sec)
     # streer over check
     if path_plan.laneChangeState != LaneChangeState.off:
@@ -286,7 +286,7 @@ class CarController():
     # str_log2 = 'limit={:.0f} tm={:.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
     # trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
-    str_log1 = '곡률={:5.1f} 조향토크값:적용[{:5.0f}]/목표[{:5.0f}]'.format(  self.model_speed , apply_steer, dst_steer )
+    str_log1 = 'CV={:5.1f} 조향토크값:적용[{:5.0f}]/목표[{:5.0f}]'.format( self.model_speed , apply_steer, dst_steer )
     str_log2 = '  limit={:.0f}  tm={:.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
@@ -323,13 +323,13 @@ class CarController():
       else:
         self.resume_cnt = 0
 
-      str1 = 'run={} cruise_set_mode={} kph={:.1f}/{:.1f} DO={:.0f}/{:.0f} '.format( is_sc_run, self.SC.cruise_set_mode, self.SC.cruise_set_speed_kph, CS.VSetDis, CS.driverOverride, CS.cruise_buttons)
-      str2 = 'btn_type={:.0f} speed={:.1f} cnt={:.0f}'.format( self.SC.btn_type, self.SC.sc_clu_speed, self.resume_cnt )
-      str_log  = str1 + str2
-      self.traceCC.add( str_log )        
+      # str1 = 'run={} cruise_set_mode={} kph={:.1f}/{:.1f} DO={:.0f}/{:.0f} '.format( is_sc_run, self.SC.cruise_set_mode, self.SC.cruise_set_speed_kph, CS.VSetDis, CS.driverOverride, CS.cruise_buttons)
+      # str2 = 'btn_type={:.0f} speed={:.1f} cnt={:.0f}'.format( self.SC.btn_type, self.SC.sc_clu_speed, self.resume_cnt )
+      # str_log  = str1 + str2
+      # self.traceCC.add( str_log )        
 
     # 20 Hz LFA MFA message
-    if frame % 5 == 0 and self.car_fingerprint in [CAR.SONATA, CAR.PALISADE, CAR.GRANDEUR_H_20]:
+    if frame % 5 == 0 and self.car_fingerprint in [CAR.SONATA, CAR.PALISADE]: #, CAR.GRANDEUR_H_20
       can_sends.append(create_lfa_mfa(self.packer, frame, enabled))
 
     # counter inc
