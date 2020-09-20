@@ -95,10 +95,6 @@ class LatControlLQR():
     #  steers_max = random.uniform(1.0, 1.2)
     # ########################### 
 
-    log_ki = self.ki
-    log_scale = self.scale
-    log_dc_gain = self.dc_gain   
-
     # Subtract offset. Zero angle should correspond to zero torque
     self.angle_steers_des = path_plan.angleSteers - path_plan.angleOffset
     steering_angle -= path_plan.angleOffset
@@ -138,12 +134,16 @@ class LatControlLQR():
     check_saturation = (CS.vEgo > 10) and not CS.steeringRateLimited and not CS.steeringPressed
     saturated = self._check_saturation(self.output_steer, check_saturation, steers_max)
 
-    if not CS.steeringPressed:
-      str2 = '/{} /{} /{} /{} /{} /{} /{} /{} /{} /{}'.format(   
-              v_ego_kph, steering_angle, self.angle_steers_des, angle_steers_k, steeringTQ, torque_scale, log_scale, log_ki, log_dc_gain, self.output_steer)
-      self.trLQR.add( str2 )
+    if CS.steeringPressed:
+      whoissteering = "Driver"
+    else:
+      whoissteering = "Openpilot"
     
-    str5 = 'LQR_Set:dcgain={:06.4f}/scale={:06.1f}/ki={:05.3f}/tq={:4.1f}/u_lqr={:5.1}/i={:5.3f}/O={:5.3f}'.format(
+    str2 = '/{} /{} /{} /{} /{} /{} /{} /{} /{} /{} /{}'.format(   
+              v_ego_kph, steering_angle, self.angle_steers_des, angle_steers_k, steeringTQ, torque_scale, self.dc_gain, self.scale, self.ki, self.output_steer, whoissteering)
+    self.trLQR.add( str2 )
+    
+    str5 = 'LQR_Set:dcgain={:06.4f}/scale={:06.1f}/ki={:05.3f}/tq={:4.1f}/u={:5.1}/i={:5.3f}/O={:5.3f}'.format(
               self.dc_gain, self.scale, self.ki, steeringTQ, u_lqr, self.i_lqr, self.output_steer )
     trace1.printf2( str5 )
 
