@@ -245,21 +245,21 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.lqr.a = [0., 1., -0.22619643, 1.21822268]
       ret.lateralTuning.lqr.b = [-1.92006585e-04, 3.95603032e-05]
       ret.lateralTuning.lqr.c = [1., 0.]
-      """ Conan Origin
+      """ Conan Origin 
       ret.lateralTuning.lqr.k = [-100., 450.]
       ret.lateralTuning.lqr.l = [0.22, 0.318]
       ret.lateralTuning.lqr.dcGain = 0.003
       """
-      """ Neokii
+      """ Neokii """
       ret.lateralTuning.lqr.k = [-103.976, 450.]
       ret.lateralTuning.lqr.l = [0.22, 0.318]
       ret.lateralTuning.lqr.dcGain = 0.003
-      """
-      """ Comma.ai Original """
+      
+      """ Comma.ai Original 
       ret.lateralTuning.lqr.k = [-110.73572306, 451.22718255]
       ret.lateralTuning.lqr.l = [0.3233671, 0.3185757]
       ret.lateralTuning.lqr.dcGain = 0.002237852961363602
-
+      """
     ret.atomTuning.cvKPH    = ATOMC.cv_KPH
     ret.atomTuning.cvBPV    = ATOMC.cv_BPV
     ret.atomTuning.cvsMaxV  = ATOMC.cv_sMaxV
