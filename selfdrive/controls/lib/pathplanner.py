@@ -383,7 +383,7 @@ class PathPlanner():
       limit_steers2 = interp( model_sum, xp, fp2 )  # -
       self.angle_steers_des_mpc = self.limit_ctrl1( org_angle_steers_des, limit_steers1, limit_steers2, angle_steers )
       
-      str1 = '/{} /{} /{} /{} /{} /{}'.format(   
+      str1 = '/{} /{} /{} /{} /{}'.format(   
               model_sum, limit_steers1, limit_steers2, org_angle_steers_des, angle_steers)
       self.trRapidCurv.add( str1 )      
 
