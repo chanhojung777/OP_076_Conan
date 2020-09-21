@@ -302,7 +302,7 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
     // Draw white vision track => blue bg
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
         //nvgRGBA(0, 0, 255, 255), nvgRGBA(0, 0, 255, 30));
-        nvgRGBA(0, 255, 0, 255), nvgRGBA(0, 255, 0, 0));
+        nvgRGBA(0, 255, 0, 255), nvgRGBA(0, 255, 0, 150));
   }
 
   /* THIS IS THE STANDARD MPC -wirelessnet2
