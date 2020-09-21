@@ -189,7 +189,7 @@ static void ui_draw_lane_line(UIState *s, const model_path_vertices_data *pvd, N
     }
   }
   nvgClosePath(s->vg);
-  nvgFillColor(s->vg, nvgRGBA(0, 0, 255, 200));
+  nvgFillColor(s->vg, nvgRGBA( 0, 120, 0, 100)); //< green , nvgRGBA(0, 0, 150, 100)); blue
   nvgFill(s->vg);
 }
 
@@ -283,25 +283,26 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
     // Draw colored MPC track Kegman's
     if (s->scene.kegman.steerOverride) {
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
-        nvgRGBA(0, 191, 255, 255), nvgRGBA(0, 95, 128, 50));
+        nvgRGBA(255,255,0,255), nvgRGBA(255,0,0,50));
     } else {
       int torque_scale = (int)fabs(510*(float)s->scene.kegman.output_scale);
       red_lvl = fmin(255, torque_scale);
-      //green_lvl = fmin(255, 510-torque_scale);
-      blue_lvl = fmin(255, 510-torque_scale);
+      green_lvl = fmin(255, 510-torque_scale);
+      //blue_lvl = fmin(255, 510-torque_scale);
 
-      //NVGcolor color1 = nvgRGBA(          red_lvl,            green_lvl,  0, 255); 
-      NVGcolor color1 = nvgRGBA(          red_lvl,      0,           blue_lvl, 255); 
-      //NVGcolor color2 = nvgRGBA((int)(0.5*red_lvl), (int)(0.5*green_lvl), 0, 50);
-      NVGcolor color2 = nvgRGBA((int)(0.10*red_lvl), 0, (int)(0.90*blue_lvl), 50);
+      NVGcolor color1 = nvgRGBA(          red_lvl,            green_lvl,  0, 255); 
+      //NVGcolor color1 = nvgRGBA(          red_lvl,      0,           blue_lvl, 255); 
+      NVGcolor color2 = nvgRGBA((int)(0.5*red_lvl), (int)(0.5*green_lvl), 0, 50);
+      //NVGcolor color2 = nvgRGBA((int)(0.10*red_lvl), 0, (int)(0.90*blue_lvl), 50);
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
         color1, color2 );        
     }
    // LOGW("ui_draw_track mps=%d  cnt=%d  ov=%d  %d,%d", is_mpc, pvd->cnt, s->scene.kegman.steerOverride, red_lvl, green_lvl);
   } else {
-    // Draw white vision track
+    // Draw white vision track => blue bg
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
-        COLOR_WHITE, COLOR_WHITE_ALPHA(0)); //nvgRGBA(0, 0, 255, 255), nvgRGBA(0, 0, 255, 0));
+        //nvgRGBA(0, 0, 255, 255), nvgRGBA(0, 0, 255, 30));
+        nvgRGBA(0, 255, 0, 255), nvgRGBA(0, 255, 0, 0));
   }
 
   /* THIS IS THE STANDARD MPC -wirelessnet2
@@ -839,7 +840,7 @@ static void ui_draw_vision_event(UIState *s)
 
 
     if (s->status == STATUS_ENGAGED) {
-      color = nvgRGBA(0, 0, 255, 255); //23, 134, 68,
+      color = nvgRGBA(23, 134, 68, 255); //
     } else if (s->status == STATUS_WARNING) {
       color = COLOR_OCHRE;
     } else if (is_engageable) {
