@@ -189,7 +189,7 @@ static void ui_draw_lane_line(UIState *s, const model_path_vertices_data *pvd, N
     }
   }
   nvgClosePath(s->vg);
-  nvgFillColor(s->vg, color);
+  nvgFillColor(s->vg, nvgRGBA(0, 0, 255, 255));
   nvgFill(s->vg);
 }
 
@@ -344,7 +344,7 @@ static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pv
   } else {
     // Draw white vision track => blue
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
-      nvgRGBA(0, 0, 255, 255), nvgRGBA(0, 0, 255, 0));
+      COLOR_WHITE, COLOR_WHITE_ALPHA(0));
   }
   nvgFillPaint(s->vg, track_bg);
   nvgFill(s->vg);
@@ -373,7 +373,7 @@ static void ui_draw_track_left(UIState *s, bool is_mpc, track_vertices_data *pvd
   } else {
     // Draw white vision track
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
-      nvgRGBA(0, 0, 255, 255), nvgRGBA(0, 0, 255, 0));
+      COLOR_WHITE, COLOR_WHITE_ALPHA(0));
   }
   nvgFillPaint(s->vg, track_bg);
   nvgFill(s->vg);
@@ -708,7 +708,7 @@ static void ui_draw_debug(UIState *s)
      
   //ui_print( s, x_pos, y_pos+0, "cO:%.3f  %d, %d",scene.carParams.lateralsRatom.cameraOffset, scene.cruiseState.cruiseSwState, s->livempc_or_radarstate_changed );
   ui_print( s, x_pos, y_pos+0, "model_sum:%.1f" , scene.model_sum);
-  ui_print( s, x_pos, y_pos+00, "prob:%.2f, %.2f", scene.pathPlan.lProb, scene.pathPlan.rProb );
+  ui_print( s, x_pos, y_pos+50, "prob:%.2f, %.2f", scene.pathPlan.lProb, scene.pathPlan.rProb );
   ui_print( s, x_pos, y_pos+100, "Poly:%.2f, %.2f", scene.pathPlan.lPoly, scene.pathPlan.rPoly );
   ui_print( s, x_pos, y_pos+150, "sR:%.2f, %.2f", scene.liveParams.steerRatio, scene.pathPlan.steerRatio );
   ui_print( s, x_pos, y_pos+200, "aO:%.2f, %.2f", scene.liveParams.angleOffset, scene.pathPlan.angleOffset );
@@ -901,8 +901,8 @@ static void ui_draw_driver_view(UIState *s)
   ui_draw_rect(s->vg, scene->is_rhd ? valid_frame_x : valid_frame_x + box_h / 2, box_y, valid_frame_w - box_h / 2, box_h, COLOR_BLACK_ALPHA(144));
 
   // borders
-  ui_draw_rect(s->vg, frame_x, box_y, valid_frame_x - frame_x, box_h, nvgRGBA(23, 51, 73, 255));
-  ui_draw_rect(s->vg, valid_frame_x + valid_frame_w, box_y, frame_w - valid_frame_w - (valid_frame_x - frame_x), box_h, nvgRGBA(23, 51, 73, 255));
+  ui_draw_rect(s->vg, frame_x, box_y, valid_frame_x - frame_x, box_h, nvgRGBA(23, 51, 161, 255));
+  ui_draw_rect(s->vg, valid_frame_x + valid_frame_w, box_y, frame_w - valid_frame_w - (valid_frame_x - frame_x), box_h, nvgRGBA(23, 51, 161, 255));
 
   // draw face box
   if (scene->face_prob > 0.4) {
