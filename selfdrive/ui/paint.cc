@@ -277,7 +277,8 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
 
   NVGpaint track_bg;
   int red_lvl = 0;
-  int green_lvl = 0;
+  //int green_lvl = 0;
+  int blue_lvl = 0;
   if (is_mpc) {
     // Draw colored MPC track Kegman's
     if (s->scene.kegman.steerOverride) {
@@ -286,10 +287,13 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
     } else {
       int torque_scale = (int)fabs(510*(float)s->scene.kegman.output_scale);
       red_lvl = fmin(255, torque_scale);
-      green_lvl = fmin(255, 510-torque_scale);
+      //green_lvl = fmin(255, 510-torque_scale);
+      blue_lvl = fmin(255, 510-torque_scale);
 
-      NVGcolor color1 = nvgRGBA(          red_lvl,            green_lvl,  0, 255); 
-      NVGcolor color2 = nvgRGBA((int)(0.5*red_lvl), (int)(0.5*green_lvl), 0, 50);
+      //NVGcolor color1 = nvgRGBA(          red_lvl,            green_lvl,  0, 255); 
+      NVGcolor color1 = nvgRGBA(          red_lvl,      0,           blue_lvl, 255); 
+      //NVGcolor color2 = nvgRGBA((int)(0.5*red_lvl), (int)(0.5*green_lvl), 0, 50);
+      NVGcolor color2 = nvgRGBA((int)(0.5*red_lvl), 0, (int)(0.5*blue_lvl), 50);
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
         color1, color2 );        
     }
@@ -740,10 +744,10 @@ static void ui_draw_debug(UIState *s)
   nvgFontSize(s->vg, 80);
   switch( scene.cruiseState.modeSel  )
   {
-    case 0: strcpy( str_msg, "0.오파모드" ); nColor = COLOR_WHITE; break;
-    case 1: strcpy( str_msg, "1.커브모드" );    nColor = nvgRGBA(200, 200, 255, 255);  break;
-    case 2: strcpy( str_msg, "2.차간거리" );  nColor = nvgRGBA(200, 255, 255, 255);  break;
-    case 3: strcpy( str_msg, "3.순정모드" );  nColor = nvgRGBA(200, 255, 255, 255);  break;
+    case 0: strcpy( str_msg, "0.OP+ASCC" ); nColor = COLOR_WHITE; break;
+    case 1: strcpy( str_msg, "1.OP+Curv." );    nColor = nvgRGBA(0, 180, 100, 255);  break;
+    case 2: strcpy( str_msg, "2.OP+Dist." );  nColor = nvgRGBA(0, 150, 100, 255);  break;
+    case 3: strcpy( str_msg, "3.Stock" );  nColor = nvgRGBA(200, 255, 255, 255);  break;
     default :  sprintf( str_msg, "%d.NORMAL", scene.cruiseState.modeSel ); nColor = COLOR_WHITE;  break;
   }
   nvgFillColor(s->vg, nColor);  
@@ -837,7 +841,7 @@ static void ui_draw_vision_event(UIState *s)
 
 
     if (s->status == STATUS_ENGAGED) {
-      color = nvgRGBA(23, 134, 68, 255);
+      color = nvgRGBA(0, 0, 255, 255); //23, 134, 68,
     } else if (s->status == STATUS_WARNING) {
       color = COLOR_OCHRE;
     } else if (is_engageable) {
