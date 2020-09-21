@@ -293,7 +293,7 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
       //NVGcolor color1 = nvgRGBA(          red_lvl,            green_lvl,  0, 255); 
       NVGcolor color1 = nvgRGBA(          red_lvl,      0,           blue_lvl, 255); 
       //NVGcolor color2 = nvgRGBA((int)(0.5*red_lvl), (int)(0.5*green_lvl), 0, 50);
-      NVGcolor color2 = nvgRGBA((int)(0.25*red_lvl), 0, (int)(0.75*blue_lvl), 50);
+      NVGcolor color2 = nvgRGBA((int)(0.10*red_lvl), 0, (int)(0.90*blue_lvl), 50);
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
         color1, color2 );        
     }
@@ -301,7 +301,7 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
   } else {
     // Draw white vision track
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
-       COLOR_WHITE, COLOR_WHITE_ALPHA(0));
+        nvgRGBA(0, 0, 255, 255), nvgRGBA(0, 0, 255, 0));
   }
 
   /* THIS IS THE STANDARD MPC -wirelessnet2
@@ -342,7 +342,7 @@ static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pv
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
         nvgRGBA(155, 0, 0, 255), nvgRGBA(55, 0, 0, 50));
   } else {
-    // Draw white vision track
+    // Draw white vision track => blue
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
       nvgRGBA(0, 0, 255, 255), nvgRGBA(0, 0, 255, 0));
   }
