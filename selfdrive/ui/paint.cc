@@ -189,7 +189,7 @@ static void ui_draw_lane_line(UIState *s, const model_path_vertices_data *pvd, N
     }
   }
   nvgClosePath(s->vg);
-  nvgFillColor(s->vg, nvgRGBA(0, 0, 255, 255));
+  nvgFillColor(s->vg, nvgRGBA(0, 0, 255, 200));
   nvgFill(s->vg);
 }
 
@@ -301,7 +301,7 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
   } else {
     // Draw white vision track
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
-        nvgRGBA(0, 0, 255, 255), nvgRGBA(0, 0, 255, 0));
+        COLOR_WHITE, COLOR_WHITE_ALPHA(0)); //nvgRGBA(0, 0, 255, 255), nvgRGBA(0, 0, 255, 0));
   }
 
   /* THIS IS THE STANDARD MPC -wirelessnet2
