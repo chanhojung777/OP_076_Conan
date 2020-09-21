@@ -344,7 +344,7 @@ static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pv
   } else {
     // Draw white vision track
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
-      COLOR_WHITE, COLOR_WHITE_ALPHA(0));
+      nvgRGBA(0, 0, 255, 255), nvgRGBA(0, 0, 255, 0));
   }
   nvgFillPaint(s->vg, track_bg);
   nvgFill(s->vg);
@@ -373,7 +373,7 @@ static void ui_draw_track_left(UIState *s, bool is_mpc, track_vertices_data *pvd
   } else {
     // Draw white vision track
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
-      COLOR_WHITE, COLOR_WHITE_ALPHA(0));
+      nvgRGBA(0, 0, 255, 255), nvgRGBA(0, 0, 255, 0));
   }
   nvgFillPaint(s->vg, track_bg);
   nvgFill(s->vg);
@@ -707,19 +707,17 @@ static void ui_draw_debug(UIState *s)
   
      
   //ui_print( s, x_pos, y_pos+0, "cO:%.3f  %d, %d",scene.carParams.lateralsRatom.cameraOffset, scene.cruiseState.cruiseSwState, s->livempc_or_radarstate_changed );
-  ui_print( s, x_pos, y_pos+0, "prob:%.2f, %.2f", scene.pathPlan.lProb, scene.pathPlan.rProb );
-  ui_print( s, x_pos, y_pos+50, "Poly:%.2f, %.2f", scene.pathPlan.lPoly, scene.pathPlan.rPoly );
-  ui_print( s, x_pos, y_pos+100, "sR:%.2f, %.2f", scene.liveParams.steerRatio, scene.pathPlan.steerRatio );
-  ui_print( s, x_pos, y_pos+150, "aO:%.2f, %.2f", scene.liveParams.angleOffset, scene.pathPlan.angleOffset );
-  ui_print( s, x_pos, y_pos+200, "aOa:%.2f", scene.liveParams.angleOffsetAverage );
-  ui_print( s, x_pos, y_pos+250, "LW:%.2f", scene.pathPlan.laneWidth );
-  ui_print( s, x_pos, y_pos+300, "aD:%.2f", scene.pathPlan.steerActuatorDelay );
-  ui_print( s, x_pos, y_pos+350, "sF:%.2f", scene.liveParams.stiffnessFactor );
+  ui_print( s, x_pos, y_pos+0, "model_sum:%.1f" , scene.model_sum);
+  ui_print( s, x_pos, y_pos+00, "prob:%.2f, %.2f", scene.pathPlan.lProb, scene.pathPlan.rProb );
+  ui_print( s, x_pos, y_pos+100, "Poly:%.2f, %.2f", scene.pathPlan.lPoly, scene.pathPlan.rPoly );
+  ui_print( s, x_pos, y_pos+150, "sR:%.2f, %.2f", scene.liveParams.steerRatio, scene.pathPlan.steerRatio );
+  ui_print( s, x_pos, y_pos+200, "aO:%.2f, %.2f", scene.liveParams.angleOffset, scene.pathPlan.angleOffset );
+  ui_print( s, x_pos, y_pos+250, "aOa:%.2f", scene.liveParams.angleOffsetAverage );
+  ui_print( s, x_pos, y_pos+300, "LW:%.2f", scene.pathPlan.laneWidth );
+  ui_print( s, x_pos, y_pos+350, "aD:%.2f", scene.pathPlan.steerActuatorDelay );
+  ui_print( s, x_pos, y_pos+400, "sF:%.2f", scene.liveParams.stiffnessFactor );
 
-
-  //ui_print( s, x_pos, y_pos+300, "model_sum:%.1f" , scene.model_sum);
   //ui_print( s, x_pos, y_pos+400, "awareness:%.2f" , scene.awareness_status);
-
 
   ui_print( s, 0, 1020, "%s", scene.alert.text1 );
   ui_print( s, 0, 1078, "%s", scene.alert.text2 );
@@ -734,7 +732,7 @@ static void ui_draw_debug(UIState *s)
   switch( scene.params.nOpkrAccelProfile  )
   {
     case 1: strcpy( str_msg, "1.느리게" ); nColor = nvgRGBA(100, 100, 255, 255); break;
-    case 2: strcpy( str_msg, "2.보통" );    nColor = COLOR_WHITE;  break;
+    case 2: strcpy( str_msg, "2.보통" );    nColor = nvgRGBA(0, 180, 100, 255);  break;
     case 3: strcpy( str_msg, "3.빠르게" );  nColor = nvgRGBA(255, 100, 100, 255);  break;
     default :  sprintf( str_msg, "%d", scene.params.nOpkrAccelProfile ); nColor = COLOR_WHITE;  break;
   }
