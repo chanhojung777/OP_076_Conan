@@ -23,6 +23,8 @@ class CarInterfaceBase():
     self.frame = 0
     self.low_speed_alert = False
     self.cruise_enabled_prev = False
+    self.pcm_enable_prev = False
+    self.pcm_enable_cmd = False
 
     if CarState is not None:
       self.CS = CarState(CP)
@@ -55,7 +57,7 @@ class CarInterfaceBase():
     # standard ALC params
     ret.steerControlType = car.CarParams.SteerControlType.torque
     ret.steerMaxBP = [0.]
-    ret.steerMaxV = [1.1]
+    ret.steerMaxV = [1.0]
     ret.minSteerSpeed = 0.
 
     # stock ACC by default
@@ -127,15 +129,23 @@ class CarInterfaceBase():
 
     if not pcm_enable:
       pass
+    elif cs_out.gearShifter != GearShifter.drive:
+      self.cruise_enabled_prev = cs_out.cruiseState.enabled
+      if self.pcm_enable_prev:
+        self.pcm_enable_cmd = False    
     elif cs_out.cruiseState.enabled != self.cruise_enabled_prev:
+      self.cruise_enabled_prev = cs_out.cruiseState.enabled      
       if cs_out.cruiseState.enabled:
+        self.pcm_enable_cmd = True
+      else:
+        self.pcm_enable_cmd = False
+
+    if self.pcm_enable_prev != self.pcm_enable_cmd:
+      self.pcm_enable_prev = self.pcm_enable_cmd
+      if self.pcm_enable_cmd:        
         events.add(EventName.pcmEnable)
       else:
         events.add(EventName.pcmDisable)
-      self.cruise_enabled_prev = cs_out.cruiseState.enabled
-
-
-
 
     return events
 
