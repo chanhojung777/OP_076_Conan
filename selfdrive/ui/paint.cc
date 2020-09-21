@@ -189,7 +189,7 @@ static void ui_draw_lane_line(UIState *s, const model_path_vertices_data *pvd, N
     }
   }
   nvgClosePath(s->vg);
-  nvgFillColor(s->vg, nvgRGBA( 0, 120, 0, 100)); //< green , nvgRGBA(0, 0, 150, 100)); blue
+  nvgFillColor(s->vg, nvgRGBA(0, 0, 120, 150));//blue, , nvgRGBA( 0, 120, 0, 150)); //< green 
   nvgFill(s->vg);
 }
 
@@ -278,22 +278,25 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
   NVGpaint track_bg;
   int red_lvl = 0;
   int green_lvl = 0;
-  //int blue_lvl = 0;
+  int blue_lvl = 0;
   if (is_mpc) {
     // Draw colored MPC track Kegman's
     if (s->scene.kegman.steerOverride) {
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
         COLOR_WHITE, COLOR_WHITE_ALPHA(0));
     } else {
-      int torque_scale = (int)fabs(510*(float)s->scene.kegman.output_scale);
+      int torque_scale = (int)fabs(255*(float)s->scene.kegman.output_scale);
+      //if (torque_scale > 0) {
+      //  torque_scale = torque_scale / 1.77 // over 255  
+      //}
       red_lvl = fmin(255, torque_scale);
-      green_lvl = fmin(255, 510-torque_scale);
-      //blue_lvl = fmin(255, 510-torque_scale);
+      //green_lvl = fmin(255, 255.-torque_scale);
+      blue_lvl = fmin(255, 255-torque_scale);
 
-      NVGcolor color1 = nvgRGBA(          red_lvl,            green_lvl,  0, 255); 
-      //NVGcolor color1 = nvgRGBA(          red_lvl,      0,           blue_lvl, 255); 
-      NVGcolor color2 = nvgRGBA((int)(0.2*red_lvl), (int)(0.8*green_lvl), 0, 50);
-      //NVGcolor color2 = nvgRGBA((int)(0.10*red_lvl), 0, (int)(0.90*blue_lvl), 50);
+      //NVGcolor color1 = nvgRGBA(          red_lvl,            green_lvl,  0, 255); 
+      NVGcolor color1 = nvgRGBA(          red_lvl,      0,           blue_lvl, 255); 
+      //NVGcolor color2 = nvgRGBA((int)(0.5*red_lvl), (int)(0.5*green_lvl), 0, 50);
+      NVGcolor color2 = nvgRGBA((int)(0.50*red_lvl), 0, (int)(0.50*blue_lvl), 50);
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
         color1, color2 );        
     }
@@ -301,8 +304,8 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
   } else {
     // Draw white vision track => blue bg
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
-        //nvgRGBA(0, 0, 255, 255), nvgRGBA(0, 0, 255, 30));
-        nvgRGBA(0, 255, 0, 255), nvgRGBA(0, 255, 0, 150));
+        nvgRGBA(0, 0, 255, 255), nvgRGBA(0, 0, 255, 100));
+        //nvgRGBA(0, 255, 0, 255), nvgRGBA(0, 255, 0, 150));
   }
 
   /* THIS IS THE STANDARD MPC -wirelessnet2
