@@ -277,13 +277,13 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
 
   NVGpaint track_bg;
   int red_lvl = 0;
-  //int green_lvl = 0;
-  int blue_lvl = 0;
+  int green_lvl = 0;
+  //int blue_lvl = 0;
   if (is_mpc) {
     // Draw colored MPC track Kegman's
     if (s->scene.kegman.steerOverride) {
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
-        nvgRGBA(255,255,0,255), nvgRGBA(255,0,0,50));
+        COLOR_WHITE, COLOR_WHITE_ALPHA(0));
     } else {
       int torque_scale = (int)fabs(510*(float)s->scene.kegman.output_scale);
       red_lvl = fmin(255, torque_scale);
@@ -292,7 +292,7 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
 
       NVGcolor color1 = nvgRGBA(          red_lvl,            green_lvl,  0, 255); 
       //NVGcolor color1 = nvgRGBA(          red_lvl,      0,           blue_lvl, 255); 
-      NVGcolor color2 = nvgRGBA((int)(0.5*red_lvl), (int)(0.5*green_lvl), 0, 50);
+      NVGcolor color2 = nvgRGBA((int)(0.2*red_lvl), (int)(0.8*green_lvl), 0, 50);
       //NVGcolor color2 = nvgRGBA((int)(0.10*red_lvl), 0, (int)(0.90*blue_lvl), 50);
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
         color1, color2 );        
