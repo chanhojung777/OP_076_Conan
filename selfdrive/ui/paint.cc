@@ -286,9 +286,6 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
         COLOR_WHITE, COLOR_WHITE_ALPHA(0));
     } else {
       int torque_scale = (int)fabs(255*(float)s->scene.kegman.output_scale);
-      //if (torque_scale > 0) {
-      //  torque_scale = torque_scale / 1.77 // over 255  
-      //}
       red_lvl = fmin(255, torque_scale);
       //green_lvl = fmin(255, 255.-torque_scale);
       blue_lvl = fmin(255, 255-torque_scale);
