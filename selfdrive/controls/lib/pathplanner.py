@@ -291,7 +291,7 @@ class PathPlanner():
       elif self.lane_change_state == LaneChangeState.laneChangeStarting:
         # fade out over .5s
         xp = [40,60,70,80]
-        fp2 = [0.5,1,1.5,2]
+        fp2 = [0.5,0.8,1.2,1.8] #fp2 = [0.5,1,1.5,2]
         lane_time = interp( v_ego_kph, xp, fp2 )        
         self.lane_change_ll_prob = max(self.lane_change_ll_prob - lane_time*DT_MDL, 0.0)
         # 98% certainty
