@@ -189,7 +189,7 @@ static void ui_draw_lane_line(UIState *s, const model_path_vertices_data *pvd, N
     }
   }
   nvgClosePath(s->vg);
-  nvgFillColor(s->vg, nvgRGBA(0, 0, 120, 150));//blue, , nvgRGBA( 0, 120, 0, 150)); //< green 
+  nvgFillColor(s->vg, nvgRGBA(0, 0, 200, 150));//blue, , nvgRGBA( 0, 120, 0, 150)); //< green 
   nvgFill(s->vg);
 }
 
@@ -304,7 +304,7 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
   } else {
     // Draw white vision track => blue bg
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
-        nvgRGBA(0, 0, 255, 255), nvgRGBA(0, 0, 255, 100));
+        nvgRGBA(0, 0, 255, 255), nvgRGBA(0, 0, 255, 50));
         //nvgRGBA(0, 255, 0, 255), nvgRGBA(0, 255, 0, 150));
   }
 
