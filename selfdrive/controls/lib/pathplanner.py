@@ -11,6 +11,7 @@ from common.numpy_fast import interp
 import cereal.messaging as messaging
 from cereal import log
 from selfdrive.car.hyundai.interface import CarInterface
+from selfdrive.car.hyundai.values import Buttons
 import common.log as trace1
 
 
@@ -277,6 +278,12 @@ class PathPlanner():
       # State transitions
       # off
       if self.lane_change_state == LaneChangeState.off and one_blinker and not self.prev_one_blinker and not below_lane_change_speed:
+      if cruiseState.cruiseSwState == Buttons.CANCEL:
+        self.lane_change_state = LaneChangeState.off
+        self.lane_change_ll_prob = 1.0
+        self.lane_change_wait_timer = 0
+
+      elif self.lane_change_state == LaneChangeState.off and one_blinker and not self.prev_one_blinker and not below_lane_change_speed:
         self.lane_change_state = LaneChangeState.preLaneChange
         self.lane_change_ll_prob = 1.0
         self.lane_change_wait_timer = 0
@@ -294,7 +301,7 @@ class PathPlanner():
       elif self.lane_change_state == LaneChangeState.laneChangeStarting:
         # fade out over .5s
         xp = [40,60,70,80]
-        fp2 = [0.5,0.8,1.2,1.8] #fp2 = [0.5,1,1.5,2]
+        fp2 = [0.5,1.0,1.5,2.0] #fp2 = [0.5,0.8,1.2,1.8] 
         lane_time = interp( v_ego_kph, xp, fp2 )        
         self.lane_change_ll_prob = max(self.lane_change_ll_prob - lane_time*DT_MDL, 0.0)
         # 98% certainty
@@ -369,7 +376,7 @@ class PathPlanner():
 
     elif v_ego_kph < 30:  # 30
       xp = [10,20,30]
-      fp2 = [5,7,9]
+      fp2 = [1,3,5]
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
     elif v_ego_kph > 90: 
@@ -382,9 +389,12 @@ class PathPlanner():
       self.angle_steers_des_mpc = interp( model_sum, xp, fp1 )  # +
       """
       # 2.방법
-      xp = [-10,-5,0,5,10]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
-      fp1 = [3,8,10,20,10]    # +
-      fp2 = [10,20,10,8,3]    # -
+      xp = [-20,-10,-5,0,5,10,20]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
+      fp1 = [3,8,10,15,20,15,10]    # +
+      fp2 = [10,15,20,15,10,8,3]    # -
+      #xp = [-10,-5,0,5,10]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
+      #fp1 = [3,8,10,20,10]    # +
+      #fp2 = [10,20,10,8,3]    # -
       limit_steers1 = interp( model_sum, xp, fp1 )  # +
       limit_steers2 = interp( model_sum, xp, fp2 )  # -
       self.angle_steers_des_mpc = self.limit_ctrl1( org_angle_steers_des, limit_steers1, limit_steers2, angle_steers )
