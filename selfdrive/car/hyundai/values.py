@@ -4,8 +4,8 @@ Ecu = car.CarParams.Ecu
 
 # Steer torque limits
 class SteerLimitParams:
-  STEER_MAX = 450   # 409 is the max, 255 is stock
-  STEER_DELTA_UP = 3
+  STEER_MAX = 500   # 409 is the max, 255 is stock
+  STEER_DELTA_UP = 4
   STEER_DELTA_DOWN = 7
   STEER_DRIVER_ALLOWANCE = 50
   STEER_DRIVER_MULTIPLIER = 2
@@ -204,4 +204,4 @@ DBC = {
   CAR.IONIQ_EV: dbc_dict('hyundai_kia_generic', None),
 }
 
-STEER_THRESHOLD = 120
+STEER_THRESHOLD = 100
