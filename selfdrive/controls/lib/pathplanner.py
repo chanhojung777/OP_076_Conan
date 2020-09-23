@@ -262,6 +262,9 @@ class PathPlanner():
       self.lane_change_state = LaneChangeState.off
       self.lane_change_direction = LaneChangeDirection.none
     else:
+      l_poly = self.LP.l_poly[3]
+      r_poly = self.LP.r_poly[3]
+      c_prob = l_poly + r_poly      
       torque_applied = steeringPressed and \
                         ((steeringTorque > 0 and self.lane_change_direction == LaneChangeDirection.left) or \
                           (steeringTorque < 0 and self.lane_change_direction == LaneChangeDirection.right))
@@ -302,14 +305,17 @@ class PathPlanner():
       elif self.lane_change_state == LaneChangeState.laneChangeFinishing:
         # fade in laneline over 1s
         self.lane_change_ll_prob = min(self.lane_change_ll_prob + DT_MDL, 1.0)
-        if self.lane_change_ll_prob > 0.99:
+        if self.lane_change_ll_prob > 0.99  and  abs(c_prob) < 0.3:
           self.lane_change_state = LaneChangeState.laneChangeDone
 
       # done
       elif self.lane_change_state == LaneChangeState.laneChangeDone:
         if not one_blinker:
+          #self.trPATH.add( 'end - pathPlan  l_prob={}  r_prob={}   c_prob={}'.format( l_poly, r_poly, c_prob ) )          
           self.lane_change_state = LaneChangeState.off
 
+      #if self.lane_change_state != LaneChangeState.off:
+      #  self.trPATH.add( 'pathPlan  l_prob={}  r_prob={}   c_prob={}'.format( l_poly, r_poly, c_prob ) )
 
 
     if self.lane_change_state in [LaneChangeState.off, LaneChangeState.preLaneChange]:
@@ -428,7 +434,7 @@ class PathPlanner():
 
     if self.solution_invalid_cnt > 0:
       str_log3 = 'v_ego_kph={:.1f} angle_steers_des_mpc={:.1f} angle_steers={:.1f} solution_invalid_cnt={:.0f} mpc_solution={:.1f}/{:.0f}'.format( v_ego_kph, self.angle_steers_des_mpc, angle_steers, self.solution_invalid_cnt, self.mpc_solution[0].cost, mpc_nans )
-      self.trpathPlan.add( 'pathPlan {}  LOG_MPC={}'.format( str_log3, LOG_MPC ) )   
+      self.trpathPlan.add( 'pathPlan {}  LOG_MPC={}'.format( str_log3, LOG_MPC ) )
 
 
     if LOG_MPC:
