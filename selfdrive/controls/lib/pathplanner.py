@@ -277,7 +277,6 @@ class PathPlanner():
 
       # State transitions
       # off
-      if self.lane_change_state == LaneChangeState.off and one_blinker and not self.prev_one_blinker and not below_lane_change_speed:
       if cruiseState.cruiseSwState == Buttons.CANCEL:
         self.lane_change_state = LaneChangeState.off
         self.lane_change_ll_prob = 1.0
