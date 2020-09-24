@@ -405,14 +405,14 @@ def thermald_thread():
       if thermal_status_prev >= ThermalStatus.danger:
         params.delete("Offroad_TemperatureTooHigh")
 
-    current_ts = sec_since_boot()
+    #current_ts = sec_since_boot()
     if should_start:
       if not should_start_prev:
         params.delete("IsOffroad")
 
       off_ts = None
       if started_ts is None:
-        started_ts = current_ts
+        started_ts = sec_since_boot()
         started_seen = True
         os.system('echo performance > /sys/class/devfreq/soc:qcom,cpubw/governor')
     else:
@@ -421,14 +421,19 @@ def thermald_thread():
 
       started_ts = None
       if off_ts is None:
-        off_ts = current_ts
+        off_ts = sec_since_boot()
         os.system('echo powersave > /sys/class/devfreq/soc:qcom,cpubw/governor')
 
       # shutdown if the battery gets lower than 3%, it's discharging, we aren't running for
       # more than a minute but we were running
+
+      if msg.thermal.batteryPercent <= BATT_PERC_OFF and msg.thermal.batteryStatus == "Discharging" and \
+         started_seen and OpkrAutoShutdown and (sec_since_boot() - off_ts) > OpkrAutoShutdown:
+        os.system('LD_LIBRARY_PATH="" svc power shutdown')
+"""
       power_shutdown = False
       if msg.thermal.batteryStatus == "Discharging":
-        delta_ts = current_ts - off_ts
+        delta_ts = sec_since_boot() - off_ts
         
         if started_seen:
           if msg.thermal.batteryPercent <= BATT_PERC_OFF and (OpkrAutoShutdown and  delta_ts > OpkrAutoShutdown):
@@ -442,8 +447,8 @@ def thermald_thread():
           print( 'power_shutdown batterypercent={} should_start={}'.format(msg.thermal.batteryPercent, should_start) )
 
       else:
-        off_ts = current_ts
-
+        off_ts = sec_since_boot()
+"""
 
       #print( 'OpkrAutoShutdown = {}'.format( OpkrAutoShutdown ) )
       #if msg.thermal.batteryPercent < BATT_PERC_OFF and msg.thermal.batteryStatus == "Discharging" and \
@@ -473,7 +478,7 @@ def thermald_thread():
     should_start_prev = should_start
 
     if usb_power:
-      pm.charging_ctrl( msg, ts, 70, 60 )
+      pm.charging_ctrl( msg, ts, 90, 70 )
 
     # report to server once per minute
     if (count % int(60. / DT_TRML)) == 0:
