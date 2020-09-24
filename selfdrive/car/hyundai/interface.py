@@ -253,9 +253,9 @@ class CarInterface(CarInterfaceBase):
       """ Neokii """
       ret.lateralTuning.lqr.k = [-103.976, 450.]
       ret.lateralTuning.lqr.l = [0.22, 0.318]
-      ret.lateralTuning.lqr.dcGain = 0.003
+      ret.lateralTuning.lqr.dcGain = 0.0029
       
-      """ Comma.ai Original 
+      """ Comma.ai Original Rav4
       ret.lateralTuning.lqr.k = [-110.73572306, 451.22718255]
       ret.lateralTuning.lqr.l = [0.3233671, 0.3185757]
       ret.lateralTuning.lqr.dcGain = 0.002237852961363602

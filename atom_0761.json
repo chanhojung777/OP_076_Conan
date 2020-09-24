@@ -1,0 +1,21 @@
+{
+  "cameraOffset": 0.02,
+  "cv_BPV": [[10,255]],
+  "cv_KPH": [0],
+  "cv_sMaxV": [[500,200]],
+  "cv_sdDNV": [[7,4]],
+  "cv_sdUPV": [[4,2]],
+  "sR_ActuatorDelayV": [[0.1,0.2,0.4,0.2,0.1]],
+  "sR_BPV": [[-80,-40,0,40,80]],
+  "sR_KPH": [0],
+  "sR_lqr_kiV": [[0.04,0.03,0.02,0.03,0.04]],
+  "sR_lqr_scaleV": [[1500,1600,1800,1600,1500]],
+  "sR_pid_KiV": [[0.06,0.05,0.03,0.05,0.06]],
+  "sR_pid_KpV": [[0.25,0.22,0.16,0.22,0.25]],
+  "sR_pid_deadzone": 0.1,
+  "sR_steerRatioV": [[16.5,15.5,14.5,15.5,15.0]],
+  "steerLimitTimer": 5.0,
+  "steerOffset": 0.2,
+  "steerRateCost": 0.4,
+  "tun_type": "lqr"
+}
