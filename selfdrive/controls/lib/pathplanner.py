@@ -373,9 +373,9 @@ class PathPlanner():
         if delta_steer < 0:
           self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
 
-    elif v_ego_kph < 30:  # 30
-      xp = [10,20,30]
-      fp2 = [3,5,7]
+    elif v_ego_kph < 40:  # 30
+      xp = [10,20,30,40]
+      fp2 = [1,3,5,7]
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
     elif v_ego_kph > 90: 
@@ -388,7 +388,10 @@ class PathPlanner():
       self.angle_steers_des_mpc = interp( model_sum, xp, fp1 )  # +
       """
       # 2.방법
-      xp = [-20,-10,-5,0,5,10,20]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
+      # xp = [-30,-20,-10,-5,0,5,10,20,30]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
+      # fp1 = [3,8,10,15,20,25,20,15,10]    # +
+      # fp2 = [10,15,20,25,20,15,10,8,3]    # -
+      xp = [-20,-10,-5,0,5,10,20]    # 5 조향각 약12도, 10=>28, 15=>35, 20=>43, 30=>52
       fp1 = [3,8,10,15,20,15,10]    # +
       fp2 = [10,15,20,15,10,8,3]    # -
       #xp = [-10,-5,0,5,10]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
