@@ -430,25 +430,23 @@ def thermald_thread():
       if msg.thermal.batteryPercent <= BATT_PERC_OFF and msg.thermal.batteryStatus == "Discharging" and \
          started_seen and OpkrAutoShutdown and (sec_since_boot() - off_ts) > OpkrAutoShutdown:
         os.system('LD_LIBRARY_PATH="" svc power shutdown')
-"""
-      power_shutdown = False
-      if msg.thermal.batteryStatus == "Discharging":
-        delta_ts = sec_since_boot() - off_ts
+      # power_shutdown = False
+      # if msg.thermal.batteryStatus == "Discharging":
+      #   delta_ts = sec_since_boot() - off_ts
         
-        if started_seen:
-          if msg.thermal.batteryPercent <= BATT_PERC_OFF and (OpkrAutoShutdown and  delta_ts > OpkrAutoShutdown):
-            power_shutdown = True
-        elif  delta_ts > 240 and msg.thermal.batteryPercent < 10:
-          power_shutdown = True
+      #   if started_seen:
+      #     if msg.thermal.batteryPercent <= BATT_PERC_OFF and (OpkrAutoShutdown and  delta_ts > OpkrAutoShutdown):
+      #       power_shutdown = True
+      #   elif  delta_ts > 240 and msg.thermal.batteryPercent < 10:
+      #     power_shutdown = True
 
 
-        if power_shutdown:
-          os.system('LD_LIBRARY_PATH="" svc power shutdown')
-          print( 'power_shutdown batterypercent={} should_start={}'.format(msg.thermal.batteryPercent, should_start) )
+      #   if power_shutdown:
+      #     os.system('LD_LIBRARY_PATH="" svc power shutdown')
+      #     print( 'power_shutdown batterypercent={} should_start={}'.format(msg.thermal.batteryPercent, should_start) )
 
-      else:
-        off_ts = sec_since_boot()
-"""
+      # else:
+      #   off_ts = sec_since_boot()
 
       #print( 'OpkrAutoShutdown = {}'.format( OpkrAutoShutdown ) )
       #if msg.thermal.batteryPercent < BATT_PERC_OFF and msg.thermal.batteryStatus == "Discharging" and \
