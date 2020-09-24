@@ -42,7 +42,8 @@ def calc_d_poly(l_poly, r_poly, p_poly, l_prob, r_prob, lane_width, v_ego):
 
   if lr_prob > 0.7: # 차선추종 강화 로직
     #lr_prob = min(lr_prob * 1.3, 1.0)  
-    lr_prob = max(0.95, lr_prob)
+    #lr_prob = max(0.95, lr_prob)
+    lr_prob = min((l_prob + r_prob) * 1.2 - (l_prob * r_prob), 1.0) 
 
   d_poly_lane = (l_prob * path_from_left_lane + r_prob * path_from_right_lane) / (l_prob + r_prob + 0.0001)
   return lr_prob * d_poly_lane + (1.0 - lr_prob) * p_poly
