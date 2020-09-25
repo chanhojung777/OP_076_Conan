@@ -219,9 +219,9 @@ class PathPlanner():
     angleOffsetAverage = sm['liveParameters'].angleOffsetAverage
     stiffnessFactor = sm['liveParameters'].stiffnessFactor
 
-    if (self.atom_timer_cnt % 100) == 0:
-      str_log3 = 'angleOffset={:.1f} angleOffsetAverage={:.3f} steerRatio={:.2f} stiffnessFactor={:.3f} '.format( angle_offset, angleOffsetAverage, self.steerRatio, stiffnessFactor )
-      self.trLearner.add( 'LearnerParam {}  carParams={}'.format( str_log3, self.carParams_valid ) )       
+    # if (self.atom_timer_cnt % 100) == 0:
+    #   str_log3 = 'angleOffset={:.1f} angleOffsetAverage={:.3f} steerRatio={:.2f} stiffnessFactor={:.3f} '.format( angle_offset, angleOffsetAverage, self.steerRatio, stiffnessFactor )
+    #   self.trLearner.add( 'LearnerParam {}  carParams={}'.format( str_log3, self.carParams_valid ) )       
 
     if lateralsRatom.learnerParams:
       pass
@@ -300,7 +300,7 @@ class PathPlanner():
       elif self.lane_change_state == LaneChangeState.laneChangeStarting:
         # fade out over .5s
         xp = [40,60,70,80]
-        fp2 = [0.5,0.8,1.2,1.8] 
+        fp2 = [0.5,0.8,1.2,1.5] 
         lane_time = interp( v_ego_kph, xp, fp2 )        
         self.lane_change_ll_prob = max(self.lane_change_ll_prob - lane_time*DT_MDL, 0.0)
         # 98% certainty
@@ -362,7 +362,7 @@ class PathPlanner():
 
     # atom
     if steeringPressed:
-      delta_steer = self.angle_steers_des_mpc - angle_steers
+      delta_steer = org_angle_steers_des - angle_steers
       xp = [-255,0,255]
       fp2 = [5,0,5]
       limit_steers = interp( steeringTorque, xp, fp2 )
@@ -397,6 +397,16 @@ class PathPlanner():
       str1 = '/{} /{} /{} /{} /{}'.format(   
               model_sum, limit_steers1, limit_steers2, org_angle_steers_des, angle_steers)
       self.trRapidCurv.add( str1 )      
+
+    # 최대 허용 제어 조향각.
+    delta_steer = self.angle_steers_des_mpc - angle_steers
+    if delta_steer > 10:
+      p_angle_steers = angle_steers + 10
+      self.angle_steers_des_mpc = p_angle_steers
+    elif delta_steer < -10:
+      m_angle_steers = angle_steers - 10
+      self.angle_steers_des_mpc = m_angle_steers
+
 
     #  Check for infeasable MPC solution
     mpc_nans = any(math.isnan(x) for x in self.mpc_solution[0].delta)
@@ -437,9 +447,9 @@ class PathPlanner():
     plan_send.pathPlan.steerActuatorDelay = steerActuatorDelay
     pm.send('pathPlan', plan_send)
 
-    if self.solution_invalid_cnt > 0:
-      str_log3 = 'v_ego_kph={:.1f} angle_steers_des_mpc={:.1f} angle_steers={:.1f} solution_invalid_cnt={:.0f} mpc_solution={:.1f}/{:.0f}'.format( v_ego_kph, self.angle_steers_des_mpc, angle_steers, self.solution_invalid_cnt, self.mpc_solution[0].cost, mpc_nans )
-      self.trpathPlan.add( 'pathPlan {}  LOG_MPC={}'.format( str_log3, LOG_MPC ) )
+    # if self.solution_invalid_cnt > 0:
+    #   str_log3 = 'v_ego_kph={:.1f} angle_steers_des_mpc={:.1f} angle_steers={:.1f} solution_invalid_cnt={:.0f} mpc_solution={:.1f}/{:.0f}'.format( v_ego_kph, self.angle_steers_des_mpc, angle_steers, self.solution_invalid_cnt, self.mpc_solution[0].cost, mpc_nans )
+    #   self.trpathPlan.add( 'pathPlan {}  LOG_MPC={}'.format( str_log3, LOG_MPC ) )
 
 
     if LOG_MPC:
