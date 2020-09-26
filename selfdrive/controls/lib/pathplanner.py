@@ -142,7 +142,7 @@ class PathPlanner():
     for steerRatio in self.sr_BPV:  # steerRatio
       self.sr_SteerRatio.append( interp( sr_value, steerRatio, self.sr_steerRatioV[nPos] ) )
       nPos += 1
-      if nPos > 10:
+      if nPos > 20:
         break
 
     steerRatio = interp( v_ego_kph, self.sr_KPH, self.sr_SteerRatio )
@@ -159,7 +159,7 @@ class PathPlanner():
     for steerRatio in self.sr_BPV:
       self.sr_ActuatorDelay.append( interp( sr_value, steerRatio, self.sr_ActuatorDelayV[nPos] ) )
       nPos += 1
-      if nPos > 10:
+      if nPos > 20:
         break
 
     actuatorDelay = interp( v_ego_kph, self.sr_KPH, self.sr_ActuatorDelay )
@@ -233,8 +233,10 @@ class PathPlanner():
       else:
         self.steer_rate_cost = CP.steerRateCost
         self.steerRatio = CP.steerRatio
-   
-      
+
+      #xp = [-5,0,5]   
+      #fp = [0.4, 0.6, 0.4] 
+      #self.steer_rate_cost = interp( angle_steers, xp, fp )      
       steerRatio = self.atom_tune( v_ego_kph, angle_steers, atomTuning )
       self.steerRatio = self.atom_steer( steerRatio, 2, 0.05 )
 
@@ -299,8 +301,8 @@ class PathPlanner():
       # starting
       elif self.lane_change_state == LaneChangeState.laneChangeStarting:
         # fade out over .5s
-        xp = [40,60,70,80]
-        fp2 = [0.1,0.8,1.2,1.5] 
+        xp = [40,60,70,80,120]
+        fp2 = [0.1,0.6,1.2,1.5,1.8] 
         lane_time = interp( v_ego_kph, xp, fp2 )        
         self.lane_change_ll_prob = max(self.lane_change_ll_prob - lane_time*DT_MDL, 0.0)
         # 98% certainty
@@ -311,7 +313,7 @@ class PathPlanner():
       elif self.lane_change_state == LaneChangeState.laneChangeFinishing:
         # fade in laneline over 1s
         self.lane_change_ll_prob = min(self.lane_change_ll_prob + DT_MDL, 1.0)
-        if self.lane_change_ll_prob > 0.99  and  abs(c_prob) < 0.3:
+        if self.lane_change_ll_prob > 0.80  and  abs(c_prob) < 0.3:
           self.lane_change_state = LaneChangeState.laneChangeDone
 
       # done
@@ -373,9 +375,9 @@ class PathPlanner():
         if delta_steer < 0:
           self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
 
-    elif v_ego_kph < 30:  # 30
-      xp = [5,15,30]
-      fp2 = [1,5,9]
+    elif v_ego_kph < 25:  # 30
+      xp = [5,15,25]
+      fp2 = [1,7,9]
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
     elif v_ego_kph > 90: 
@@ -410,7 +412,7 @@ class PathPlanner():
     # 가변 sR rate_cost
     self.atom_sr_boost_bp = [ 1.5,  5.0, 10.0, 15.0, 20.0, 30.0, 50.0, 60.0, 100.0, 300.0]
     self.sR_Cost          = [0.60, 0.41, 0.34, 0.28, 0.24, 0.18, 0.12, 0.10,  0.05,  0.01]
-    # self.steer_rate_cost  = interp(abs(angle_steers), self.atom_sr_boost_bp, self.sR_Cost)
+    self.steer_rate_cost  = interp(abs(angle_steers), self.atom_sr_boost_bp, self.sR_Cost)
 
     #  Check for infeasable MPC solution
     mpc_nans = any(math.isnan(x) for x in self.mpc_solution[0].delta)
