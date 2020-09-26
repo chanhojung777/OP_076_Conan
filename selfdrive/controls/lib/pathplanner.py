@@ -410,7 +410,7 @@ class PathPlanner():
     # 가변 sR rate_cost
     self.atom_sr_boost_bp = [ 1.5,  5.0, 10.0, 15.0, 20.0, 30.0, 50.0, 60.0, 100.0, 300.0]
     self.sR_Cost          = [0.60, 0.41, 0.34, 0.28, 0.24, 0.18, 0.12, 0.10,  0.05,  0.01]
-    self.steer_rate_cost  = interp(abs(angle_steers), self.atom_sr_boost_bp, self.sR_Cost)
+    # self.steer_rate_cost  = interp(abs(angle_steers), self.atom_sr_boost_bp, self.sR_Cost)
 
     #  Check for infeasable MPC solution
     mpc_nans = any(math.isnan(x) for x in self.mpc_solution[0].delta)
@@ -440,7 +440,7 @@ class PathPlanner():
 
     plan_send.pathPlan.angleSteers = float(self.angle_steers_des_mpc)
     plan_send.pathPlan.rateSteers = float(rate_desired)
-    plan_send.pathPlan.angleOffset = float(angleOffsetAverage)
+    plan_send.pathPlan.angleOffset = float(angle_offset) #angleOffsetAverage)
     plan_send.pathPlan.mpcSolutionValid = bool(plan_solution_valid)
     plan_send.pathPlan.paramsValid = bool(sm['liveParameters'].valid)
 

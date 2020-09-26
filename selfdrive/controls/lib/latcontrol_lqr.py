@@ -143,7 +143,7 @@ class LatControlLQR():
               v_ego_kph, steering_angle, self.angle_steers_des, angle_steers_k, steeringTQ, torque_scale, self.dc_gain, self.scale, self.ki, self.output_steer, whoissteering)
     self.trLQR.add( str2 )
     
-    str5 = 'LQR_Set:dcgain={:06.4f}/scale={:06.1f}/ki={:05.3f}/tq={:4.1f}/u={:5.1}/i={:5.3f}/O={:5.3f}'.format(
+    str5 = 'LQR_Set:dcgain={:06.4f}/scale={:06.1f}/ki={:05.3f}/tq={:4.1f}/u={:5.1f}/i={:5.3f}/O={:5.3f}'.format(
               self.dc_gain, self.scale, self.ki, steeringTQ, u_lqr, self.i_lqr, self.output_steer )
     trace1.printf2( str5 )
 
