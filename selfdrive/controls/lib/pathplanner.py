@@ -300,7 +300,7 @@ class PathPlanner():
       elif self.lane_change_state == LaneChangeState.laneChangeStarting:
         # fade out over .5s
         xp = [40,60,70,80]
-        fp2 = [0.5,0.8,1.2,1.5] 
+        fp2 = [0.1,0.8,1.2,1.5] 
         lane_time = interp( v_ego_kph, xp, fp2 )        
         self.lane_change_ll_prob = max(self.lane_change_ll_prob - lane_time*DT_MDL, 0.0)
         # 98% certainty
@@ -359,10 +359,10 @@ class PathPlanner():
 
     self.angle_steers_des_mpc = float(math.degrees(delta_desired * VM.sR) + angle_offset)
     org_angle_steers_des = self.angle_steers_des_mpc
-
+    delta_steer = org_angle_steers_des - angle_steers
     # atom
     if steeringPressed:
-      delta_steer = org_angle_steers_des - angle_steers
+      #delta_steer = org_angle_steers_des - angle_steers
       xp = [-255,0,255]
       fp2 = [5,0,5]
       limit_steers = interp( steeringTorque, xp, fp2 )
@@ -374,8 +374,8 @@ class PathPlanner():
           self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
 
     elif v_ego_kph < 30:  # 30
-      xp = [5,10,20,30]
-      fp2 = [1,5,7,9]
+      xp = [5,15,30]
+      fp2 = [1,5,9]
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
     elif v_ego_kph > 90: 
@@ -394,19 +394,23 @@ class PathPlanner():
       limit_steers2 = interp( model_sum, xp, fp2 )  # -
       self.angle_steers_des_mpc = self.limit_ctrl1( org_angle_steers_des, limit_steers1, limit_steers2, angle_steers )
       
-      str1 = '/{} /{} /{} /{} /{}'.format(   
-              model_sum, limit_steers1, limit_steers2, org_angle_steers_des, angle_steers)
+      str1 = 'CV/{} LS1/{} LS2/{} Ang/{} oDES/{} delta/{} fDES/{}'.format(   
+              model_sum, limit_steers1, limit_steers2, angle_steers, org_angle_steers_des, delta_steer, self.angle_steers_des_mpc)
       self.trRapidCurv.add( str1 )      
 
-    # 최대 허용 제어 조향각.
+    # 최대 허용 제어 조향각.  기존 10도(코난)에서 20도(호야)로 올렸음
     delta_steer = self.angle_steers_des_mpc - angle_steers
-    if delta_steer > 10:
-      p_angle_steers = angle_steers + 10
+    if delta_steer > 20:
+      p_angle_steers = angle_steers + 20
       self.angle_steers_des_mpc = p_angle_steers
-    elif delta_steer < -10:
-      m_angle_steers = angle_steers - 10
+    elif delta_steer < -20:
+      m_angle_steers = angle_steers - 20
       self.angle_steers_des_mpc = m_angle_steers
 
+    # 가변 sR rate_cost
+    self.atom_sr_boost_bp = [ 1.5,  5.0, 10.0, 15.0, 20.0, 30.0, 50.0, 60.0, 100.0, 300.0]
+    self.sR_Cost          = [0.60, 0.41, 0.34, 0.28, 0.24, 0.18, 0.12, 0.10,  0.05,  0.01]
+    self.steer_rate_cost  = interp(abs(angle_steers), self.atom_sr_boost_bp, self.sR_Cost)
 
     #  Check for infeasable MPC solution
     mpc_nans = any(math.isnan(x) for x in self.mpc_solution[0].delta)
