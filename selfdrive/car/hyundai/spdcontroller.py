@@ -1,29 +1,19 @@
 import math
 import numpy as np
-
 from cereal import log
 import cereal.messaging as messaging
-
-
 from cereal import log
 import cereal.messaging as messaging
 from selfdrive.config import Conversions as CV
 from selfdrive.controls.lib.planner import calc_cruise_accel_limits
 from selfdrive.controls.lib.speed_smoother import speed_smoother
 from selfdrive.controls.lib.long_mpc import LongitudinalMpc
-
 from selfdrive.car.hyundai.values import Buttons
 from common.numpy_fast import clip, interp
-
 from selfdrive.config import RADAR_TO_CAMERA
-
-
 import common.log as trace1
 import common.CTime1000 as tm
 import common.MoveAvg as moveavg1
-
-
-
 
 MAX_SPEED = 255.0
 
@@ -131,7 +121,7 @@ class SpdController():
             v_curvature = np.sqrt(a_y_max / np.clip(np.abs(curv), 1e-4, None))
             model_speed = np.min(v_curvature)
             # Don't slow down below 20mph
-            model_speed = max(25.0 * CV.KPH_TO_MS, model_speed)
+            model_speed = max(10.0 * CV.KPH_TO_MS, model_speed)
 
             model_sum = curv[2] * 1000.  #np.sum( curv, 0 )
 

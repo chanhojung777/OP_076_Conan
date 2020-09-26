@@ -157,14 +157,14 @@ class CarController():
     param.STEER_DELTA_UP = min( param.STEER_DELTA_UP, nUP)
     param.STEER_DELTA_DOWN = min( param.STEER_DELTA_DOWN, nDN )
 
-    sec_mval = 10 # 오파 => 운전자.  (sec)
-    sec_pval = 0.5 # 운전자 => 오파  (sec)
+    sec_mval = 5 # 오파 => 운전자.  (sec)
+    sec_pval = 0.1 # 운전자 => 오파  (sec)
     # streer over check
     if path_plan.laneChangeState != LaneChangeState.off:
       self.steer_torque_over_timer = 0
     elif CS.out.leftBlinker or CS.out.rightBlinker:
-      sec_mval = 0.5 # 오파 => 운전자.
-      sec_pval = 10 # 운전자 => 오파  (sec)
+      sec_mval = 1 # 오파 => 운전자.
+      sec_pval = 8 # 운전자 => 오파  (sec)
 
     if v_ego_kph > 5 and CS.out.steeringPressed:  #사용자 핸들 토크
       if abs_angle_steers > 5 and CS.out.steeringTorque < -STEER_THRESHOLD:   #right
@@ -329,10 +329,10 @@ class CarController():
       # self.traceCC.add( str_log )        
 
     # 20 Hz LFA MFA message
-    if frame % 5 == 0 and self.car_fingerprint in [CAR.SONATA, CAR.PALISADE]: #, CAR.GRANDEUR_H_20
+    if frame % 5 == 0 and self.car_fingerprint in [CAR.SONATA, CAR.PALISADE, CAR.GRANDEUR_H_20]: #
       can_sends.append(create_lfa_mfa(self.packer, frame, enabled))
 
     # counter inc
     self.lkas11_cnt += 1
     return can_sends
-
+    

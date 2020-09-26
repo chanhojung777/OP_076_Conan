@@ -35,37 +35,14 @@ class CarInterface(CarInterfaceBase):
 
     ret.radarOffCan = bool( params.get('OpkrTraceSet') != b'1' ) 
     ret.lateralsRatom.learnerParams = int( params.get('OpkrEnableLearner') ) 
-    
-
 
     # Hyundai port is a community feature for now
     ret.communityFeature = False  #True
-
     ret.longcontrolEnabled = False
-
-    """
-      0.7.5
-      ret.steerActuatorDelay = 0.1  # Default delay   0.1
-      ret.steerRateCost = 0.5
-      ret.steerLimitTimer = 0.4
-      tire_stiffness_factor = 1
-    """
-
-    """
-      0.7.3
-      ret.steerActuatorDelay = 0.1  # Default delay   0.15
-      ret.steerRateCost = 0.45
-      ret.steerLimitTimer = 0.8
-      tire_stiffness_factor = 0.7
-    """
-
     tire_stiffness_factor = 1.
     ret.steerActuatorDelay = 0.325  # Default delay
     ret.steerRateCost = 0.5
     ret.steerLimitTimer = 0.8
-
-
-
 
     if candidate == CAR.GRANDEUR_H_19:
       ret.lateralTuning.pid.kf = 0.000005      
