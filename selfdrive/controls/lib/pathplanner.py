@@ -383,12 +383,12 @@ class PathPlanner():
     elif v_ego_kph > 90: 
       pass
     elif abs(angle_steers) > 10: # angle steer > 10
-      # xp = [-30,-20,-10,-5,0,5,10,20,30]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
-      # fp1 = [3,8,10,15,20,25,28,22,15]    # +
-      # fp2 = [15,22,28,25,20,15,10,8,3]    # -
-      xp = [-20,-10,-5,0,5,10,20]    # 5 조향각 약12도, 10=>28, 15=>35, 20=>43, 30=>52
-      fp1 = [3,8,10,15,20,15,10]    # +
-      fp2 = [10,15,20,15,10,8,3]    # -
+      xp = [-30,-20,-10,-5,0,5,10,20,30]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
+      fp1 = [3,8,10,15,20,25,28,22,15]    # +
+      fp2 = [15,22,28,25,20,15,10,8,3]    # -
+      # xp = [-20,-10,-5,0,5,10,20]    # 5 조향각 약12도, 10=>28, 15=>35, 20=>43, 30=>52
+      # fp1 = [3,8,10,15,20,15,10]    # +
+      # fp2 = [10,15,20,15,10,8,3]    # -
       #xp = [-10,-5,0,5,10]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
       #fp1 = [3,8,10,20,10]    # +
       #fp2 = [10,20,10,8,3]    # -
@@ -396,18 +396,18 @@ class PathPlanner():
       limit_steers2 = interp( model_sum, xp, fp2 )  # -
       self.angle_steers_des_mpc = self.limit_ctrl1( org_angle_steers_des, limit_steers1, limit_steers2, angle_steers )
       
-      str1 = 'CV/{} LS1/{} LS2/{} Ang/{} oDES/{} delta/{} fDES/{}'.format(   
+      str1 = 'CVs/{} LS1/{} LS2/{} Ang/{} oDES/{} delta/{} fDES/{}'.format(   
               model_sum, limit_steers1, limit_steers2, angle_steers, org_angle_steers_des, delta_steer, self.angle_steers_des_mpc)
       self.trRapidCurv.add( str1 )      
 
-    # 최대 허용 제어 조향각.  기존 10도(코난)에서 20도(호야)로 올렸음
-    delta_steer = self.angle_steers_des_mpc - angle_steers
-    if delta_steer > 10:
-      p_angle_steers = angle_steers + 10
-      self.angle_steers_des_mpc = p_angle_steers
-    elif delta_steer < -10:
-      m_angle_steers = angle_steers - 10
-      self.angle_steers_des_mpc = m_angle_steers
+    # 최대 허용 제어 조향각.  
+    # delta_steer = self.angle_steers_des_mpc - angle_steers
+    # if delta_steer > 10:
+    #   p_angle_steers = angle_steers + 10
+    #   self.angle_steers_des_mpc = p_angle_steers
+    # elif delta_steer < -10:
+    #   m_angle_steers = angle_steers - 10
+    #   self.angle_steers_des_mpc = m_angle_steers
 
     # 가변 sR rate_cost
     self.atom_sr_boost_bp = [ 1.5,  5.0, 10.0, 15.0, 20.0, 30.0, 50.0, 60.0, 100.0, 300.0]
