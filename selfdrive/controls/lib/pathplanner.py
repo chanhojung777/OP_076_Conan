@@ -383,12 +383,12 @@ class PathPlanner():
     elif v_ego_kph > 90: 
       pass
     elif abs(angle_steers) > 10: # angle steer > 10
-      xp = [-30,-20,-10,-5,0,5,10,20,30]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
-      fp1 = [3,8,10,15,20,25,28,22,15]    # +
-      fp2 = [15,22,28,25,20,15,10,8,3]    # -
-      # xp = [-20,-10,-5,0,5,10,20]    # 5 조향각 약12도, 10=>28, 15=>35, 20=>43, 30=>52
-      # fp1 = [3,8,10,15,20,15,10]    # +
-      # fp2 = [10,15,20,15,10,8,3]    # -
+      # xp = [-30,-20,-10,-5,0,5,10,20,30]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
+      # fp1 = [3,8,10,15,20,25,28,22,15]    # +
+      # fp2 = [15,22,28,25,20,15,10,8,3]    # -
+      xp = [-20,-10,-5,0,5,10,20]    # 5 조향각 약12도, 10=>28, 15=>35, 20=>43, 30=>52
+      fp1 = [3,8,10,15,20,15,10]    # +
+      fp2 = [10,15,20,15,10,8,3]    # -
       #xp = [-10,-5,0,5,10]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
       #fp1 = [3,8,10,20,10]    # +
       #fp2 = [10,20,10,8,3]    # -
@@ -402,11 +402,11 @@ class PathPlanner():
 
     # 최대 허용 제어 조향각.  기존 10도(코난)에서 20도(호야)로 올렸음
     delta_steer = self.angle_steers_des_mpc - angle_steers
-    if delta_steer > 15:
-      p_angle_steers = angle_steers + 15
+    if delta_steer > 10:
+      p_angle_steers = angle_steers + 10
       self.angle_steers_des_mpc = p_angle_steers
-    elif delta_steer < -15:
-      m_angle_steers = angle_steers - 15
+    elif delta_steer < -10:
+      m_angle_steers = angle_steers - 10
       self.angle_steers_des_mpc = m_angle_steers
 
     # 가변 sR rate_cost
