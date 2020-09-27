@@ -142,10 +142,17 @@ class SpdctrlNormal(SpdController):
     def update_curv(self, CS, sm, model_speed):
         wait_time_cmd = 0
         set_speed = self.cruise_set_speed_kph
+        v_ego_kph = CS.clu_Vanz
 
+        if int(self.cruise_set_mode) == 4:
+            set_speed = model_speed * 1.2
+            delta_spd = abs(model_speed - v_ego_kph)
+            xp = [2,10,30]
+            fp = [100,30,15]
+            wait_time_cmd = interp( delta_spd, xp, fp )
         # 2. 커브 감속.
         #if self.cruise_set_speed_kph >= 100:
-        if CS.clu_Vanz >= 100:            
+        elif CS.clu_Vanz >= 100:            
             if model_speed < 50:
                 set_speed = self.cruise_set_speed_kph - 7 
                 self.seq_step_debug = 30

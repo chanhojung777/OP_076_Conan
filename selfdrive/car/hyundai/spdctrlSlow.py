@@ -17,6 +17,7 @@ class SpdctrlSlow(SpdController):
         lead_set_speed = self.cruise_set_speed_kph
         lead_wait_cmd = 600
         self.seq_step_debug = 0
+
         if int(self.cruise_set_mode) != 2:
             return lead_wait_cmd, lead_set_speed
 
@@ -125,10 +126,17 @@ class SpdctrlSlow(SpdController):
     def update_curv(self, CS, sm, model_speed):
         wait_time_cmd = 0
         set_speed = self.cruise_set_speed_kph
+        v_ego_kph = CS.clu_Vanz 
 
+        if int(self.cruise_set_mode) == 4:
+            set_speed = model_speed #* 0.8
+            delta_spd = abs(model_speed - v_ego_kph)
+            xp = [2,10,20]
+            fp = [100,30,15]
+            wait_time_cmd = interp( delta_spd, xp, fp )
         
         # 2. 커브 감속.
-        if self.cruise_set_speed_kph >= 70:
+        elif self.cruise_set_speed_kph >= 70:
             if model_speed < 80:
                 set_speed = self.cruise_set_speed_kph - 15
                 wait_time_cmd = 100
