@@ -402,11 +402,11 @@ class PathPlanner():
 
     # 최대 허용 제어 조향각.  기존 10도(코난)에서 20도(호야)로 올렸음
     delta_steer = self.angle_steers_des_mpc - angle_steers
-    if delta_steer > 20:
-      p_angle_steers = angle_steers + 20
+    if delta_steer > 15:
+      p_angle_steers = angle_steers + 15
       self.angle_steers_des_mpc = p_angle_steers
-    elif delta_steer < -20:
-      m_angle_steers = angle_steers - 20
+    elif delta_steer < -15:
+      m_angle_steers = angle_steers - 15
       self.angle_steers_des_mpc = m_angle_steers
 
     # 가변 sR rate_cost

@@ -157,13 +157,13 @@ class CarController():
     param.STEER_DELTA_UP = min( param.STEER_DELTA_UP, nUP)
     param.STEER_DELTA_DOWN = min( param.STEER_DELTA_DOWN, nDN )
 
-    sec_mval = 5 # 오파 => 운전자.  (sec)
-    sec_pval = 0.1 # 운전자 => 오파  (sec)
+    sec_mval = 10 # 오파 => 운전자.  (sec)
+    sec_pval = 0.5 # 운전자 => 오파  (sec)
     # streer over check
     if path_plan.laneChangeState != LaneChangeState.off:
       self.steer_torque_over_timer = 0
     elif CS.out.leftBlinker or CS.out.rightBlinker:
-      sec_mval = 1 # 오파 => 운전자.
+      sec_mval = 0.5 # 오파 => 운전자.
       sec_pval = 8 # 운전자 => 오파  (sec)
 
     if v_ego_kph > 5 and CS.out.steeringPressed:  #사용자 핸들 토크
