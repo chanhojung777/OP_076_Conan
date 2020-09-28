@@ -234,9 +234,9 @@ class PathPlanner():
         self.steer_rate_cost = CP.steerRateCost
         self.steerRatio = CP.steerRatio
 
-      #xp = [-5,0,5]   
-      #fp = [0.4, 0.6, 0.4] 
-      #self.steer_rate_cost = interp( angle_steers, xp, fp )      
+      # xp = [0, 5, 10, 15, 20, 30, 50, 60, 100]   
+      # fp = [1.2, 0.41, 0.34, 0.28, 0.24, 0.18, 0.12, 0.10, 0.05] 
+      # self.steer_rate_cost = interp( abs(angle_steers), xp, fp )      
       steerRatio = self.atom_tune( v_ego_kph, angle_steers, atomTuning )
       self.steerRatio = self.atom_steer( steerRatio, 2, 0.05 )
 
