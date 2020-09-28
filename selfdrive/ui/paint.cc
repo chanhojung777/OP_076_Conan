@@ -173,24 +173,35 @@ static void draw_lead(UIState *s, float d_rel, float v_rel, float y_rel)
 
 static void ui_draw_lane_line(UIState *s, const model_path_vertices_data *pvd, NVGcolor color) 
 {
+  if (pvd->cnt == 0) return;
+
   nvgBeginPath(s->vg);
-  bool started = false;
-  for (int i=0; i<pvd->cnt; i++) {
-    float x = pvd->v[i].x;
-    float y = pvd->v[i].y;
-    if (x < 0 || y < 0.) {
-      continue;
-    }
-    if (!started) {
-      nvgMoveTo(s->vg, x, y);
-      started = true;
-    } else {
-      nvgLineTo(s->vg, x, y);
-    }
+  nvgMoveTo(s->vg, pvd->v[0].x, pvd->v[0].y);
+  for (int i=1; i<pvd->cnt; i++) {
+    nvgLineTo(s->vg, pvd->v[i].x, pvd->v[i].y);
   }
   nvgClosePath(s->vg);
-  nvgFillColor(s->vg, nvgRGBA(0, 0, 200, 200));//blue, , nvgRGBA( 0, 120, 0, 150)); //< green 
+  nvgFillColor(s->vg, nvgRGBA(0, 0, 200, 150));//blue, , nvgRGBA( 0, 120, 0, 150)); //< green 
   nvgFill(s->vg);
+
+  // nvgBeginPath(s->vg);
+  // bool started = false;
+  // for (int i=0; i<pvd->cnt; i++) {
+  //   float x = pvd->v[i].x;
+  //   float y = pvd->v[i].y;
+  //   if (x < 0 || y < 0.) {
+  //     continue;
+  //   }
+  //   if (!started) {
+  //     nvgMoveTo(s->vg, x, y);
+  //     started = true;
+  //   } else {
+  //     nvgLineTo(s->vg, x, y);
+  //   }
+  // }
+  // nvgClosePath(s->vg);
+  // nvgFillColor(s->vg, nvgRGBA(0, 0, 200, 200));//blue, , nvgRGBA( 0, 120, 0, 150)); //< green 
+  // nvgFill(s->vg);
 }
 
 static void update_track_data(UIState *s, bool is_mpc, track_vertices_data *pvd) 
