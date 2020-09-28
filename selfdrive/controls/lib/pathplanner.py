@@ -402,11 +402,11 @@ class PathPlanner():
 
     #최대 허용 제어 조향각.  
     delta_steer = self.angle_steers_des_mpc - angle_steers
-    if delta_steer > 2:
-      p_angle_steers = angle_steers + 3
+    if delta_steer > 8:
+      p_angle_steers = angle_steers + 8
       self.angle_steers_des_mpc = p_angle_steers
-    elif delta_steer < -2:
-      m_angle_steers = angle_steers - 3
+    elif delta_steer < -8:
+      m_angle_steers = angle_steers - 8
       self.angle_steers_des_mpc = m_angle_steers
 
     # 가변 sR rate_cost
