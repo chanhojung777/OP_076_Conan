@@ -181,7 +181,7 @@ static void ui_draw_lane_line(UIState *s, const model_path_vertices_data *pvd, N
     nvgLineTo(s->vg, pvd->v[i].x, pvd->v[i].y);
   }
   nvgClosePath(s->vg);
-  nvgFillColor(s->vg, nvgRGBA(0, 0, 200, 150));//blue, , nvgRGBA( 0, 120, 0, 150)); //< green 
+  nvgFillColor(s->vg, color);//blue, , nvgRGBA( 0, 120, 0, 150)); //< green 
   nvgFill(s->vg);
 
   // nvgBeginPath(s->vg);
@@ -476,11 +476,12 @@ static void update_all_lane_lines_data(UIState *s, const PathData &path, model_p
 }
 
 static void ui_draw_lane(UIState *s, const PathData *path, model_path_vertices_data *pstart, NVGcolor color) {
-  ui_draw_lane_line(s, pstart, color);
-  float var = fmin(path->std, 0.7);
-  color.a /= 4;
-  ui_draw_lane_line(s, pstart + 1, color);
-  ui_draw_lane_line(s, pstart + 2, color);
+  ui_draw_lane_line(s, pstart, nvgRGBA(0, 0, 200, 200)););
+  // float var = fmin(path->std, 0.7);
+  // color.a /= 4;
+  color.a /= 25;
+  ui_draw_lane_line(s, pstart + 1, nvgRGBA(0, 0, 0, 100)););
+  ui_draw_lane_line(s, pstart + 2, nvgRGBA(0, 0, 0, 100)););
 }
 
 static void ui_draw_vision_lanes(UIState *s) {
