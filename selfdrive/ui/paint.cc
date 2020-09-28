@@ -718,10 +718,10 @@ static void ui_draw_debug(UIState *s)
   // ui_print( s, x_pos, y_pos+350, "aD:%.2f", scene.pathPlan.steerActuatorDelay );
   // ui_print( s, x_pos, y_pos+400, "sF:%.2f", scene.liveParams.stiffnessFactor );
 
-  ui_print( s, x_pos, y_pos+0, "model_sum:%.1f" , scene.model_sum);
-  ui_print( s, x_pos, y_pos+50, "sR:%.2f, %.2f", scene.liveParams.steerRatio, scene.pathPlan.steerRatio );
-  ui_print( s, x_pos, y_pos+100, "aOffset:%.2f, %.2f", scene.liveParams.angleOffset, scene.pathPlan.angleOffset );
-  ui_print( s, x_pos, y_pos+150, "aOffsetAvg:%.2f", scene.liveParams.angleOffsetAverage );
+  ui_print( s, x_pos, y_pos+0, "aOffset:%.2f, %.2f", scene.liveParams.angleOffset, scene.pathPlan.angleOffset );
+  ui_print( s, x_pos, y_pos+50, "aOffsetAvg:%.2f", scene.liveParams.angleOffsetAverage );
+  ui_print( s, x_pos, y_pos+100, "model_sum:%.1f" , scene.model_sum);
+  ui_print( s, x_pos, y_pos+150, "sR:%.2f, %.2f", scene.liveParams.steerRatio, scene.pathPlan.steerRatio );
   ui_print( s, x_pos, y_pos+200, "aDelay:%.2f", scene.pathPlan.steerActuatorDelay );
   ui_print( s, x_pos, y_pos+250, "stF:%.2f", scene.liveParams.stiffnessFactor );
 
