@@ -725,10 +725,10 @@ static void ui_draw_debug(UIState *s)
   ui_print( s, x_pos, y_pos+200, "aDelay:%.2f", scene.pathPlan.steerActuatorDelay );
   ui_print( s, x_pos, y_pos+250, "stF:%.2f", scene.liveParams.stiffnessFactor );
 
-  ui_print( s, x_pos+550, y_pos+400, "차선폭");
-  ui_print( s, x_pos+560, y_pos+450, "%.2f", scene.pathPlan.laneWidth ); 
-  ui_print( s, x_pos+150, y_pos+500, "  %.2f       차선간격     %.2f", scene.pathPlan.lPoly, scene.pathPlan.rPoly );
-  ui_print( s, x_pos+150, y_pos+550, "%.2f        차선인식률       %.2f", scene.pathPlan.lProb, scene.pathPlan.rProb );
+  ui_print( s, x_pos+550, y_pos+500, "차선폭");
+  ui_print( s, x_pos+560, y_pos+550, "%.2f", scene.pathPlan.laneWidth ); 
+  ui_print( s, x_pos+300, y_pos+600, "  %.2f        차선간격      %.2f", scene.pathPlan.lPoly, scene.pathPlan.rPoly );
+  ui_print( s, x_pos+300, y_pos+650, "%.2f        차선인식률       %.2f", scene.pathPlan.lProb, scene.pathPlan.rProb );
 
   //ui_print( s, x_pos, y_pos+400, "awareness:%.2f" , scene.awareness_status);
 
