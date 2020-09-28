@@ -226,8 +226,8 @@ class CarInterface(CarInterfaceBase):
       ret.lateralTuning.lqr.k = [-100., 450.]
       ret.lateralTuning.lqr.l = [0.22, 0.318]
       ret.lateralTuning.lqr.dcGain = 0.0029
-      """
-      """ Neokii """
+      """ 
+       Neokii 
       ret.lateralTuning.lqr.k = [-103.976, 450.]
       ret.lateralTuning.lqr.l = [0.22, 0.318]
       ret.lateralTuning.lqr.dcGain = 0.0029
