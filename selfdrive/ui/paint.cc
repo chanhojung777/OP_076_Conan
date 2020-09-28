@@ -476,12 +476,12 @@ static void update_all_lane_lines_data(UIState *s, const PathData &path, model_p
 }
 
 static void ui_draw_lane(UIState *s, const PathData *path, model_path_vertices_data *pstart, NVGcolor color) {
-  ui_draw_lane_line(s, pstart, nvgRGBA(0, 0, 200, 200)););
+  ui_draw_lane_line(s, pstart, nvgRGBA(0, 0, 200, 200));
   // float var = fmin(path->std, 0.7);
   // color.a /= 4;
   color.a /= 25;
-  ui_draw_lane_line(s, pstart + 1, nvgRGBA(0, 0, 0, 100)););
-  ui_draw_lane_line(s, pstart + 2, nvgRGBA(0, 0, 0, 100)););
+  ui_draw_lane_line(s, pstart + 1, nvgRGBA(0, 0, 0, 100));
+  ui_draw_lane_line(s, pstart + 2, nvgRGBA(0, 0, 0, 100));
 }
 
 static void ui_draw_vision_lanes(UIState *s) {
