@@ -400,7 +400,7 @@ class PathPlanner():
               model_sum, limit_steers1, limit_steers2, angle_steers, org_angle_steers_des, delta_steer, self.angle_steers_des_mpc)
       self.trRapidCurv.add( str1 )      
 
-    최대 허용 제어 조향각.  
+    #최대 허용 제어 조향각.  
     delta_steer = self.angle_steers_des_mpc - angle_steers
     if delta_steer > 5:
       p_angle_steers = angle_steers + 5
