@@ -400,18 +400,18 @@ class PathPlanner():
               model_sum, limit_steers1, limit_steers2, angle_steers, org_angle_steers_des, delta_steer, self.angle_steers_des_mpc)
       self.trRapidCurv.add( str1 )      
 
-    # 최대 허용 제어 조향각.  
-    # delta_steer = self.angle_steers_des_mpc - angle_steers
-    # if delta_steer > 10:
-    #   p_angle_steers = angle_steers + 10
-    #   self.angle_steers_des_mpc = p_angle_steers
-    # elif delta_steer < -10:
-    #   m_angle_steers = angle_steers - 10
-    #   self.angle_steers_des_mpc = m_angle_steers
+    최대 허용 제어 조향각.  
+    delta_steer = self.angle_steers_des_mpc - angle_steers
+    if delta_steer > 5:
+      p_angle_steers = angle_steers + 5
+      self.angle_steers_des_mpc = p_angle_steers
+    elif delta_steer < -5:
+      m_angle_steers = angle_steers - 5
+      self.angle_steers_des_mpc = m_angle_steers
 
     # 가변 sR rate_cost
     self.atom_sr_boost_bp = [ 1.5,  5.0, 10.0, 15.0, 20.0, 30.0, 50.0, 60.0, 100.0, 300.0]
-    self.sR_Cost          = [0.60, 0.41, 0.34, 0.28, 0.24, 0.18, 0.12, 0.10,  0.05,  0.01]
+    self.sR_Cost          = [1.00, 0.41, 0.34, 0.28, 0.24, 0.18, 0.12, 0.10,  0.05,  0.01]
     self.steer_rate_cost  = interp(abs(angle_steers), self.atom_sr_boost_bp, self.sR_Cost)
 
     #  Check for infeasable MPC solution
