@@ -183,6 +183,9 @@ class PathPlanner():
     return steerRatio
 
   def update(self, sm, pm, CP, VM):
+    limit_steers1 = 0
+    limit_steers2 = 0
+    debug_status = 0
     self.atom_timer_cnt += 1
     if self.atom_timer_cnt > 1000:
       self.atom_timer_cnt = 0
@@ -400,9 +403,9 @@ class PathPlanner():
       limit_steers2 = interp( model_sum, xp, fp2 )  # -
       self.angle_steers_des_mpc = self.limit_ctrl1( org_angle_steers_des, limit_steers1, limit_steers2, angle_steers )
       
-      str1 = 'CVs/{} LS1/{} LS2/{} Ang/{} oDES/{} delta1/{} fDES/{}'.format(   
+    str1 = 'CVs/{} LS1/{} LS2/{} Ang/{} oDES/{} delta1/{} fDES/{}'.format(   
               model_sum, limit_steers1, limit_steers2, angle_steers, org_angle_steers_des, delta_steer, self.angle_steers_des_mpc)
-      #self.trRapidCurv.add( str1 )      
+    #self.trRapidCurv.add( str1 )      
 
     #최대 허용 제어 조향각.  
     delta_steer2 = self.angle_steers_des_mpc - angle_steers
