@@ -409,11 +409,11 @@ class PathPlanner():
 
     #최대 허용 제어 조향각.  
     delta_steer2 = self.angle_steers_des_mpc - angle_steers
-    if delta_steer2 > 5:
-      p_angle_steers = angle_steers + 5
+    if delta_steer2 > 10:
+      p_angle_steers = angle_steers + 10
       self.angle_steers_des_mpc = p_angle_steers
-    elif delta_steer2 < -5:
-      m_angle_steers = angle_steers - 5
+    elif delta_steer2 < -10:
+      m_angle_steers = angle_steers - 10
       self.angle_steers_des_mpc = m_angle_steers
 
     str2 = 'delta2/{} fDES2/{}'.format(   
