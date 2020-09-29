@@ -363,20 +363,19 @@ class PathPlanner():
     org_angle_steers_des = self.angle_steers_des_mpc
     delta_steer = org_angle_steers_des - angle_steers
     # atom
-    if steeringPressed:
-      #delta_steer = org_angle_steers_des - angle_steers
-      debug_status = 1
-      xp = [-255,0,255]
-      fp2 = [5,0,5]
-      limit_steers = interp( steeringTorque, xp, fp2 )
-      if steeringTorque < 0:  # right
-        if delta_steer > 0:
-          self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
-      elif steeringTorque > 0:  # left
-        if delta_steer < 0:
-          self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
-
-    elif v_ego_kph < 25:  # 30
+    # if steeringPressed:
+    #   #delta_steer = org_angle_steers_des - angle_steers
+    #   debug_status = 1
+    #   xp = [-255,0,255]
+    #   fp2 = [5,0,5]
+    #   limit_steers = interp( steeringTorque, xp, fp2 )
+    #   if steeringTorque < 0:  # right
+    #     if delta_steer > 0:
+    #       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
+    #   elif steeringTorque > 0:  # left
+    #     if delta_steer < 0:
+    #       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
+    if v_ego_kph < 25:  # 30
       debug_status = 2
       xp = [5,15,25]
       fp2 = [1,7,9]
@@ -387,6 +386,7 @@ class PathPlanner():
       pass
     elif abs(angle_steers) > 10: # angle steer > 10
       debug_status = 4
+    #최대 허용 조향각 제어 로직 1.  
       xp = [-30,-20,-10,-5,0,5,10,20,30]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
       fp1 = [3,8,10,15,20,25,28,22,15]    # +
       fp2 = [15,22,28,25,20,15,10,8,3]    # -
@@ -400,11 +400,10 @@ class PathPlanner():
       limit_steers2 = interp( model_sum, xp, fp2 )  # -
       self.angle_steers_des_mpc = self.limit_ctrl1( org_angle_steers_des, limit_steers1, limit_steers2, angle_steers )
       
-    str1 = '#/{} CVs/{} LS1/{} LS2/{} Ang/{} oDES/{} delta1/{} fDES/{}'.format(   
+    str1 = '#/{} CVs/{} LS1/{} LS2/{} Ang/{} oDES/{} delta1/{} fDES/{} '.format(   
               debug_status, model_sum, limit_steers1, limit_steers2, angle_steers, org_angle_steers_des, delta_steer, self.angle_steers_des_mpc)
-    #self.trRapidCurv.add( str1 )      
 
-    #최대 허용 제어 조향각.  
+    #최대 허용 조향각 제어 로직 2.  
     delta_steer2 = self.angle_steers_des_mpc - angle_steers
     ANGLE_LIMIT = 8
     if delta_steer > ANGLE_LIMIT:
