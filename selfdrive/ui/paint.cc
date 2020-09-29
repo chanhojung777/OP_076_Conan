@@ -442,35 +442,10 @@ static inline bool valid_frame_pt(UIState *s, float x, float y) {
   return x >= 0 && x <= s->rgb_width && y >= 0 && y <= s->rgb_height;
 
 }
-// static void update_lane_line_data(UIState *s, const float *points, float off, bool is_ghost, model_path_vertices_data *pvd) {
-//   pvd->cnt = 0;
-//   for (int i = 0; i < MODEL_PATH_MAX_VERTICES_CNT / 2; i++) {
-//     float px = (float)i;
-//     float py = points[i] - off;
-//     const vec4 p_car_space = (vec4){{px, py, 0., 1.}};
-//     const vec3 p_full_frame = car_space_to_full_frame(s, p_car_space);
-//     if(!valid_frame_pt(s, p_full_frame.v[0], p_full_frame.v[1]))
-//       continue;
-//     pvd->v[pvd->cnt].x = p_full_frame.v[0];
-//     pvd->v[pvd->cnt].y = p_full_frame.v[1];
-//     pvd->cnt += 1;
-//   }
-//   for (int i = MODEL_PATH_MAX_VERTICES_CNT / 2; i > 0; i--) {
-//     float px = (float)i;
-//     float py = is_ghost?(points[i]-off):(points[i]+off);
-//     const vec4 p_car_space = (vec4){{px, py, 0., 1.}};
-//     const vec3 p_full_frame = car_space_to_full_frame(s, p_car_space);
-//     if(!valid_frame_pt(s, p_full_frame.v[0], p_full_frame.v[1]))
-//       continue;
-//     pvd->v[pvd->cnt].x = p_full_frame.v[0];
-//     pvd->v[pvd->cnt].y = p_full_frame.v[1];
-//     pvd->cnt += 1;
-//   }
-// }
-static void update_lane_line_data(UIState *s, const float *points, float off, model_path_vertices_data *pvd, float valid_len) {
+
+static void update_lane_line_data(UIState *s, const float *points, float off, bool is_ghost, model_path_vertices_data *pvd) {
   pvd->cnt = 0;
-  int rcount = fmin(MODEL_PATH_MAX_VERTICES_CNT / 2, valid_len);
-  for (int i = 0; i < rcount; i++) {
+  for (int i = 0; i < MODEL_PATH_MAX_VERTICES_CNT / 2; i++) {
     float px = (float)i;
     float py = points[i] - off;
     const vec4 p_car_space = (vec4){{px, py, 0., 1.}};
@@ -481,9 +456,9 @@ static void update_lane_line_data(UIState *s, const float *points, float off, mo
     pvd->v[pvd->cnt].y = p_full_frame.v[1];
     pvd->cnt += 1;
   }
-  for (int i = rcount; i > 0; i--) {
+  for (int i = MODEL_PATH_MAX_VERTICES_CNT / 2; i > 0; i--) {
     float px = (float)i;
-    float py = points[i] + off;
+    float py = is_ghost?(points[i]-off):(points[i]+off);
     const vec4 p_car_space = (vec4){{px, py, 0., 1.}};
     const vec3 p_full_frame = car_space_to_full_frame(s, p_car_space);
     if(!valid_frame_pt(s, p_full_frame.v[0], p_full_frame.v[1]))
@@ -494,79 +469,28 @@ static void update_lane_line_data(UIState *s, const float *points, float off, mo
   }
 }
 
-// static void update_all_lane_lines_data(UIState *s, const PathData &path, model_path_vertices_data *pstart) {
-//   update_lane_line_data(s, path.points, 0.025*path.prob, false, pstart);
-//   float var = fmin(path.std, 0.7);
-//   update_lane_line_data(s, path.points, -var, true, pstart + 1);
-//   update_lane_line_data(s, path.points, var, true, pstart + 2);
-// }
-
-// static void ui_draw_lane(UIState *s, const PathData *path, model_path_vertices_data *pstart, NVGcolor color) {
-//   ui_draw_lane_line(s, pstart, nvgRGBA(0, 0, 200, 200));
-//   float var = fmin(path->std, 0.7);
-//   color.a /= 4;
-//   ui_draw_lane_line(s, pstart + 1, nvgRGBA(0, 128, 255, 200)); //(0, 0, 200, 100)); //
-//   ui_draw_lane_line(s, pstart + 2, nvgRGBA(0, 128, 255, 200)); //(0, 0, 200, 100)); //
-// }
-
-// static void ui_draw_vision_lanes(UIState *s) {
-//   const UIScene *scene = &s->scene;
-//   model_path_vertices_data *pvd = &s->model_path_vertices[0];
-//   if(s->model_changed) {
-//     update_all_lane_lines_data(s, scene->model.left_lane, pvd);
-//     update_all_lane_lines_data(s, scene->model.right_lane, pvd + MODEL_LANE_PATH_CNT);
-//     s->model_changed = false;
-//   }
-//   // Draw left lane edge
-//   ui_draw_lane(
-//       s, &scene->model.left_lane,
-//       pvd,
-//       nvgRGBAf(1.0, 1.0, 1.0, scene->model.left_lane.prob));
-
-//   // Draw right lane edge
-//   ui_draw_lane(
-//       s, &scene->model.right_lane,
-//       pvd + MODEL_LANE_PATH_CNT,
-//       nvgRGBAf(1.0, 1.0, 1.0, scene->model.right_lane.prob));
-
-//   if( s->livempc_or_radarstate_changed ) {
-//     update_all_track_data(s);
-//     //s->livempc_or_radarstate_changed = 0;
-//   }
-
-//   // Draw vision path
-//   ui_draw_track(s, false, &s->track_vertices[0]);
-//   if (scene->engaged) {
-//     // Draw MPC path when engaged
-//     ui_draw_track(s, true, &s->track_vertices[1]);    
-//     if (scene->rightBlindspot){
-//       ui_draw_track_right(s, true, &s->track_vertices[1]);
-//     }
-//     if (scene->leftBlindspot){
-//       ui_draw_track_left(s, true, &s->track_vertices[1]);
-//     }      
-//   }
-// }
 static void update_all_lane_lines_data(UIState *s, const PathData &path, model_path_vertices_data *pstart) {
-  update_lane_line_data(s, path.points, 0.025*path.prob, pstart, path.validLen);
+  update_lane_line_data(s, path.points, 0.025*path.prob, false, pstart);
   float var = fmin(path.std, 0.7);
-  update_lane_line_data(s, path.points, -var, pstart + 1, path.validLen);
-  update_lane_line_data(s, path.points, var, pstart + 2, path.validLen);
+  update_lane_line_data(s, path.points, -var, true, pstart + 1);
+  update_lane_line_data(s, path.points, var, true, pstart + 2);
 }
 
 static void ui_draw_lane(UIState *s, const PathData *path, model_path_vertices_data *pstart, NVGcolor color) {
-  ui_draw_lane_line(s, pstart, color);
-  color.a /= 25;
-  ui_draw_lane_line(s, pstart + 1, color);
-  ui_draw_lane_line(s, pstart + 2, color);
+  ui_draw_lane_line(s, pstart, nvgRGBA(0, 0, 200, 200));
+  float var = fmin(path->std, 0.7);
+  color.a /= 4;
+  ui_draw_lane_line(s, pstart + 1, nvgRGBA(0, 128, 255, 200)); //(0, 0, 200, 100)); //
+  ui_draw_lane_line(s, pstart + 2, nvgRGBA(0, 128, 255, 200)); //(0, 0, 200, 100)); //
 }
 
 static void ui_draw_vision_lanes(UIState *s) {
   const UIScene *scene = &s->scene;
   model_path_vertices_data *pvd = &s->model_path_vertices[0];
-  if(s->sm->updated("model")) {
+  if(s->model_changed) {
     update_all_lane_lines_data(s, scene->model.left_lane, pvd);
     update_all_lane_lines_data(s, scene->model.right_lane, pvd + MODEL_LANE_PATH_CNT);
+    s->model_changed = false;
   }
   // Draw left lane edge
   ui_draw_lane(
@@ -580,18 +504,25 @@ static void ui_draw_vision_lanes(UIState *s) {
       pvd + MODEL_LANE_PATH_CNT,
       nvgRGBAf(1.0, 1.0, 1.0, scene->model.right_lane.prob));
 
-  if(s->sm->updated("radarState")) {
+  if( s->livempc_or_radarstate_changed ) {
     update_all_track_data(s);
+    //s->livempc_or_radarstate_changed = 0;
   }
+
   // Draw vision path
   ui_draw_track(s, false, &s->track_vertices[0]);
-  if (scene->controls_state.getEnabled()) {
+  if (scene->engaged) {
     // Draw MPC path when engaged
-    ui_draw_track(s, true, &s->track_vertices[1]);
+    ui_draw_track(s, true, &s->track_vertices[1]);    
+    if (scene->rightBlindspot){
+      ui_draw_track_right(s, true, &s->track_vertices[1]);
+    }
+    if (scene->leftBlindspot){
+      ui_draw_track_left(s, true, &s->track_vertices[1]);
+    }      
   }
 }
 
-//////////////////////////
 // Draw all world space objects.
 static void ui_draw_world(UIState *s) {
   const UIScene *scene = &s->scene;
@@ -625,9 +556,6 @@ static void ui_draw_world(UIState *s) {
   }
   nvgRestore(s->vg);
 }
-
-
-
 
 static void ui_draw_vision_maxspeed(UIState *s) {
   /*if (!s->longitudinal_control){
