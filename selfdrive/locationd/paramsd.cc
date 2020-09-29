@@ -26,7 +26,7 @@ void sigpipe_handler(int sig) {
 int main(int argc, char *argv[]) {
   signal(SIGPIPE, (sighandler_t)sigpipe_handler);
 
-  SubMaster sm({"controlsState", "sensorEvents", "cameraOdometry"});
+  SubMaster sm({"controlsState", "sensorEvents", "cameraOdometry", "pathPlan"});
   PubMaster pm({"liveParameters"});
 
   Localizer localizer;
@@ -61,6 +61,9 @@ int main(int argc, char *argv[]) {
   double ao = 0.0;
   double posenet_invalid_count = 0;
 
+  auto lateralsRatom = car_params.getLateralsRatom();
+  int  carParams_learnerParams = lateralsRatom.getLearnerParams();  
+
   if (result == 0){
     auto str = std::string(value, value_sz);
     free(value);
@@ -78,7 +81,9 @@ int main(int argc, char *argv[]) {
         std::string log = "Parameter starting with: " + str;
         LOGW(log.c_str());
 
-        sR = json["steerRatio"].number_value();
+        if( carParams_learnerParams )
+           sR = json["steerRatio"].number_value();
+
         x = json["stiffnessFactor"].number_value();
         ao = json["angleOffsetAverage"].number_value();
       }
@@ -92,7 +97,14 @@ int main(int argc, char *argv[]) {
   while (true){
     if (sm.update(100) == 0) continue;
 
-    if (sm.updated("controlsState")){
+    if ( !carParams_learnerParams && sm.updated("pathPlan") )
+    {
+      auto data = sm["pathPlan"].getPathPlan();
+      learner.sR = data.getSteerRatio();
+    }
+
+    if ( sm.updated("controlsState") )
+    {
       localizer.handle_log(sm["controlsState"]);
       save_counter++;
 

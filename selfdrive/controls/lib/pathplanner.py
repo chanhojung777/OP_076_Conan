@@ -219,7 +219,7 @@ class PathPlanner():
 
     self.steerRatio = sm['liveParameters'].steerRatio
     angle_offset = sm['liveParameters'].angleOffset
-    angleOffsetAverage = sm['liveParameters'].angleOffsetAverage
+    #angleOffsetAverage = sm['liveParameters'].angleOffsetAverage
     stiffnessFactor = sm['liveParameters'].stiffnessFactor
 
     # if (self.atom_timer_cnt % 100) == 0:
@@ -236,12 +236,9 @@ class PathPlanner():
       else:
         self.steer_rate_cost = CP.steerRateCost
         self.steerRatio = CP.steerRatio
-
-      # xp = [0, 5, 10, 15, 20, 30, 50, 60, 100]   
-      # fp = [1.2, 0.41, 0.34, 0.28, 0.24, 0.18, 0.12, 0.10, 0.05] 
-      # self.steer_rate_cost = interp( abs(angle_steers), xp, fp )      
+  
       steerRatio = self.atom_tune( v_ego_kph, angle_steers, atomTuning )
-      self.steerRatio = self.atom_steer( steerRatio, 2, 0.05 )
+      self.steerRatio = self.atom_steer( steerRatio, 2, 1 )
 
     #actuatorDelay = CP.steerActuatorDelay
     steerActuatorDelay = self.atom_actuatorDelay( v_ego_kph, angle_steers, atomTuning )
@@ -308,15 +305,15 @@ class PathPlanner():
         fp2 = [0.1,0.6,1.2,1.5,1.8] 
         lane_time = interp( v_ego_kph, xp, fp2 )        
         self.lane_change_ll_prob = max(self.lane_change_ll_prob - lane_time*DT_MDL, 0.0)
-        # 98% certainty
-        if lane_change_prob < 0.02 and self.lane_change_ll_prob < 0.01:
+        # 98% certainty => 95%
+        if lane_change_prob < 0.05 and self.lane_change_ll_prob < 0.01:
           self.lane_change_state = LaneChangeState.laneChangeFinishing
 
       # finishing
       elif self.lane_change_state == LaneChangeState.laneChangeFinishing:
         # fade in laneline over 1s
         self.lane_change_ll_prob = min(self.lane_change_ll_prob + DT_MDL, 1.0)
-        if self.lane_change_ll_prob > 0.80  and  abs(c_prob) < 0.3:
+        if self.lane_change_ll_prob > 0.80  and  abs(c_prob) < 0.5:
           self.lane_change_state = LaneChangeState.laneChangeDone
 
       # done
@@ -403,17 +400,18 @@ class PathPlanner():
       limit_steers2 = interp( model_sum, xp, fp2 )  # -
       self.angle_steers_des_mpc = self.limit_ctrl1( org_angle_steers_des, limit_steers1, limit_steers2, angle_steers )
       
-    str1 = 'CVs/{} LS1/{} LS2/{} Ang/{} oDES/{} delta1/{} fDES/{}'.format(   
-              model_sum, limit_steers1, limit_steers2, angle_steers, org_angle_steers_des, delta_steer, self.angle_steers_des_mpc)
+    str1 = '#/{} CVs/{} LS1/{} LS2/{} Ang/{} oDES/{} delta1/{} fDES/{}'.format(   
+              debug_status, model_sum, limit_steers1, limit_steers2, angle_steers, org_angle_steers_des, delta_steer, self.angle_steers_des_mpc)
     #self.trRapidCurv.add( str1 )      
 
     #최대 허용 제어 조향각.  
     delta_steer2 = self.angle_steers_des_mpc - angle_steers
-    if delta_steer2 > 10:
-      p_angle_steers = angle_steers + 10
+    ANGLE_LIMIT = 8
+    if delta_steer > ANGLE_LIMIT:
+      p_angle_steers = angle_steers + ANGLE_LIMIT
       self.angle_steers_des_mpc = p_angle_steers
-    elif delta_steer2 < -10:
-      m_angle_steers = angle_steers - 10
+    elif delta_steer < -ANGLE_LIMIT:
+      m_angle_steers = angle_steers - ANGLE_LIMIT
       self.angle_steers_des_mpc = m_angle_steers
 
     str2 = 'delta2/{} fDES2/{}'.format(   
