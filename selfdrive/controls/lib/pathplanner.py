@@ -366,26 +366,26 @@ class PathPlanner():
     org_angle_steers_des = self.angle_steers_des_mpc
     delta_steer = org_angle_steers_des - angle_steers
     # atom
-    if steeringPressed:   
-      if angle_steers > 10 and steeringTorque > 0:
-        debug_status = 0
-        delta_steer = max( delta_steer, 0 )
-        delta_steer = min( delta_steer, DST_ANGLE_LIMIT )
-        self.angle_steers_des_mpc = angle_steers + delta_steer
-      elif angle_steers < -10  and steeringTorque < 0:
-        debug_status = 0
-        delta_steer = min( delta_steer, 0 )
-        delta_steer = max( delta_steer, -DST_ANGLE_LIMIT )        
-        self.angle_steers_des_mpc = angle_steers + delta_steer
-      else:
-        debug_status = 1
-        if steeringTorque < 0:  # right
-          if delta_steer > 0:
-            self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, angle_steers )
-        elif steeringTorque > 0:  # left
-          if delta_steer < 0:
-            self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, angle_steers )
-    elif v_ego_kph < 15:  # 30
+    # if steeringPressed:   
+    #   if angle_steers > 10 and steeringTorque > 0:
+    #     debug_status = 0
+    #     delta_steer = max( delta_steer, 0 )
+    #     delta_steer = min( delta_steer, DST_ANGLE_LIMIT )
+    #     self.angle_steers_des_mpc = angle_steers + delta_steer
+    #   elif angle_steers < -10  and steeringTorque < 0:
+    #     debug_status = 0
+    #     delta_steer = min( delta_steer, 0 )
+    #     delta_steer = max( delta_steer, -DST_ANGLE_LIMIT )        
+    #     self.angle_steers_des_mpc = angle_steers + delta_steer
+    #   else:
+    #     debug_status = 1
+    #     if steeringTorque < 0:  # right
+    #       if delta_steer > 0:
+    #         self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, angle_steers )
+    #     elif steeringTorque > 0:  # left
+    #       if delta_steer < 0:
+    #         self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, angle_steers )
+    if v_ego_kph < 15:  # 30
     # 저속 와리가리 제어.  
       debug_status = 2
       xp = [3,10,15]
