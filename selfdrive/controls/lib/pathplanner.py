@@ -367,7 +367,8 @@ class PathPlanner():
     delta_steer = org_angle_steers_des - angle_steers
     # atom
     if steeringPressed:   
-      if angle_steers > 0
+      if angle_steers > 10 and steeringTorque > 0:
+        debug_status = 0
         delta_steer = max( delta_steer, 0 )
         delta_steer = min( delta_steer, DST_ANGLE_LIMIT )
         self.angle_steers_des_mpc = angle_steers + delta_steer
