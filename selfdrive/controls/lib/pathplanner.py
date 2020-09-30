@@ -13,9 +13,9 @@ from cereal import log
 from selfdrive.car.hyundai.interface import CarInterface
 from selfdrive.car.hyundai.values import Buttons
 import common.log as trace1
+from selfdrive.car.hyundai.values import Buttons
 
-
-
+import common.MoveAvg as ma
 
 LaneChangeState = log.PathPlan.LaneChangeState
 LaneChangeDirection = log.PathPlan.LaneChangeDirection
@@ -96,6 +96,7 @@ class PathPlanner():
     self.atom_sr_boost_range = [0., 0.]
 
     self.carParams_valid = False
+    self.m_avg = ma.MoveAvg()    
 
   def limit_ctrl(self, value, limit, offset ):
       p_limit = offset + limit
@@ -313,7 +314,7 @@ class PathPlanner():
       elif self.lane_change_state == LaneChangeState.laneChangeFinishing:
         # fade in laneline over 1s
         self.lane_change_ll_prob = min(self.lane_change_ll_prob + DT_MDL, 1.0)
-        if self.lane_change_ll_prob > 0.80  and  abs(c_prob) < 0.5:
+        if self.lane_change_ll_prob > 0.90  and  abs(c_prob) < 0.3:
           self.lane_change_state = LaneChangeState.laneChangeDone
 
       # done
@@ -387,13 +388,13 @@ class PathPlanner():
     elif abs(angle_steers) > 10: # angle steer > 10
       debug_status = 4
     #최대 허용 조향각 제어 로직 1.  
-      xp = [-30,-20,-10,-5,0,5,10,20,30]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
+      xp = [-30,-20,-10,-5,0,5,10,20,30]    # 5=>약12도, 10=>28 15=>35, 30=>52
       fp1 = [3,8,10,15,20,25,28,22,15]    # +
       fp2 = [15,22,28,25,20,15,10,8,3]    # -
-      # xp = [-20,-10,-5,0,5,10,20]    # 5 조향각 약12도, 10=>28, 15=>35, 20=>43, 30=>52
+      # xp = [-20,-10,-5,0,5,10,20]    # 5=>약12도, 10=>28, 15=>35, 20=>43, 30=>52
       # fp1 = [3,8,10,15,20,15,10]    # +
       # fp2 = [10,15,20,15,10,8,3]    # -
-      #xp = [-10,-5,0,5,10]    # 5 조향각 약12도, 10=>28 15=>35, 30=>52
+      #xp = [-10,-5,0,5,10]    # 5=>약12도, 10=>28 15=>35, 30=>52
       #fp1 = [3,8,10,20,10]    # +
       #fp2 = [10,20,10,8,3]    # -
       limit_steers1 = interp( model_sum, xp, fp1 )  # +
