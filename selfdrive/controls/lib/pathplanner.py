@@ -427,7 +427,7 @@ class PathPlanner():
 
     # 가변 sR rate_cost
     self.atom_sr_boost_bp = [ 5.0, 10.0, 15.0, 20.0, 30.0, 50.0, 60.0, 100.0, 300.0]
-    self.sR_Cost          = [ 1.5, 1.20, 0.80, 0.60, 0.30, 0.18, 0.10,  0.05,  0.01]
+    self.sR_Cost          = [ 1.2, 1.00, 0.75, 0.60, 0.30, 0.18, 0.10,  0.05,  0.01]
     #self.sR_Cost          = [1.20, 0.41, 0.34, 0.28, 0.24, 0.18, 0.12, 0.10,  0.05,  0.01]    
     self.steer_rate_cost  = interp(abs(angle_steers), self.atom_sr_boost_bp, self.sR_Cost)
 
