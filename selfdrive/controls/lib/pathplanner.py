@@ -383,8 +383,8 @@ class PathPlanner():
         elif steeringTorque > 0:  # left
           if delta_steer < 0:
             self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, angle_steers )
-
     elif v_ego_kph < 15:  # 30
+    # 저속 와리가리 제어.  
       debug_status = 2
       xp = [3,10,15]
       fp2 = [1,5,7]
@@ -393,7 +393,7 @@ class PathPlanner():
     elif v_ego_kph > 90: 
       debug_status = 3
       pass
-    elif abs(angle_steers) > 10: # angle steer > 10
+    elif abs(angle_steers) > 10: 
       debug_status = 4
     #최대 허용 조향각 제어 로직 1.  
       xp = [-30,-20,-10,-5,0,5,10,20,30]    # 5=>약12도, 10=>28 15=>35, 30=>52
@@ -414,7 +414,6 @@ class PathPlanner():
 
     #최대 허용 조향각 제어 로직 2.  
     delta_steer2 = self.angle_steers_des_mpc - angle_steers
-    ANGLE_LIMIT = 8
     if delta_steer > DST_ANGLE_LIMIT:
       p_angle_steers = angle_steers + DST_ANGLE_LIMIT
       self.angle_steers_des_mpc = p_angle_steers
@@ -427,8 +426,9 @@ class PathPlanner():
     self.trRapidCurv.add( str1 + str2 )        
 
     # 가변 sR rate_cost
-    self.atom_sr_boost_bp = [ 1.5,  5.0, 10.0, 15.0, 20.0, 30.0, 50.0, 60.0, 100.0, 300.0]
-    self.sR_Cost          = [1.00, 0.41, 0.34, 0.28, 0.24, 0.18, 0.12, 0.10,  0.05,  0.01]
+    self.atom_sr_boost_bp = [ 5.0, 10.0, 15.0, 20.0, 30.0, 50.0, 60.0, 100.0, 300.0]
+    self.sR_Cost          = [ 1.5, 1.20, 0.80, 0.60, 0.30, 0.18, 0.10,  0.05,  0.01]
+    #self.sR_Cost          = [1.20, 0.41, 0.34, 0.28, 0.24, 0.18, 0.12, 0.10,  0.05,  0.01]    
     self.steer_rate_cost  = interp(abs(angle_steers), self.atom_sr_boost_bp, self.sR_Cost)
 
     #  Check for infeasable MPC solution
