@@ -12,9 +12,8 @@ import cereal.messaging as messaging
 from cereal import log
 from selfdrive.car.hyundai.interface import CarInterface
 from selfdrive.car.hyundai.values import Buttons
-import common.log as trace1
-from selfdrive.car.hyundai.values import Buttons
 
+import common.log as trace1
 import common.MoveAvg as ma
 
 LaneChangeState = log.PathPlan.LaneChangeState
@@ -24,7 +23,8 @@ LaneChangeDirection = log.PathPlan.LaneChangeDirection
 LOG_MPC = os.environ.get('LOG_MPC', True)
 
 LANE_CHANGE_SPEED_MIN = 40 * CV.KPH_TO_MS
-LANE_CHANGE_TIME_MAX = 10.
+LANE_CHANGE_TIME_MAX = 9.
+DST_ANGLE_LIMIT = 8.
 
 DESIRES = {
   LaneChangeDirection.none: {
@@ -302,8 +302,10 @@ class PathPlanner():
       # starting
       elif self.lane_change_state == LaneChangeState.laneChangeStarting:
         # fade out over .5s
-        xp = [40,60,70,80,120]
-        fp2 = [0.1,0.6,1.2,1.5,1.8] 
+        # xp = [40,60,70,80,120]
+        # fp2 = [0.1,0.6,1.2,1.5,1.8] 
+        xp = [40,80]
+        fp2 = [0.1,1.5]        
         lane_time = interp( v_ego_kph, xp, fp2 )        
         self.lane_change_ll_prob = max(self.lane_change_ll_prob - lane_time*DT_MDL, 0.0)
         # 98% certainty => 95%
@@ -314,7 +316,7 @@ class PathPlanner():
       elif self.lane_change_state == LaneChangeState.laneChangeFinishing:
         # fade in laneline over 1s
         self.lane_change_ll_prob = min(self.lane_change_ll_prob + DT_MDL, 1.0)
-        if self.lane_change_ll_prob > 0.90  and  abs(c_prob) < 0.3:
+        if self.lane_change_ll_prob > 0.90  and  abs(c_prob) < 0.5:
           self.lane_change_state = LaneChangeState.laneChangeDone
 
       # done
@@ -364,22 +366,27 @@ class PathPlanner():
     org_angle_steers_des = self.angle_steers_des_mpc
     delta_steer = org_angle_steers_des - angle_steers
     # atom
-    # if steeringPressed:
-    #   #delta_steer = org_angle_steers_des - angle_steers
-    #   debug_status = 1
-    #   xp = [-255,0,255]
-    #   fp2 = [5,0,5]
-    #   limit_steers = interp( steeringTorque, xp, fp2 )
-    #   if steeringTorque < 0:  # right
-    #     if delta_steer > 0:
-    #       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
-    #   elif steeringTorque > 0:  # left
-    #     if delta_steer < 0:
-    #       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
-    if v_ego_kph < 20:  # 30
+    if steeringPressed:
+      if angle_steers > 10 and steeringTorque > 0:
+        delta_steer = max( delta_steer, 0 )
+        delta_steer = min( delta_steer, DST_ANGLE_LIMIT )
+        self.angle_steers_des_mpc = angle_steers + delta_steer
+      elif angle_steers < -10  and steeringTorque < 0:
+        delta_steer = min( delta_steer, 0 )
+        delta_steer = max( delta_steer, -DST_ANGLE_LIMIT )        
+        self.angle_steers_des_mpc = angle_steers + delta_steer
+      else:
+        if steeringTorque < 0:  # right
+          if delta_steer > 0:
+            self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, angle_steers )
+        elif steeringTorque > 0:  # left
+          if delta_steer < 0:
+            self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, angle_steers )
+
+    elif v_ego_kph < 15:  # 30
       debug_status = 2
-      xp = [5,15,20]
-      fp2 = [1,7,9]
+      xp = [3,10,15]
+      fp2 = [3,5,7]
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
     elif v_ego_kph > 90: 
@@ -407,11 +414,11 @@ class PathPlanner():
     #최대 허용 조향각 제어 로직 2.  
     delta_steer2 = self.angle_steers_des_mpc - angle_steers
     ANGLE_LIMIT = 8
-    if delta_steer > ANGLE_LIMIT:
-      p_angle_steers = angle_steers + ANGLE_LIMIT
+    if delta_steer > DST_ANGLE_LIMIT:
+      p_angle_steers = angle_steers + DST_ANGLE_LIMIT
       self.angle_steers_des_mpc = p_angle_steers
-    elif delta_steer < -ANGLE_LIMIT:
-      m_angle_steers = angle_steers - ANGLE_LIMIT
+    elif delta_steer < -DST_ANGLE_LIMIT:
+      m_angle_steers = angle_steers - DST_ANGLE_LIMIT
       self.angle_steers_des_mpc = m_angle_steers
 
     str2 = 'delta2/{} fDES2/{}'.format(   
