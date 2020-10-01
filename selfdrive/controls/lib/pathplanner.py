@@ -305,8 +305,8 @@ class PathPlanner():
         # xp = [40,60,70,80,120]
         # fp2 = [0.1,0.6,1.2,1.5,1.8] 
         xp = [40,80]
-        fp2 = [0.1,1.5]        
-        lane_time = interp( v_ego_kph, xp, fp2 )        
+        fp2 = [1,2]
+        lane_time = interp( v_ego_kph, xp, fp2 ) 
         self.lane_change_ll_prob = max(self.lane_change_ll_prob - lane_time*DT_MDL, 0.0)
         # 98% certainty => 95%
         if lane_change_prob < 0.05 and self.lane_change_ll_prob < 0.01:
@@ -315,7 +315,10 @@ class PathPlanner():
       # finishing
       elif self.lane_change_state == LaneChangeState.laneChangeFinishing:
         # fade in laneline over 1s
-        self.lane_change_ll_prob = min(self.lane_change_ll_prob + DT_MDL, 1.0)
+        xp = [40,70]
+        fp2 = [2,1]
+        lane_time = interp( v_ego_kph, xp, fp2 )
+        self.lane_change_ll_prob = min(self.lane_change_ll_prob + lane_time*DT_MDL, 1.0)
         if self.lane_change_ll_prob > 0.90  and  abs(c_prob) < 0.5:
           self.lane_change_state = LaneChangeState.laneChangeDone
 
@@ -366,7 +369,12 @@ class PathPlanner():
     org_angle_steers_des = self.angle_steers_des_mpc
     delta_steer = org_angle_steers_des - angle_steers
     #atom
-    if steeringPressed:   
+    if self.lane_change_state == LaneChangeState.laneChangeStarting:
+      xp = [40,80]
+      fp2 = [3,10]
+      limit_steers = interp( v_ego_kph, xp, fp2 )
+      self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )      
+    elif steeringPressed:
       if angle_steers > 10 and steeringTorque > 0:
         debug_status = 0
         delta_steer = max( delta_steer, 0 )
