@@ -315,11 +315,8 @@ class PathPlanner():
       # finishing
       elif self.lane_change_state == LaneChangeState.laneChangeFinishing:
         # fade in laneline over 1s
-        xp = [40,70]
-        fp2 = [2,1]
-        lane_time = interp( v_ego_kph, xp, fp2 )
-        self.lane_change_ll_prob = min(self.lane_change_ll_prob + lane_time*DT_MDL, 1.0)
-        if self.lane_change_ll_prob > 0.90  and  abs(c_prob) < 0.5:
+        self.lane_change_ll_prob = min(self.lane_change_ll_prob + DT_MDL, 1.0)
+        if self.lane_change_ll_prob > 0.6  and  abs(c_prob) < 0.3:
           self.lane_change_state = LaneChangeState.laneChangeDone
 
       # done
@@ -370,8 +367,8 @@ class PathPlanner():
     delta_steer = org_angle_steers_des - angle_steers
     #atom
     if self.lane_change_state == LaneChangeState.laneChangeStarting:
-      xp = [40,80]
-      fp2 = [3,10]
+      xp = [40,70]
+      fp2 = [2,8]
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )      
     elif steeringPressed:
@@ -426,10 +423,10 @@ class PathPlanner():
 
     #최대 허용 조향각 제어 로직 2.  
     delta_steer2 = self.angle_steers_des_mpc - angle_steers
-    if delta_steer > DST_ANGLE_LIMIT:
+    if delta_steer2 > DST_ANGLE_LIMIT:   
       p_angle_steers = angle_steers + DST_ANGLE_LIMIT
       self.angle_steers_des_mpc = p_angle_steers
-    elif delta_steer < -DST_ANGLE_LIMIT:
+    elif delta_steer2 < -DST_ANGLE_LIMIT:
       m_angle_steers = angle_steers - DST_ANGLE_LIMIT
       self.angle_steers_des_mpc = m_angle_steers
 
