@@ -23,7 +23,7 @@ LaneChangeDirection = log.PathPlan.LaneChangeDirection
 LOG_MPC = os.environ.get('LOG_MPC', True)
 
 LANE_CHANGE_SPEED_MIN = 40 * CV.KPH_TO_MS
-LANE_CHANGE_TIME_MAX = 9.
+LANE_CHANGE_TIME_MAX = 8.
 DST_ANGLE_LIMIT = 8.
 
 DESIRES = {
@@ -365,26 +365,26 @@ class PathPlanner():
     self.angle_steers_des_mpc = float(math.degrees(delta_desired * VM.sR) + angle_offset)
     org_angle_steers_des = self.angle_steers_des_mpc
     delta_steer = org_angle_steers_des - angle_steers
-    # atom
-    # if steeringPressed:   
-    #   if angle_steers > 10 and steeringTorque > 0:
-    #     debug_status = 0
-    #     delta_steer = max( delta_steer, 0 )
-    #     delta_steer = min( delta_steer, DST_ANGLE_LIMIT )
-    #     self.angle_steers_des_mpc = angle_steers + delta_steer
-    #   elif angle_steers < -10  and steeringTorque < 0:
-    #     debug_status = 0
-    #     delta_steer = min( delta_steer, 0 )
-    #     delta_steer = max( delta_steer, -DST_ANGLE_LIMIT )        
-    #     self.angle_steers_des_mpc = angle_steers + delta_steer
-    #   else:
-    #     debug_status = 1
-    #     if steeringTorque < 0:  # right
-    #       if delta_steer > 0:
-    #         self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, angle_steers )
-    #     elif steeringTorque > 0:  # left
-    #       if delta_steer < 0:
-    #         self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, angle_steers )
+    atom
+    if steeringPressed:   
+      if angle_steers > 10 and steeringTorque > 0:
+        debug_status = 0
+        delta_steer = max( delta_steer, 0 )
+        delta_steer = min( delta_steer, DST_ANGLE_LIMIT )
+        self.angle_steers_des_mpc = angle_steers + delta_steer
+      elif angle_steers < -10  and steeringTorque < 0:
+        debug_status = 0
+        delta_steer = min( delta_steer, 0 )
+        delta_steer = max( delta_steer, -DST_ANGLE_LIMIT )        
+        self.angle_steers_des_mpc = angle_steers + delta_steer
+      else:
+        debug_status = 1
+        if steeringTorque < 0:  # right
+          if delta_steer > 0:
+            self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, angle_steers )
+        elif steeringTorque > 0:  # left
+          if delta_steer < 0:
+            self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, angle_steers )
     if v_ego_kph < 15:  # 30
     # 저속 와리가리 제어.  
       debug_status = 2
