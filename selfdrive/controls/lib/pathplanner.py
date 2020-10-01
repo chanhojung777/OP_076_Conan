@@ -24,7 +24,7 @@ LOG_MPC = os.environ.get('LOG_MPC', True)
 
 LANE_CHANGE_SPEED_MIN = 40 * CV.KPH_TO_MS
 LANE_CHANGE_TIME_MAX = 8.
-DST_ANGLE_LIMIT = 8.
+DST_ANGLE_LIMIT = 7.
 
 DESIRES = {
   LaneChangeDirection.none: {
