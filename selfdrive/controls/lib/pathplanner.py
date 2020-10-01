@@ -365,7 +365,7 @@ class PathPlanner():
     self.angle_steers_des_mpc = float(math.degrees(delta_desired * VM.sR) + angle_offset)
     org_angle_steers_des = self.angle_steers_des_mpc
     delta_steer = org_angle_steers_des - angle_steers
-    atom
+    #atom
     if steeringPressed:   
       if angle_steers > 10 and steeringTorque > 0:
         debug_status = 0
@@ -385,7 +385,7 @@ class PathPlanner():
         elif steeringTorque > 0:  # left
           if delta_steer < 0:
             self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, angle_steers )
-    if v_ego_kph < 15:  # 30
+    elif v_ego_kph < 15:  # 30
     # 저속 와리가리 제어.  
       debug_status = 2
       xp = [3,10,15]
