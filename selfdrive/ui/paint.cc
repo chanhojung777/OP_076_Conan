@@ -571,11 +571,11 @@ static void ui_draw_vision_lanes(UIState *s) {
   }
 
 
-  if( scene->nTimer & 0x01 )
-  {
-     colorLeft = nvgRGBAf(0.5, 0.5, 0.5, left_lane );
-     colorRight = nvgRGBAf(0.5, 0.5, 0.5, right_lane );
-  }
+//  if( scene->nTimer & 0x01 )
+//  {
+//     colorLeft = nvgRGBAf(0.5, 0.5, 0.5, left_lane );
+//     colorRight = nvgRGBAf(0.5, 0.5, 0.5, right_lane );
+//  }
 
 
   // Draw left lane edge
