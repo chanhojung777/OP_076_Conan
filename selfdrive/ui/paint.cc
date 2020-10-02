@@ -567,11 +567,11 @@ static void ui_draw_vision_lanes(UIState *s) {
   if( scene->model.left_lane.prob < 0.5 )
   {
       if ( scene->model.left_lane.prob < 0.2 )
-          colorleft = nvgRGBAf(0.7, 0.1, 0.1, 0.5 );
+          colorLeft = nvgRGBAf(0.7, 0.1, 0.1, 0.5 );
       else if ( scene->model.left_lane.prob < 0.4 )
-          colorleft = nvgRGBAf(0.7, 0.7, 0.1, 0.5 );
+          colorLeft = nvgRGBAf(0.7, 0.7, 0.1, 0.5 );
       else 
-          colorleft = nvgRGBAf(0.1, 0.7, 0.1, 0.5 );      
+          colorLeft = nvgRGBAf(0.1, 0.7, 0.1, 0.5 );      
   }
 
 
