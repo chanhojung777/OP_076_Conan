@@ -518,8 +518,8 @@ static void ui_draw_vision_lanes(UIState *s) {
     s->model_changed = false;
   }
 
-  #float  left_lane =  fmax( 0.1, scene->model.left_lane.prob );
-  #float  right_lane =  fmax( 0.1, scene->model.right_lane.prob );
+  //float  left_lane =  fmax( 0.1, scene->model.left_lane.prob );
+  //float  right_lane =  fmax( 0.1, scene->model.right_lane.prob );
   float  left_lane =  fmax( 0.8, scene->model.left_lane.prob );
   float  right_lane =  fmax( 0.8, scene->model.right_lane.prob );
   
