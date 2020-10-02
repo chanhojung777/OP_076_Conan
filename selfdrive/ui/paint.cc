@@ -518,8 +518,11 @@ static void ui_draw_vision_lanes(UIState *s) {
     s->model_changed = false;
   }
 
-  float  left_lane =  fmax( 0.1, scene->model.left_lane.prob );
-  float  right_lane =  fmax( 0.1, scene->model.right_lane.prob );
+  #float  left_lane =  fmax( 0.1, scene->model.left_lane.prob );
+  #float  right_lane =  fmax( 0.1, scene->model.right_lane.prob );
+  float  left_lane =  fmax( 0.8, scene->model.left_lane.prob );
+  float  right_lane =  fmax( 0.8, scene->model.right_lane.prob );
+  
   NVGcolor colorLeft = nvgRGBAf(0.2, 0.2, 1.0, left_lane );
   NVGcolor colorRight = nvgRGBAf(0.2, 0.2, 1.0, right_lane );
 
@@ -528,7 +531,7 @@ static void ui_draw_vision_lanes(UIState *s) {
     if( scene->leftBlindspot )
       colorLeft  = nvgRGBAf(0.7, 0.1, 0.1, left_lane );
     else
-      colorLeft  = nvgRGBAf(0.1, 0.1, 0.7, left_lane );    
+      colorLeft  = nvgRGBAf(0.1, 0.7, 0.1, left_lane );    
   }
   else if( scene->leftBlindspot )
   {
@@ -540,7 +543,7 @@ static void ui_draw_vision_lanes(UIState *s) {
     if( scene->rightBlindspot )
         colorRight  = nvgRGBAf(0.7, 0.1, 0.1, right_lane );
     else
-        colorRight  = nvgRGBAf(0.1, 0.1, 0.7, right_lane ); 
+        colorRight  = nvgRGBAf(0.1, 0.7, 0.1, right_lane ); 
   }
   else if( scene->rightBlindspot )
   {
@@ -548,30 +551,30 @@ static void ui_draw_vision_lanes(UIState *s) {
   }
 
 
-  if( scene->nTimer & 0x01 )
-  {
-     colorLeft = nvgRGBAf(1.0, 1.0, 1.0, left_lane );
-     colorRight = nvgRGBAf(1.0, 1.0, 1.0, right_lane );
-  }
-
-
   if( scene->model.right_lane.prob < 0.6 )
   {
       if ( scene->model.right_lane.prob < 0.2 )
-          colorRight = nvgRGBAf(0.7, 0.1, 0.1, 0.5 );
+          colorRight = nvgRGBAf(0.7, 0.1, 0.1, right_lane );
       else if ( scene->model.right_lane.prob < 0.4 )
-          colorRight = nvgRGBAf(0.7, 0.7, 0.1, 0.5 );
+          colorRight = nvgRGBAf(0.7, 0.7, 0.1, right_lane );
       else 
-          colorRight = nvgRGBAf(0.1, 0.7, 0.1, 0.5);      
+          colorRight = nvgRGBAf(0.1, 0.7, 0.1, right_lane);      
   }
   if( scene->model.left_lane.prob < 0.5 )
   {
       if ( scene->model.left_lane.prob < 0.2 )
-          colorLeft = nvgRGBAf(0.7, 0.1, 0.1, 0.5 );
+          colorLeft = nvgRGBAf(0.7, 0.1, 0.1, left_lane );
       else if ( scene->model.left_lane.prob < 0.4 )
-          colorLeft = nvgRGBAf(0.7, 0.7, 0.1, 0.5 );
+          colorLeft = nvgRGBAf(0.7, 0.7, 0.1, left_lane );
       else 
-          colorLeft = nvgRGBAf(0.1, 0.7, 0.1, 0.5 );      
+          colorLeft = nvgRGBAf(0.1, 0.7, 0.1, left_lane );      
+  }
+
+
+  if( scene->nTimer & 0x01 )
+  {
+     colorLeft = nvgRGBAf(0.5, 0.5, 0.5, left_lane );
+     colorRight = nvgRGBAf(0.5, 0.5, 0.5, right_lane );
   }
 
 
