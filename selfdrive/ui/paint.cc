@@ -520,8 +520,8 @@ static void ui_draw_vision_lanes(UIState *s) {
 
   float  left_lane =  fmax( 0.1, scene->model.left_lane.prob );
   float  right_lane =  fmax( 0.1, scene->model.right_lane.prob );
-  NVGcolor colorLeft = nvgRGBAf(1.0, 1.0, 1.0, left_lane );
-  NVGcolor colorRight = nvgRGBAf(1.0, 1.0, 1.0, right_lane );
+  NVGcolor colorLeft = nvgRGBAf(0.2, 0.2, 1.0, left_lane );
+  NVGcolor colorRight = nvgRGBAf(0.2, 0.2, 1.0, right_lane );
 
   if( scene->leftBlinker )
   {
