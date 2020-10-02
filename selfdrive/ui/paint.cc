@@ -171,39 +171,6 @@ static void draw_lead(UIState *s, float d_rel, float v_rel, float y_rel)
   draw_chevron(s, d_rel+2.7, y_rel, 25, nvgRGBA(201, 34, 49, fillAlpha), COLOR_YELLOW);
 }
 
-// static void ui_draw_lane_line(UIState *s, const model_path_vertices_data *pvd, NVGcolor color) 
-// {
-//   if (pvd->cnt == 0) return;
-
-//   nvgBeginPath(s->vg);
-//   nvgMoveTo(s->vg, pvd->v[0].x, pvd->v[0].y);
-//   for (int i=1; i<pvd->cnt; i++) {
-//     nvgLineTo(s->vg, pvd->v[i].x, pvd->v[i].y);
-//   }
-//   nvgClosePath(s->vg);
-//   nvgFillColor(s->vg, color);//blue, , nvgRGBA( 0, 120, 0, 150)); //< green 
-//   nvgFill(s->vg);
-
-//   // nvgBeginPath(s->vg);
-//   // bool started = false;
-//   // for (int i=0; i<pvd->cnt; i++) {
-//   //   float x = pvd->v[i].x;
-//   //   float y = pvd->v[i].y;
-//   //   if (x < 0 || y < 0.) {
-//   //     continue;
-//   //   }
-//   //   if (!started) {
-//   //     nvgMoveTo(s->vg, x, y);
-//   //     started = true;
-//   //   } else {
-//   //     nvgLineTo(s->vg, x, y);
-//   //   }
-//   // }
-//   // nvgClosePath(s->vg);
-//   // nvgFillColor(s->vg, nvgRGBA(0, 0, 200, 200));//blue, , nvgRGBA( 0, 120, 0, 150)); //< green 
-//   // nvgFill(s->vg);
-// }
-
 static void ui_draw_lane_line(UIState *s, const model_path_vertices_data *pvd, NVGcolor color) 
 {
   nvgBeginPath(s->vg);
@@ -222,7 +189,7 @@ static void ui_draw_lane_line(UIState *s, const model_path_vertices_data *pvd, N
     }
   }
   nvgClosePath(s->vg);
-  nvgFillColor(s->vg, color);
+  nvgFillColor(s->vg, color); //blue, , nvgRGBA( 0, 120, 0, 150)); //< green   
   nvgFill(s->vg);
 }
 
@@ -560,7 +527,7 @@ static void ui_draw_vision_lanes(UIState *s) {
       else 
           colorRight = nvgRGBAf(0.1, 0.7, 0.1, right_lane);      
   }
-  if( scene->model.left_lane.prob < 0.5 )
+  if( scene->model.left_lane.prob < 0.6 )
   {
       if ( scene->model.left_lane.prob < 0.2 )
           colorLeft = nvgRGBAf(0.7, 0.1, 0.1, left_lane );
