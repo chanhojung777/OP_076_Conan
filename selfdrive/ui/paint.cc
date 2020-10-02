@@ -171,37 +171,59 @@ static void draw_lead(UIState *s, float d_rel, float v_rel, float y_rel)
   draw_chevron(s, d_rel+2.7, y_rel, 25, nvgRGBA(201, 34, 49, fillAlpha), COLOR_YELLOW);
 }
 
+// static void ui_draw_lane_line(UIState *s, const model_path_vertices_data *pvd, NVGcolor color) 
+// {
+//   if (pvd->cnt == 0) return;
+
+//   nvgBeginPath(s->vg);
+//   nvgMoveTo(s->vg, pvd->v[0].x, pvd->v[0].y);
+//   for (int i=1; i<pvd->cnt; i++) {
+//     nvgLineTo(s->vg, pvd->v[i].x, pvd->v[i].y);
+//   }
+//   nvgClosePath(s->vg);
+//   nvgFillColor(s->vg, color);//blue, , nvgRGBA( 0, 120, 0, 150)); //< green 
+//   nvgFill(s->vg);
+
+//   // nvgBeginPath(s->vg);
+//   // bool started = false;
+//   // for (int i=0; i<pvd->cnt; i++) {
+//   //   float x = pvd->v[i].x;
+//   //   float y = pvd->v[i].y;
+//   //   if (x < 0 || y < 0.) {
+//   //     continue;
+//   //   }
+//   //   if (!started) {
+//   //     nvgMoveTo(s->vg, x, y);
+//   //     started = true;
+//   //   } else {
+//   //     nvgLineTo(s->vg, x, y);
+//   //   }
+//   // }
+//   // nvgClosePath(s->vg);
+//   // nvgFillColor(s->vg, nvgRGBA(0, 0, 200, 200));//blue, , nvgRGBA( 0, 120, 0, 150)); //< green 
+//   // nvgFill(s->vg);
+// }
+
 static void ui_draw_lane_line(UIState *s, const model_path_vertices_data *pvd, NVGcolor color) 
 {
-  if (pvd->cnt == 0) return;
-
   nvgBeginPath(s->vg);
-  nvgMoveTo(s->vg, pvd->v[0].x, pvd->v[0].y);
-  for (int i=1; i<pvd->cnt; i++) {
-    nvgLineTo(s->vg, pvd->v[i].x, pvd->v[i].y);
+  bool started = false;
+  for (int i=0; i<pvd->cnt; i++) {
+    float x = pvd->v[i].x;
+    float y = pvd->v[i].y;
+    if (x < 0 || y < 0.) {
+      continue;
+    }
+    if (!started) {
+      nvgMoveTo(s->vg, x, y);
+      started = true;
+    } else {
+      nvgLineTo(s->vg, x, y);
+    }
   }
   nvgClosePath(s->vg);
-  nvgFillColor(s->vg, color);//blue, , nvgRGBA( 0, 120, 0, 150)); //< green 
+  nvgFillColor(s->vg, color);
   nvgFill(s->vg);
-
-  // nvgBeginPath(s->vg);
-  // bool started = false;
-  // for (int i=0; i<pvd->cnt; i++) {
-  //   float x = pvd->v[i].x;
-  //   float y = pvd->v[i].y;
-  //   if (x < 0 || y < 0.) {
-  //     continue;
-  //   }
-  //   if (!started) {
-  //     nvgMoveTo(s->vg, x, y);
-  //     started = true;
-  //   } else {
-  //     nvgLineTo(s->vg, x, y);
-  //   }
-  // }
-  // nvgClosePath(s->vg);
-  // nvgFillColor(s->vg, nvgRGBA(0, 0, 200, 200));//blue, , nvgRGBA( 0, 120, 0, 150)); //< green 
-  // nvgFill(s->vg);
 }
 
 static void update_track_data(UIState *s, bool is_mpc, track_vertices_data *pvd) 
@@ -477,7 +499,8 @@ static void update_all_lane_lines_data(UIState *s, const PathData &path, model_p
 }
 
 static void ui_draw_lane(UIState *s, const PathData *path, model_path_vertices_data *pstart, NVGcolor color) {
-  ui_draw_lane_line(s, pstart, nvgRGBA(0, 0, 200, 200));
+  // ui_draw_lane_line(s, pstart, nvgRGBA(0, 0, 200, 200));
+  ui_draw_lane_line(s, pstart, color);  
   float var = fmin(path->std, 0.7);
   color.a /= 4;
   ui_draw_lane_line(s, pstart + 1, color);
@@ -503,26 +526,52 @@ static void ui_draw_vision_lanes(UIState *s) {
   if( scene->leftBlinker )
   {
     if( scene->leftBlindspot )
-      colorLeft  = nvgRGBAf(1.0, 0.2, 0.2, left_lane );
+      colorLeft  = nvgRGBAf(0.7, 0.1, 0.1, left_lane );
     else
-      colorLeft  = nvgRGBAf(0.2, 0.2, 1.0, left_lane );    
+      colorLeft  = nvgRGBAf(0.1, 0.1, 0.7, left_lane );    
   }
   else if( scene->leftBlindspot )
   {
-    colorLeft  = nvgRGBAf(1.0, 0.5, 0.5, left_lane );
+    colorLeft  = nvgRGBAf(0.7, 0.1, 0.1, left_lane );
   }
-
 
   if( scene->rightBlinker )
   {
     if( scene->rightBlindspot )
-        colorRight  = nvgRGBAf(1.0, 0.2, 0.2, right_lane );
+        colorRight  = nvgRGBAf(0.7, 0.1, 0.1, right_lane );
     else
-        colorRight  = nvgRGBAf(0.2, 0.2, 1.0, right_lane ); 
+        colorRight  = nvgRGBAf(0.1, 0.1, 0.7, right_lane ); 
   }
   else if( scene->rightBlindspot )
   {
-    colorRight  = nvgRGBAf(1.0, 0.5, 0.5, right_lane );
+    colorRight  = nvgRGBAf(0.7, 0.1, 0.1, right_lane );
+  }
+
+
+  if( scene->nTimer & 0x01 )
+  {
+     colorLeft = nvgRGBAf(1.0, 1.0, 1.0, left_lane );
+     colorRight = nvgRGBAf(1.0, 1.0, 1.0, right_lane );
+  }
+
+
+  if( model.right_lane.prob < 0.6 )
+  {
+      if ( model.right_lane.prob < 0.2 )
+          colorRight = nvgRGBAf(0.7, 0.1, 0.1, 0.5 );
+      else if ( model.right_lane.prob < 0.4 )
+          colorRight = nvgRGBAf(0.7, 0.7, 0.1, 0.5 );
+      else 
+          colorRight = nvgRGBAf(0.1, 0.7, 0.1, 0.5);      
+  }
+  if( model.left_lane.prob < 0.5 )
+  {
+      if ( model.left_lane.prob < 0.2 )
+          colorleft = nvgRGBAf(0.7, 0.1, 0.1, 0.5 );
+      else if ( model.left_lane.prob < 0.4 )
+          colorleft = nvgRGBAf(0.7, 0.7, 0.1, 0.5 );
+      else 
+          colorleft = nvgRGBAf(0.1, 0.7, 0.1, 0.5 );      
   }
 
 

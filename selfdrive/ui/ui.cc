@@ -983,11 +983,13 @@ int main(int argc, char* argv[]) {
   int draws = 0;
 
   UIScene &scene = s->scene;
-  s->scene.satelliteCount = -1;
+  scene.satelliteCount = -1;
+  scene.batteryPercent = 50;  
   s->started = false;
   s->vision_seen = false;
   int nAwakeTime = 0;
   int nParamRead = 0;
+  int nFrame30 = 0;  
   while (!do_exit) {
     bool should_swap = false;
     if (!s->started) {
@@ -999,6 +1001,13 @@ int main(int argc, char* argv[]) {
     double u1 = millis_since_boot();
 
     // parameter Read.
+    nFrame30++;
+    if( nFrame30 > 8 )
+    {
+      scene.nTimer++;
+      nFrame30 = 0;
+    }
+
     nParamRead++;
     switch( nParamRead )
     {
@@ -1033,10 +1042,10 @@ int main(int argc, char* argv[]) {
     set_brightness(s, (int)smooth_brightness);
 
     // resize vision for collapsing sidebar
-    const bool hasSidebar = !s->scene.uilayout_sidebarcollapsed;
-    s->scene.ui_viz_rx = hasSidebar ? box_x : (box_x - sbr_w + (bdr_s * 2));
-    s->scene.ui_viz_rw = hasSidebar ? box_w : (box_w + sbr_w - (bdr_s * 2));
-    s->scene.ui_viz_ro = hasSidebar ? -(sbr_w - 6 * bdr_s) : 0;
+    const bool hasSidebar = !scene.uilayout_sidebarcollapsed;
+    scene.ui_viz_rx = hasSidebar ? box_x : (box_x - sbr_w + (bdr_s * 2));
+    scene.ui_viz_rw = hasSidebar ? box_w : (box_w + sbr_w - (bdr_s * 2));
+    scene.ui_viz_ro = hasSidebar ? -(sbr_w - 6 * bdr_s) : 0;
 
     // poll for touch events
     int touch_x = -1, touch_y = -1;
@@ -1100,7 +1109,7 @@ int main(int argc, char* argv[]) {
 
       // Visiond process is just stopped, force a redraw to make screen blank again.
       if (!s->started) {
-        s->scene.uilayout_sidebarcollapsed = false;
+        scene.uilayout_sidebarcollapsed = false;
         update_offroad_layout_state(s);
         ui_draw(s);
         glFinish();
@@ -1122,7 +1131,7 @@ int main(int argc, char* argv[]) {
     if (s->hardware_timeout > 0) {
       s->hardware_timeout--;
     } else {
-      s->scene.hwType = cereal::HealthData::HwType::UNKNOWN;
+      scene.hwType = cereal::HealthData::HwType::UNKNOWN;
     }
 
     // Don't waste resources on drawing in case screen is off
@@ -1139,7 +1148,7 @@ int main(int argc, char* argv[]) {
     } else  {
       //if( scene.params.nOpkrUIVolumeBoost )
       //{
-          int volume = fmin(MAX_VOLUME, MIN_VOLUME + s->scene.v_ego / 5);  // up one notch every 5 m/s
+          int volume = fmin(MAX_VOLUME, MIN_VOLUME + scene.v_ego / 5);  // up one notch every 5 m/s
           set_volume( volume );
       //}
       s->volume_timeout = 5 * UI_FREQ;
@@ -1149,15 +1158,15 @@ int main(int argc, char* argv[]) {
     if (s->controls_timeout > 0) {
       s->controls_timeout--;
     } else {
-      if (s->started && s->controls_seen && s->scene.alert_text2 != "Controls Unresponsive") {
+      if (s->started && s->controls_seen && scene.alert_text2 != "Controls Unresponsive") {
         LOGE("Controls unresponsive");
-        s->scene.alert_size = cereal::ControlsState::AlertSize::FULL;
+        scene.alert_size = cereal::ControlsState::AlertSize::FULL;
         update_status(s, STATUS_ALERT);
 
-        s->scene.alert_text1 = "TAKE CONTROL IMMEDIATELY";
-        s->scene.alert_text2 = "Controls Unresponsive";
+        scene.alert_text1 = "TAKE CONTROL IMMEDIATELY";
+        scene.alert_text2 = "Controls Unresponsive";
         ui_awake_aleat( s );
-        ui_draw_vision_alert(s, s->scene.alert_size, s->status, s->scene.alert_text1.c_str(), s->scene.alert_text2.c_str());
+        ui_draw_vision_alert(s, scene.alert_size, s->status, scene.alert_text1.c_str(), scene.alert_text2.c_str());
 
         s->alert_sound_timeout = 2 * UI_FREQ;
         s->alert_sound = cereal::CarControl::HUDControl::AudibleAlert::CHIME_WARNING_REPEAT;
@@ -1182,11 +1191,11 @@ int main(int argc, char* argv[]) {
     int param_read = read_param_uint64_timeout(&s->last_athena_ping, "LastAthenaPingTime", &s->last_athena_ping_timeout);
     if (param_read != -1) { // Param was updated this loop
       if (param_read != 0) { // Failed to read param
-        s->scene.athenaStatus = NET_DISCONNECTED;
+        scene.athenaStatus = NET_DISCONNECTED;
       } else if (nanos_since_boot() - s->last_athena_ping < 70e9) {
-        s->scene.athenaStatus = NET_CONNECTED;
+        scene.athenaStatus = NET_CONNECTED;
       } else {
-        s->scene.athenaStatus = NET_ERROR;
+        scene.athenaStatus = NET_ERROR;
       }
     }
     update_offroad_layout_timeout(s, &s->offroad_layout_timeout);
