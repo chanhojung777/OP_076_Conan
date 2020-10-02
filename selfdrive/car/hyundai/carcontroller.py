@@ -286,7 +286,7 @@ class CarController():
     # str_log2 = 'limit={:.0f} tm={:.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
     # trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 
-    str_log1 = 'CV={:5.1f} 조향토크값:적용[{:5.0f}]/목표[{:5.0f}]'.format( self.model_speed , apply_steer, dst_steer )
+    str_log1 = 'CV={:5.1f} 조향토크값:적용[{:5.0f}]/필요[{:5.0f}]/최대[{:5.0f}]'.format( self.model_speed , apply_steer, new_steer, dst_steer )
     str_log2 = '  limit={:.0f}  tm={:.1f} '.format( apply_steer_limit, self.timer1.sampleTime()  )
     trace1.printf( '{} {}'.format( str_log1, str_log2 ) )
 

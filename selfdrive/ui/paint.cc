@@ -480,8 +480,10 @@ static void ui_draw_lane(UIState *s, const PathData *path, model_path_vertices_d
   ui_draw_lane_line(s, pstart, nvgRGBA(0, 0, 200, 200));
   float var = fmin(path->std, 0.7);
   color.a /= 4;
-  ui_draw_lane_line(s, pstart + 1, nvgRGBA(0, 128, 255, 200)); //(0, 0, 200, 100)); //
-  ui_draw_lane_line(s, pstart + 2, nvgRGBA(0, 128, 255, 200)); //(0, 0, 200, 100)); //
+  ui_draw_lane_line(s, pstart + 1, color);
+  ui_draw_lane_line(s, pstart + 2, color);  
+  // ui_draw_lane_line(s, pstart + 1, nvgRGBA(0, 128, 255, 200)); //(0, 0, 200, 100)); //
+  // ui_draw_lane_line(s, pstart + 2, nvgRGBA(0, 128, 255, 200)); //(0, 0, 200, 100)); //
 }
 
 static void ui_draw_vision_lanes(UIState *s) {
@@ -492,17 +494,49 @@ static void ui_draw_vision_lanes(UIState *s) {
     update_all_lane_lines_data(s, scene->model.right_lane, pvd + MODEL_LANE_PATH_CNT);
     s->model_changed = false;
   }
+
+  float  left_lane =  fmax( 0.1, scene->model.left_lane.prob );
+  float  right_lane =  fmax( 0.1, scene->model.right_lane.prob );
+  NVGcolor colorLeft = nvgRGBAf(1.0, 1.0, 1.0, left_lane );
+  NVGcolor colorRight = nvgRGBAf(1.0, 1.0, 1.0, right_lane );
+
+  if( scene->leftBlinker )
+  {
+    if( scene->leftBlindspot )
+      colorLeft  = nvgRGBAf(1.0, 0.2, 0.2, left_lane );
+    else
+      colorLeft  = nvgRGBAf(0.2, 0.2, 1.0, left_lane );    
+  }
+  else if( scene->leftBlindspot )
+  {
+    colorLeft  = nvgRGBAf(1.0, 0.5, 0.5, left_lane );
+  }
+
+
+  if( scene->rightBlinker )
+  {
+    if( scene->rightBlindspot )
+        colorRight  = nvgRGBAf(1.0, 0.2, 0.2, right_lane );
+    else
+        colorRight  = nvgRGBAf(0.2, 0.2, 1.0, right_lane ); 
+  }
+  else if( scene->rightBlindspot )
+  {
+    colorRight  = nvgRGBAf(1.0, 0.5, 0.5, right_lane );
+  }
+
+
   // Draw left lane edge
   ui_draw_lane(
       s, &scene->model.left_lane,
       pvd,
-      nvgRGBAf(1.0, 1.0, 1.0, scene->model.left_lane.prob));
+      colorLeft );
 
   // Draw right lane edge
   ui_draw_lane(
       s, &scene->model.right_lane,
       pvd + MODEL_LANE_PATH_CNT,
-      nvgRGBAf(1.0, 1.0, 1.0, scene->model.right_lane.prob));
+      colorRight );
 
   if( s->livempc_or_radarstate_changed ) {
     update_all_track_data(s);
