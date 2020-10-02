@@ -164,7 +164,7 @@ class CarController():
       self.steer_torque_over_timer = 0
     elif CS.out.leftBlinker or CS.out.rightBlinker:
       sec_mval = 0.5 # 오파 => 운전자.
-      sec_pval = 8 # 운전자 => 오파  (sec)
+      sec_pval = 6 # 운전자 => 오파  (sec)
 
     if v_ego_kph > 5 and CS.out.steeringPressed:  #사용자 핸들 토크
       if abs_angle_steers > 5 and CS.out.steeringTorque < -10: #STEER_THRESHOLD:   #right

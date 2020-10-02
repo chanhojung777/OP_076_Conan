@@ -302,14 +302,14 @@ class PathPlanner():
       # starting
       elif self.lane_change_state == LaneChangeState.laneChangeStarting:
         # fade out over .5s
-        # xp = [40,60,70,80,120]
-        # fp2 = [0.1,0.6,1.2,1.5,1.8] 
-        xp = [40,80]
-        fp2 = [1,2]
+        xp = [40,60,70,80,120]
+        fp2 = [0.1,0.6,1.2,1.5,1.8] 
+        # xp = [40,80]
+        # fp2 = [1,2]
         lane_time = interp( v_ego_kph, xp, fp2 ) 
         self.lane_change_ll_prob = max(self.lane_change_ll_prob - lane_time*DT_MDL, 0.0)
         # 98% certainty => 95%
-        if lane_change_prob < 0.05 and self.lane_change_ll_prob < 0.01:
+        if lane_change_prob < 0.10 and self.lane_change_ll_prob < 0.02:
           self.lane_change_state = LaneChangeState.laneChangeFinishing
 
       # finishing
@@ -367,23 +367,24 @@ class PathPlanner():
     delta_steer = org_angle_steers_des - angle_steers
     #atom
     if self.lane_change_state == LaneChangeState.laneChangeStarting:
+      debug_status = 0
       xp = [40,70]
       fp2 = [2,10]
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )      
     elif steeringPressed:
       if angle_steers > 10 and steeringTorque > 0:
-        debug_status = 0
+        debug_status = 1
         delta_steer = max( delta_steer, 0 )
         delta_steer = min( delta_steer, DST_ANGLE_LIMIT )
         self.angle_steers_des_mpc = angle_steers + delta_steer
       elif angle_steers < -10  and steeringTorque < 0:
-        debug_status = 0
+        debug_status = 1
         delta_steer = min( delta_steer, 0 )
         delta_steer = max( delta_steer, -DST_ANGLE_LIMIT )        
         self.angle_steers_des_mpc = angle_steers + delta_steer
       else:
-        debug_status = 1
+        debug_status = 2
         if steeringTorque < 0:  # right
           if delta_steer > 0:
             self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, angle_steers )
@@ -392,16 +393,16 @@ class PathPlanner():
             self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, DST_ANGLE_LIMIT, angle_steers )
     elif v_ego_kph < 15:  # 30
     # 저속 와리가리 제어.  
-      debug_status = 2
+      debug_status = 3
       xp = [3,10,15]
       fp2 = [1,5,7]
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
     elif v_ego_kph > 90: 
-      debug_status = 3
+      debug_status = 4
       pass
     elif abs(angle_steers) > 10: 
-      debug_status = 4
+      debug_status = 5
     #최대 허용 조향각 제어 로직 1.  
       xp = [-30,-20,-10,-5,0,5,10,20,30]    # 5=>약12도, 10=>28 15=>35, 30=>52
       fp1 = [ 5, 7, 9,11,13,15,18,15,12]    # +
@@ -478,11 +479,6 @@ class PathPlanner():
     plan_send.pathPlan.steerRatio = self.steerRatio
     plan_send.pathPlan.steerActuatorDelay = steerActuatorDelay
     pm.send('pathPlan', plan_send)
-
-    # if self.solution_invalid_cnt > 0:
-    #   str_log3 = 'v_ego_kph={:.1f} angle_steers_des_mpc={:.1f} angle_steers={:.1f} solution_invalid_cnt={:.0f} mpc_solution={:.1f}/{:.0f}'.format( v_ego_kph, self.angle_steers_des_mpc, angle_steers, self.solution_invalid_cnt, self.mpc_solution[0].cost, mpc_nans )
-    #   self.trpathPlan.add( 'pathPlan {}  LOG_MPC={}'.format( str_log3, LOG_MPC ) )
-
 
     if LOG_MPC:
       dat = messaging.new_message('liveMpc')

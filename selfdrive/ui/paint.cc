@@ -171,6 +171,7 @@ static void draw_lead(UIState *s, float d_rel, float v_rel, float y_rel)
   draw_chevron(s, d_rel+2.7, y_rel, 25, nvgRGBA(201, 34, 49, fillAlpha), COLOR_YELLOW);
 }
 
+
 static void ui_draw_lane_line(UIState *s, const model_path_vertices_data *pvd, NVGcolor color) 
 {
   nvgBeginPath(s->vg);
@@ -261,7 +262,6 @@ static void update_all_track_data(UIState *s)
     update_track_data(s, true, &s->track_vertices[1]);
   }
 }
-
 
 
 static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd) 
@@ -487,23 +487,23 @@ static void ui_draw_vision_lanes(UIState *s) {
 
   //float  left_lane =  fmax( 0.1, scene->model.left_lane.prob );
   //float  right_lane =  fmax( 0.1, scene->model.right_lane.prob );
-  float  left_lane =  fmax( 0.8, scene->model.left_lane.prob );
+  float  left_lane =  fmax( 0.8, scene->model.left_lane.prob ); // 최소한 80%정도 진하게 
   float  right_lane =  fmax( 0.8, scene->model.right_lane.prob );
   
-  NVGcolor colorLeft = nvgRGBAf(0.2, 0.2, 1.0, left_lane );
+  NVGcolor colorLeft = nvgRGBAf(0.2, 0.2, 1.0, left_lane ); // 기본차선인식선 색상 블루
   NVGcolor colorRight = nvgRGBAf(0.2, 0.2, 1.0, right_lane );
 
   if( scene->leftBlinker )
   {
     if( scene->leftBlindspot )
-      colorLeft  = nvgRGBAf(0.7, 0.1, 0.1, left_lane );
+      colorLeft  = nvgRGBAf(0.7, 0.1, 0.1, left_lane ); // 왼쪽 차선변경 시도시 왼쪽차선 차량 감지되면 레드
     else
-      colorLeft  = nvgRGBAf(0.1, 0.7, 0.1, left_lane );    
+      colorLeft  = nvgRGBAf(0.1, 0.7, 0.1, left_lane ); // 왼쪽 차선변경 시도시 왼쪽차선 차량 없으면 그린
   }
-  else if( scene->leftBlindspot )
-  {
-    colorLeft  = nvgRGBAf(0.7, 0.1, 0.1, left_lane );
-  }
+  // else if( scene->leftBlindspot )
+  // {
+  //  colorLeft  = nvgRGBAf(0.7, 0.1, 0.1, left_lane ); // 주행중 왼쪽차선 차량 감지되면 레드
+  //}
 
   if( scene->rightBlinker )
   {
@@ -512,20 +512,20 @@ static void ui_draw_vision_lanes(UIState *s) {
     else
         colorRight  = nvgRGBAf(0.1, 0.7, 0.1, right_lane ); 
   }
-  else if( scene->rightBlindspot )
-  {
-    colorRight  = nvgRGBAf(0.7, 0.1, 0.1, right_lane );
-  }
+  //else if( scene->rightBlindspot )
+  //{
+  //  colorRight  = nvgRGBAf(0.7, 0.1, 0.1, right_lane );
+  //}
 
 
   if( scene->model.right_lane.prob < 0.6 )
   {
       if ( scene->model.right_lane.prob < 0.2 )
-          colorRight = nvgRGBAf(0.7, 0.1, 0.1, right_lane );
+          colorRight = nvgRGBAf(0.7, 0.1, 0.1, right_lane ); // 오른쪽 차선 인식률이 20% 미만이면 레드
       else if ( scene->model.right_lane.prob < 0.4 )
-          colorRight = nvgRGBAf(0.7, 0.7, 0.1, right_lane );
+          colorRight = nvgRGBAf(0.7, 0.7, 0.1, right_lane ); // 오른쪽 차선 인식률이 40% 미만이면 옐로우
       else 
-          colorRight = nvgRGBAf(0.1, 0.7, 0.1, right_lane);      
+          colorRight = nvgRGBAf(0.1, 0.7, 0.1, right_lane); // 오른쪽 차선 인식률이 60% 미만이면 그린
   }
   if( scene->model.left_lane.prob < 0.6 )
   {
@@ -660,7 +660,7 @@ static void ui_draw_vision_maxspeed(UIState *s) {
 
   nvgTextAlign(s->vg, NVG_ALIGN_CENTER | NVG_ALIGN_BASELINE);
   const int text_x = viz_maxspeed_x + (viz_maxspeed_xo / 2) + (viz_maxspeed_w / 2);
-  ui_draw_text(s->vg, text_x, 148, "MAX", 26 * 2.5, COLOR_WHITE_ALPHA(is_cruise_set ? 200 : 100), s->font_sans_regular);
+  ui_draw_text(s->vg, text_x, 148, "MAX", 30 * 2.5, COLOR_WHITE_ALPHA(is_cruise_set ? 200 : 100), s->font_sans_regular);
 
 
    
@@ -767,8 +767,6 @@ static void ui_draw_debug(UIState *s)
   //ui_print( s, x_pos, y_pos+250, "Wheel:%.1f,%.1f,%.1f,%.1f", scene.wheel.fl, scene.wheel.fr, scene.wheel.rl, scene.wheel.rr );
   //ui_print( s, x_pos, y_pos+0, "%d, %d, %d, %d, %d", scene.params.nOpkrUIBrightness, scene.params.nLightSensor, scene.params.nSmoothBrightness, scene.params.nOpkrUIVolumeBoost, scene.params.nOpkrAutoLanechangedelay );
 
-  
-     
   //ui_print( s, x_pos, y_pos+0, "cO:%.3f  %d, %d",scene.carParams.lateralsRatom.cameraOffset, scene.cruiseState.cruiseSwState, s->livempc_or_radarstate_changed );
   // ui_print( s, x_pos, y_pos+0, "model_sum:%.1f" , scene.model_sum);
   // ui_print( s, x_pos, y_pos+50, "prob:%.2f, %.2f", scene.pathPlan.lProb, scene.pathPlan.rProb );
