@@ -63,8 +63,8 @@ class SpdController():
 
         self.traceSC = trace1.Loger("SPD_CTRL")
 
-        self.wheelbase = 2.845
-        self.steerRatio = 12.5  # 12.5
+        self.wheelbase = 2.885
+        self.steerRatio = 13.0  # 12.5
 
         self.v_model = 0
         self.a_model = 0
@@ -271,7 +271,6 @@ class SpdController():
             set_speed = 30
 
         # control process
-        target_set_speed = set_speed
         delta = int(set_speed) - int(CS.VSetDis)
         dec_step_cmd = 1
 
