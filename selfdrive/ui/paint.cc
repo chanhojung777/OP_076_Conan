@@ -499,7 +499,7 @@ static void ui_draw_vision_lanes(UIState *s) {
       colorLeft  = nvgRGBAf(0.1, 0.7, 0.1, left_lane ); // 왼쪽 차선변경 시도시 차량 없으면 그린
     if( scene->nTimer & 0x01 )
     {
-       colorLeft = nvgRGBAf(1.0, 0.7, 0.1, left_lane ); // 점멸시 노랑색
+       colorLeft = nvgRGBAf(1.0, 1.0, 0.1, left_lane ); // 점멸시 노랑색
        //colorRight = nvgRGBAf(0.5, 0.5, 0.5, right_lane );
     }      
   }
@@ -513,7 +513,7 @@ static void ui_draw_vision_lanes(UIState *s) {
     if( scene->nTimer & 0x01 )
     {
        //colorLeft = nvgRGBAf(0.5, 0.5, 0.5, left_lane );
-       colorRight = nvgRGBAf(1.0, 0.7, 0.1, right_lane ); // 점멸시 노랑색
+       colorRight = nvgRGBAf(1.0, 1.0, 0.1, right_lane ); // 점멸시 노랑색
     }
   }
 
