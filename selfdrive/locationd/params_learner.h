@@ -9,7 +9,7 @@
 #define MAX_STIFFNESS  2.0
 #define MIN_SR  0.3
 #define MAX_SR  2.0
-#define MIN_SR_TH  0.55
+#define MIN_SR_TH  0.35
 #define MAX_SR_TH  1.9
 
 class ParamsLearner {

@@ -486,19 +486,18 @@ static void ui_draw_vision_lanes(UIState *s) {
   float  left_lane =  fmax( 0.9, scene->model.left_lane.prob ); // 최소한 90%정도 진하게 
   float  right_lane =  fmax( 0.9, scene->model.right_lane.prob );
   
-  NVGcolor colorLeft = nvgRGBAf(0.1, 0.7, 0.1, left_lane );   // 기본차선인식선 색상 그린
-  NVGcolor colorRight = nvgRGBAf(0.1, 0.7, 0.1, right_lane ); // 기본차선인식선 색상 그린
+  NVGcolor colorLeft = nvgRGBAf(0.1, 0.7, 0.1, 1.0 );   // 기본차선인식선 색상 그린
+  NVGcolor colorRight = nvgRGBAf(0.1, 0.7, 0.1, 1.0 ); // 기본차선인식선 색상 그린
 
   if( scene->leftBlinker )
   {
     if( scene->leftBlindspot )
       colorLeft  = nvgRGBAf(0.7, 0.1, 0.1, 1.0 ); // 왼쪽 차선변경 시도시 차량 감지되면 레드
     else
-      colorLeft  = nvgRGBAf(0.1, 0.7, 0.1, left_lane ); // 왼쪽 차선변경 시도시 차량 없으면 그린
+      colorLeft  = nvgRGBAf(0.1, 0.7, 0.1, 1.0 ); // 왼쪽 차선변경 시도시 차량 없으면 그린
     if( scene->nTimer & 0x01 )
     {
        colorLeft = nvgRGBAf(0.7, 0.7, 0.7, left_lane ); // 점멸시 그레이색
-       //colorRight = nvgRGBAf(0.5, 0.5, 0.5, right_lane );
     }      
   }
 
@@ -507,10 +506,9 @@ static void ui_draw_vision_lanes(UIState *s) {
     if( scene->rightBlindspot )
         colorRight  = nvgRGBAf(0.7, 0.1, 0.1, 1.0 ); // 오른쪽 차선변경 시도시 차량 감지되면 레드
     else
-        colorRight  = nvgRGBAf(0.1, 0.7, 0.1, right_lane ); // 오른쪽 차선변경 시도시 차량 없으면 그린
+        colorRight  = nvgRGBAf(0.1, 0.7, 0.1, 1.0 ); // 오른쪽 차선변경 시도시 차량 없으면 그린
     if( scene->nTimer & 0x01 )
     {
-       //colorLeft = nvgRGBAf(0.5, 0.5, 0.5, left_lane );
        colorRight = nvgRGBAf(0.7, 0.7, 0.7, right_lane ); // 점멸시 그레이색
     }
   }
@@ -519,18 +517,17 @@ static void ui_draw_vision_lanes(UIState *s) {
   if( scene->model.right_lane.prob < 0.5 )
   {
       if ( scene->model.right_lane.prob < 0.2 )
-          colorRight = nvgRGBAf(0.7, 0.1, 0.1, right_lane ); // 오른쪽 차선 인식률이 20% 미만이면 레드
+          colorRight = nvgRGBAf(0.7, 0.1, 0.1, 1.0 ); // 오른쪽 차선 인식률이 20% 미만이면 레드
       else 
-          colorRight = nvgRGBAf(1.0, 0.7, 0.1, right_lane ); // 오른쪽 차선 인식률이 50% 미만이면 주황
+          colorRight = nvgRGBAf(1.0, 0.7, 0.1, 1.0 ); // 오른쪽 차선 인식률이 20~50% 미만이면 주황
   }
   if( scene->model.left_lane.prob < 0.5 )
   {
       if ( scene->model.left_lane.prob < 0.2 )
-          colorLeft = nvgRGBAf(0.7, 0.1, 0.1, left_lane );
+          colorLeft = nvgRGBAf(0.7, 0.1, 0.1, 1.0 ); // 왼쪽 차선 인식률이 20% 미만이면 레드
       else 
-          colorLeft = nvgRGBAf(1.0, 0.7, 0.1, left_lane );   
+          colorLeft = nvgRGBAf(1.0, 0.7, 0.1, 1.0 ); // 왼쪽 차선 인식률이 20~50% 미만이면 주황  
   }
-
 
   // Draw left lane edge
   ui_draw_lane(
