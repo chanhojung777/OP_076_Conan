@@ -490,8 +490,8 @@ static void ui_draw_vision_lanes(UIState *s) {
   float  left_lane =  fmax( 0.8, scene->model.left_lane.prob ); // 최소한 80%정도 진하게 
   float  right_lane =  fmax( 0.8, scene->model.right_lane.prob );
   
-  NVGcolor colorLeft = nvgRGBAf(0.2, 0.2, 1.0, left_lane ); // 기본차선인식선 색상 블루
-  NVGcolor colorRight = nvgRGBAf(0.2, 0.2, 1.0, right_lane );
+  NVGcolor colorLeft = nvgRGBAf(0.1, 0.7, 0.1, left_lane ); // 기본차선인식선 색상 그린
+  NVGcolor colorRight = nvgRGBAf(0.1, 0.7, 0.1, right_lane );
 
   if( scene->leftBlinker )
   {
@@ -518,23 +518,23 @@ static void ui_draw_vision_lanes(UIState *s) {
   //}
 
 
-  if( scene->model.right_lane.prob < 0.6 )
+  if( scene->model.right_lane.prob < 0.4 )
   {
       if ( scene->model.right_lane.prob < 0.2 )
           colorRight = nvgRGBAf(0.7, 0.1, 0.1, right_lane ); // 오른쪽 차선 인식률이 20% 미만이면 레드
-      else if ( scene->model.right_lane.prob < 0.4 )
+      else // if ( scene->model.right_lane.prob < 0.4 )
           colorRight = nvgRGBAf(0.7, 0.7, 0.1, right_lane ); // 오른쪽 차선 인식률이 40% 미만이면 옐로우
-      else 
-          colorRight = nvgRGBAf(0.1, 0.7, 0.1, right_lane); // 오른쪽 차선 인식률이 60% 미만이면 그린
+      //else 
+      //    colorRight = nvgRGBAf(0.1, 0.7, 0.1, right_lane); // 오른쪽 차선 인식률이 60% 미만이면 그린
   }
-  if( scene->model.left_lane.prob < 0.6 )
+  if( scene->model.left_lane.prob < 0.4 )
   {
       if ( scene->model.left_lane.prob < 0.2 )
           colorLeft = nvgRGBAf(0.7, 0.1, 0.1, left_lane );
-      else if ( scene->model.left_lane.prob < 0.4 )
+      else // if ( scene->model.left_lane.prob < 0.4 )
           colorLeft = nvgRGBAf(0.7, 0.7, 0.1, left_lane );
-      else 
-          colorLeft = nvgRGBAf(0.1, 0.7, 0.1, left_lane );      
+      //else 
+      //    colorLeft = nvgRGBAf(0.1, 0.7, 0.1, left_lane );      
   }
 
 
