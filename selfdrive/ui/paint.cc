@@ -386,8 +386,6 @@ static void draw_steering(UIState *s, float curvature) {
     float y_actual = i * tan(asin(clamp(i * curvature, -0.999, 0.999)) / 2.);
     points[i] = y_actual;
   }
-
-  // ui_draw_lane_edge(s, points, 0.0, nvgRGBA(0, 0, 255, 128), 5);
 }
 
 static void draw_frame(UIState *s) {
