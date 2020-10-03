@@ -499,6 +499,11 @@ static void ui_draw_vision_lanes(UIState *s) {
       colorLeft  = nvgRGBAf(0.7, 0.1, 0.1, left_lane ); // 왼쪽 차선변경 시도시 왼쪽차선 차량 감지되면 레드
     else
       colorLeft  = nvgRGBAf(0.1, 0.7, 0.1, left_lane ); // 왼쪽 차선변경 시도시 왼쪽차선 차량 없으면 그린
+    if( scene->nTimer & 0x01 )
+    {
+       colorLeft = nvgRGBAf(0.5, 0.5, 0.5, left_lane );
+       colorRight = nvgRGBAf(0.5, 0.5, 0.5, right_lane );
+    }      
   }
   // else if( scene->leftBlindspot )
   // {
@@ -511,11 +516,17 @@ static void ui_draw_vision_lanes(UIState *s) {
         colorRight  = nvgRGBAf(0.7, 0.1, 0.1, right_lane );
     else
         colorRight  = nvgRGBAf(0.1, 0.7, 0.1, right_lane ); 
+    if( scene->nTimer & 0x01 )
+    {
+       colorLeft = nvgRGBAf(0.5, 0.5, 0.5, left_lane );
+       colorRight = nvgRGBAf(0.5, 0.5, 0.5, right_lane );
+    }
   }
   //else if( scene->rightBlindspot )
   //{
   //  colorRight  = nvgRGBAf(0.7, 0.1, 0.1, right_lane );
   //}
+
 
 
   if( scene->model.right_lane.prob < 0.4 )
@@ -536,13 +547,6 @@ static void ui_draw_vision_lanes(UIState *s) {
       //else 
       //    colorLeft = nvgRGBAf(0.1, 0.7, 0.1, left_lane );      
   }
-
-
-//  if( scene->nTimer & 0x01 )
-//  {
-//     colorLeft = nvgRGBAf(0.5, 0.5, 0.5, left_lane );
-//     colorRight = nvgRGBAf(0.5, 0.5, 0.5, right_lane );
-//  }
 
 
   // Draw left lane edge
