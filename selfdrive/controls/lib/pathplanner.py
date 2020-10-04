@@ -308,15 +308,15 @@ class PathPlanner():
         # fp2 = [1,2]
         lane_time = interp( v_ego_kph, xp, fp2 ) 
         self.lane_change_ll_prob = max(self.lane_change_ll_prob - lane_time*DT_MDL, 0.0)
-        # 98% certainty => 95%
-        if lane_change_prob < 0.05 and self.lane_change_ll_prob < 0.02:
+        # 98% certainty 
+        if lane_change_prob < 0.02 and self.lane_change_ll_prob < 0.01:
           self.lane_change_state = LaneChangeState.laneChangeFinishing
 
       # finishing
       elif self.lane_change_state == LaneChangeState.laneChangeFinishing:
         # fade in laneline over 1s
         self.lane_change_ll_prob = min(self.lane_change_ll_prob + DT_MDL, 1.0)
-        if self.lane_change_ll_prob > 0.8  and  abs(c_prob) < 0.3:
+        if self.lane_change_ll_prob > 0.6  and  abs(c_prob) < 0.3:
           self.lane_change_state = LaneChangeState.laneChangeDone
 
       # done
@@ -369,7 +369,7 @@ class PathPlanner():
     if self.lane_change_state == LaneChangeState.laneChangeStarting:
       debug_status = 0
       xp = [40,70]
-      fp2 = [2,8]
+      fp2 = [3,8]
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )      
     elif steeringPressed:
@@ -395,7 +395,7 @@ class PathPlanner():
     # 저속 와리가리 제어.  
       debug_status = 3
       xp = [3,10,15]
-      fp2 = [1,5,7]
+      fp2 = [3,5,7]
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
     elif v_ego_kph > 90: 
