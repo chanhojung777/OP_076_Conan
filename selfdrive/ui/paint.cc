@@ -282,7 +282,7 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
   if (is_mpc) {
     // Draw colored MPC track Kegman's
     if (s->scene.kegman.steerOverride) {
-      track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.45,
+      track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.50,
         COLOR_WHITE, COLOR_WHITE_ALPHA(0));
     } else {
       int torque_scale = (int)fabs(255*(float)s->scene.kegman.output_scale);
@@ -294,13 +294,13 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
       NVGcolor color1 = nvgRGBA(          red_lvl,      0,           blue_lvl, 255); 
       //NVGcolor color2 = nvgRGBA((int)(0.5*red_lvl), (int)(0.5*green_lvl), 0, 50);
       NVGcolor color2 = nvgRGBA((int)(0.50*red_lvl), 0, (int)(0.50*blue_lvl), 50);
-      track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.45,
+      track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.50,
         color1, color2 );        
     }
    // LOGW("ui_draw_track mps=%d  cnt=%d  ov=%d  %d,%d", is_mpc, pvd->cnt, s->scene.kegman.steerOverride, red_lvl, green_lvl);
   } else {
     // Draw white vision track => blue bg
-    track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.45,
+    track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.50,
         nvgRGBA(0, 100, 255, 255), nvgRGBA(0, 100, 255, 50));
         //nvgRGBA(0, 255, 0, 255), nvgRGBA(0, 255, 0, 150));
   }
@@ -331,7 +331,7 @@ static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pv
   float offset = 0;
   nvgMoveTo(s->vg, pvd->v[0].x + offset, pvd->v[0].y);
   for (int i=1; i<nCnt; i++) {
-    if (pvd->v[i].y < pvd->v[i-1].y) offset = 150; // 좀 더 우측으로 이동
+    if (pvd->v[i].y < pvd->v[i-1].y) offset = 200; // 좀 더 우측으로 이동
     nvgLineTo(s->vg, pvd->v[i].x + offset, pvd->v[i].y);
   }
   nvgClosePath(s->vg);
@@ -360,7 +360,7 @@ static void ui_draw_track_left(UIState *s, bool is_mpc, track_vertices_data *pvd
   float offset = 0;
   nvgMoveTo(s->vg, pvd->v[0].x + offset, pvd->v[0].y);
   for (int i=1; i<nCnt; i++) {
-    if (pvd->v[i].y < pvd->v[i-1].y) offset = -150; // 좀 더 좌측으로 이동
+    if (pvd->v[i].y < pvd->v[i-1].y) offset = -200; // 좀 더 좌측으로 이동
     nvgLineTo(s->vg, pvd->v[i].x + offset, pvd->v[i].y);
   }
   nvgClosePath(s->vg);
