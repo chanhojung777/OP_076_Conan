@@ -317,15 +317,6 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
       COLOR_WHITE, COLOR_WHITE_ALPHA(0));
   }
   */
-
-  if( scene->leftBlinker ) or ( scene->rightBlinker )
-  {
-    if( scene->nTimer & 0x01 )
-    {
-      track_bg = nvgRGBAf(0.7, 0.7, 0.7, 0.5 ); // 점멸시 그레이색  
-    }    
-  }
-
   nvgFillPaint(s->vg, track_bg);
   nvgFill(s->vg);
 }
@@ -356,12 +347,6 @@ static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pv
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
       COLOR_WHITE, COLOR_WHITE_ALPHA(0));
   }
-
-  if( scene->nTimer & 0x01 )
-  {
-    track_bg = nvgRGBAf(0.7, 0.7, 0.7, 0.5 ); // 점멸시 그레이색  
-  }
-
   nvgFillPaint(s->vg, track_bg);
   nvgFill(s->vg);
 }
@@ -391,12 +376,6 @@ static void ui_draw_track_left(UIState *s, bool is_mpc, track_vertices_data *pvd
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
       COLOR_WHITE, COLOR_WHITE_ALPHA(0));
   }
-
-  if( scene->nTimer & 0x01 )
-  {
-    track_bg = nvgRGBAf(0.7, 0.7, 0.7, 0.5 ); // 점멸시 그레이색  
-  }  
-
   nvgFillPaint(s->vg, track_bg);
   nvgFill(s->vg);
 }
