@@ -317,6 +317,15 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
       COLOR_WHITE, COLOR_WHITE_ALPHA(0));
   }
   */
+
+  if( scene->leftBlinker ) or ( scene->rightBlinker )
+  {
+    if( scene->nTimer & 0x01 )
+    {
+      track_bg = nvgRGBAf(0.7, 0.7, 0.7, 0.5 ); // 점멸시 그레이색  
+    }    
+  }
+
   nvgFillPaint(s->vg, track_bg);
   nvgFill(s->vg);
 }
@@ -331,7 +340,7 @@ static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pv
   float offset = 0;
   nvgMoveTo(s->vg, pvd->v[0].x + offset, pvd->v[0].y);
   for (int i=1; i<nCnt; i++) {
-    if (pvd->v[i].y < pvd->v[i-1].y) offset = 100;
+    if (pvd->v[i].y < pvd->v[i-1].y) offset = 150; // 좀 더 우측으로 이동
     nvgLineTo(s->vg, pvd->v[i].x + offset, pvd->v[i].y);
   }
   nvgClosePath(s->vg);
@@ -347,6 +356,12 @@ static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pv
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.45,
       COLOR_WHITE, COLOR_WHITE_ALPHA(0));
   }
+
+  if( scene->nTimer & 0x01 )
+  {
+    track_bg = nvgRGBAf(0.7, 0.7, 0.7, 0.5 ); // 점멸시 그레이색  
+  }
+
   nvgFillPaint(s->vg, track_bg);
   nvgFill(s->vg);
 }
@@ -360,7 +375,7 @@ static void ui_draw_track_left(UIState *s, bool is_mpc, track_vertices_data *pvd
   float offset = 0;
   nvgMoveTo(s->vg, pvd->v[0].x + offset, pvd->v[0].y);
   for (int i=1; i<nCnt; i++) {
-    if (pvd->v[i].y < pvd->v[i-1].y) offset = -100;
+    if (pvd->v[i].y < pvd->v[i-1].y) offset = -150; // 좀 더 좌측으로 이동
     nvgLineTo(s->vg, pvd->v[i].x + offset, pvd->v[i].y);
   }
   nvgClosePath(s->vg);
@@ -376,6 +391,12 @@ static void ui_draw_track_left(UIState *s, bool is_mpc, track_vertices_data *pvd
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.45,
       COLOR_WHITE, COLOR_WHITE_ALPHA(0));
   }
+
+  if( scene->nTimer & 0x01 )
+  {
+    track_bg = nvgRGBAf(0.7, 0.7, 0.7, 0.5 ); // 점멸시 그레이색  
+  }  
+
   nvgFillPaint(s->vg, track_bg);
   nvgFill(s->vg);
 }
