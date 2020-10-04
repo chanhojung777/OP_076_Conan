@@ -513,7 +513,6 @@ static void ui_draw_vision_lanes(UIState *s) {
     }
   }
 
-
   if( scene->model.right_lane.prob < 0.5 )
   {
       if ( scene->model.right_lane.prob < 0.2 )
