@@ -283,7 +283,7 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
     // Draw colored MPC track Kegman's
     if (s->scene.kegman.steerOverride) {
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.60,
-        COLOR_WHITE, COLOR_WHITE_ALPHA(0));
+        COLOR_BLACK, COLOR_BLACK_ALPHA(0));
     } else {
       int torque_scale = (int)fabs(255*(float)s->scene.kegman.output_scale);
       red_lvl = fmin(255, torque_scale);
