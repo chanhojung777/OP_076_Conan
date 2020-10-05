@@ -457,14 +457,14 @@ static void update_lane_line_data(UIState *s, const float *points, float off, bo
 
 static void update_all_lane_lines_data(UIState *s, const PathData &path, model_path_vertices_data *pstart) {
   update_lane_line_data(s, path.points, 0.025*path.prob, false, pstart);
-  float var = fmin(path.std, 1.0);
+  float var = fmin(path.std, 0.90);
   update_lane_line_data(s, path.points, -var, true, pstart + 1);
   update_lane_line_data(s, path.points, var, true, pstart + 2);
 }
 
 static void ui_draw_lane(UIState *s, const PathData *path, model_path_vertices_data *pstart, NVGcolor color) {
   ui_draw_lane_line(s, pstart, color);  
-  float var = fmin(path->std, 1.0);
+  float var = fmin(path->std,0.90);
   color.a /= 4;
   ui_draw_lane_line(s, pstart + 1, color);
   ui_draw_lane_line(s, pstart + 2, color);  
