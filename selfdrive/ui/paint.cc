@@ -615,9 +615,6 @@ static void ui_draw_vision_maxspeed(UIState *s) {
   ui_draw_text(s->vg, text_x, 148, "MAX", 30 * 2.5, COLOR_WHITE_ALPHA(is_cruise_set ? 200 : 100), s->font_sans_regular);
 
 
-   
-
-
   if (is_cruise_set) {
  
     snprintf(maxspeed_str, sizeof(maxspeed_str), "%d", maxspeed_calc);
@@ -719,31 +716,14 @@ static void ui_draw_debug(UIState *s)
   //ui_print( s, x_pos, y_pos+250, "Wheel:%.1f,%.1f,%.1f,%.1f", scene.wheel.fl, scene.wheel.fr, scene.wheel.rl, scene.wheel.rr );
   //ui_print( s, x_pos, y_pos+0, "%d, %d, %d, %d, %d", scene.params.nOpkrUIBrightness, scene.params.nLightSensor, scene.params.nSmoothBrightness, scene.params.nOpkrUIVolumeBoost, scene.params.nOpkrAutoLanechangedelay );
 
-  //ui_print( s, x_pos, y_pos+0, "cO:%.3f  %d, %d",scene.carParams.lateralsRatom.cameraOffset, scene.cruiseState.cruiseSwState, s->livempc_or_radarstate_changed );
-  // ui_print( s, x_pos, y_pos+0, "model_sum:%.1f" , scene.model_sum);
-  // ui_print( s, x_pos, y_pos+50, "prob:%.2f, %.2f", scene.pathPlan.lProb, scene.pathPlan.rProb );
-  // ui_print( s, x_pos, y_pos+100, "Poly:%.2f, %.2f", scene.pathPlan.lPoly, scene.pathPlan.rPoly );
-  // ui_print( s, x_pos, y_pos+150, "sR:%.2f, %.2f", scene.liveParams.steerRatio, scene.pathPlan.steerRatio );
-  // ui_print( s, x_pos, y_pos+200, "aO:%.2f, %.2f", scene.liveParams.angleOffset, scene.pathPlan.angleOffset );
-  // ui_print( s, x_pos, y_pos+250, "aOa:%.2f", scene.liveParams.angleOffsetAverage );
-  // ui_print( s, x_pos, y_pos+300, "LW:%.2f", scene.pathPlan.laneWidth );
-  // ui_print( s, x_pos, y_pos+350, "aD:%.2f", scene.pathPlan.steerActuatorDelay );
-  // ui_print( s, x_pos, y_pos+400, "sF:%.2f", scene.liveParams.stiffnessFactor );
-
   ui_print( s, x_pos, y_pos+0, "aOffset:%.2f, %.2f", scene.liveParams.angleOffset, scene.pathPlan.angleOffset );
   ui_print( s, x_pos, y_pos+50, "aOffsetAvg:%.2f", scene.liveParams.angleOffsetAverage );
   ui_print( s, x_pos, y_pos+100, "model_sum:%.1f" , scene.model_sum);
   ui_print( s, x_pos, y_pos+150, "sR:%.2f, %.2f", scene.liveParams.steerRatio, scene.pathPlan.steerRatio );
   ui_print( s, x_pos, y_pos+200, "aDelay:%.2f", scene.pathPlan.steerActuatorDelay );
   ui_print( s, x_pos, y_pos+250, "stF:%.2f", scene.liveParams.stiffnessFactor );
-//  ui_print( s, x_pos+530, y_pos+700, "차선폭");
-//  ui_print( s, x_pos+550, y_pos+750, "%.2f", scene.pathPlan.laneWidth ); 
-//  ui_print( s, x_pos+270, y_pos+800, "   %.2f            차선간격            %.2f", scene.pathPlan.lPoly, abs(scene.pathPlan.rPoly) );
-//  ui_print( s, x_pos+270, y_pos+850, "%.2f             차선인식률             %.2f", scene.pathPlan.lProb, scene.pathPlan.rProb );
   ui_print( s, x_pos+50, y_pos+800, "LeftProb    LeftPoly    LaneWidth    RightPoly    RightProb");
-                                      //99.0%      0.00       0.00      0.00      00.0% 
   ui_print( s, x_pos+50, y_pos+850, "   %5.1f              %.2f                %.2f                 %.2f                %5.1f", scene.pathPlan.lProb*100, scene.pathPlan.lPoly, scene.pathPlan.laneWidth, abs(scene.pathPlan.rPoly), scene.pathPlan.rProb*100 ); 
-    //ui_print( s, x_pos, y_pos+400, "awareness:%.2f" , scene.awareness_status);
 
   ui_print( s, 0, 1020, "%s", scene.alert.text1 );
   ui_print( s, 0, 1078, "%s", scene.alert.text2 );
@@ -780,16 +760,6 @@ static void ui_draw_debug(UIState *s)
 }
 
 
-/*
-  park @1;
-  drive @2;
-  neutral @3;
-  reverse @4;
-  sport @5;
-  low @6;
-  brake @7;
-  eco @8;
-*/
 static void ui_draw_gear( UIState *s )
 {
   UIScene &scene = s->scene;  
