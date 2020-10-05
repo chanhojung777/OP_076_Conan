@@ -771,9 +771,9 @@ static void ui_draw_debug(UIState *s)
 //  ui_print( s, x_pos+550, y_pos+750, "%.2f", scene.pathPlan.laneWidth ); 
 //  ui_print( s, x_pos+270, y_pos+800, "   %.2f            차선간격            %.2f", scene.pathPlan.lPoly, scene.pathPlan.rPoly );
 //  ui_print( s, x_pos+270, y_pos+850, "%.2f             차선인식률             %.2f", scene.pathPlan.lProb, scene.pathPlan.rProb );
-  ui_print( s, x_pos+100, y_pos+800, "LeftLane  Left_Gap  LaneWidth  Right_Gap  RightLane");
+  ui_print( s, x_pos+50, y_pos+800, "LeftLane    Left_Gap    LaneWidth    Right_Gap    RightLane");
                                       //99.0%      0.00       0.00      0.00      00.0% 
-  ui_print( s, x_pos+100, y_pos+850, " %.1f      %.2f       %.2f       %.2f      %.1f", scene.pathPlan.lProb*100, scene.pathPlan.lPoly, scene.pathPlan.laneWidth, abs(scene.pathPlan.rPoly), scene.pathPlan.rProb*100 ); 
+  ui_print( s, x_pos+50, y_pos+850, "    %5.1f          %.2f           %.2f           %.2f          %5.1f", scene.pathPlan.lProb*100, scene.pathPlan.lPoly, scene.pathPlan.laneWidth, abs(scene.pathPlan.rPoly), scene.pathPlan.rProb*100 ); 
     //ui_print( s, x_pos, y_pos+400, "awareness:%.2f" , scene.awareness_status);
 
   ui_print( s, 0, 1020, "%s", scene.alert.text1 );
