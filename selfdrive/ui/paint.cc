@@ -463,19 +463,19 @@ static void update_all_lane_lines_data(UIState *s, const PathData &path, model_p
 }
 
 static void ui_draw_lane(UIState *s, const PathData *path, model_path_vertices_data *pstart, NVGcolor color) {
-  // ui_draw_lane_line(s, pstart, color);  
-  // float var = fmin(path->std, 0.7);
-  // color.a /= 4;
-  // ui_draw_lane_line(s, pstart + 1, color);
-  // ui_draw_lane_line(s, pstart + 2, color);  
-  float lane_pos = std::abs(path->poly[3]);  // get redder when line is closer to car
-  float hue = 332.5 * lane_pos - 332.5;  // equivalent to {1.4, 1.0}: {133, 0} (green to red)
-  hue = fmin(133, fmax(0, hue)) / 360.;  // clip and normalize
-  NVGcolor color = nvgHSLA(hue, 0.73, 0.64, prob * 255);
-  ui_draw_lane_line(s, pstart, color);
-  color.a /= 25;
+  ui_draw_lane_line(s, pstart, color);  
+  float var = fmin(path->std, 0.7);
+  color.a /= 4;
   ui_draw_lane_line(s, pstart + 1, color);
-  ui_draw_lane_line(s, pstart + 2, color);
+  ui_draw_lane_line(s, pstart + 2, color);  
+  // float lane_pos = std::abs(path->poly[3]);  // get redder when line is closer to car
+  // float hue = 332.5 * lane_pos - 332.5;  // equivalent to {1.4, 1.0}: {133, 0} (green to red)
+  // hue = fmin(133, fmax(0, hue)) / 360.;  // clip and normalize
+  // NVGcolor color = nvgHSLA(hue, 0.73, 0.64, prob * 255);
+  // ui_draw_lane_line(s, pstart, color);
+  // color.a /= 25;
+  // ui_draw_lane_line(s, pstart + 1, color);
+  // ui_draw_lane_line(s, pstart + 2, color);
 }
 
 static void ui_draw_vision_lanes(UIState *s) {
@@ -497,13 +497,8 @@ static void ui_draw_vision_lanes(UIState *s) {
   int left_green_lvl = int(scene->model.left_lane.prob*255 - 255);
   int right_red_lvl = int(255 - scene->model.right_lane.prob*255);
   int right_green_lvl = int(scene->model.right_lane.prob*255 - 255);
-  NVGcolor colorLeft = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
-        nvgRGBA(    left_red_lvl,     left_green_lvl, 0, 255),
-        nvgRGBA(0.5*left_red_lvl, 0.5*left_green_lvl, 0, 50));
-  NVGcolor colorRight = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
-        nvgRGBA(    right_red_lvl,     right_green_lvl, 0, 255),
-        nvgRGBA(0.5*right_red_lvl, 0.5*right_green_lvl, 0, 50));
-
+  NVGcolor colorLeft = nvgRGBA(left_red_lvl,left_green_lvl, 0, 255);
+  NVGcolor colorRight = nvgRGBA(right_red_lvl,right_green_lvl, 0, 255);
 
   if( scene->leftBlinker )
   {
