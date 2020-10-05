@@ -171,7 +171,6 @@ static void draw_lead(UIState *s, float d_rel, float v_rel, float y_rel)
   draw_chevron(s, d_rel+2.7, y_rel, 25, nvgRGBA(201, 34, 49, fillAlpha), COLOR_YELLOW);
 }
 
-
 static void ui_draw_lane_line(UIState *s, const model_path_vertices_data *pvd, NVGcolor color) 
 {
   nvgBeginPath(s->vg);
@@ -285,15 +284,15 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
         COLOR_WHITE, COLOR_WHITE_ALPHA(50));
     } else {
-      int torque_scale = (int)fabs(255*(float)s->scene.kegman.output_scale);
-      red_lvl = fmin(255, torque_scale*0.8);
+      int torque_scale = (int)fabs(500*(float)s->scene.kegman.output_scale);
+      red_lvl = fmin(255, torque_scale*0.9);
       //green_lvl = fmin(255, 255.-torque_scale);
-      blue_lvl = fmin(255, 255-torque_scale);
+      blue_lvl = fmin(255, 500-torque_scale);
 
       //NVGcolor color1 = nvgRGBA(          red_lvl,            green_lvl,  0, 255); 
       NVGcolor color1 = nvgRGBA(          red_lvl,      0,           blue_lvl, 255); 
       //NVGcolor color2 = nvgRGBA((int)(0.5*red_lvl), (int)(0.5*green_lvl), 0, 50);
-      NVGcolor color2 = nvgRGBA((int)(1.0*red_lvl), 0, (int)(1.0*blue_lvl), 100);
+      NVGcolor color2 = nvgRGBA((int)(0.5*red_lvl), 0, (int)(0.5*blue_lvl), 100);
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
         color1, color2 );        
     }
@@ -341,7 +340,7 @@ static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pv
     // Draw colored MPC track
     //const uint8_t *clr = bg_colors[s->status];
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
-        nvgRGBA(187, 0, 0, 255), nvgRGBA(187, 0, 0, 100));
+        nvgRGBA(187, 0, 0, 255), nvgRGBA(155, 0, 0, 100));
   } else {
     // Draw white vision track => blue
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
@@ -370,7 +369,7 @@ static void ui_draw_track_left(UIState *s, bool is_mpc, track_vertices_data *pvd
     // Draw colored MPC track
     //const uint8_t *clr = bg_colors[s->status];
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
-        nvgRGBA(187, 0, 0, 255), nvgRGBA(187, 0, 0, 100));
+        nvgRGBA(187, 0, 0, 255), nvgRGBA(155, 0, 0, 100));
   } else {
     // Draw white vision track
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
@@ -464,14 +463,19 @@ static void update_all_lane_lines_data(UIState *s, const PathData &path, model_p
 }
 
 static void ui_draw_lane(UIState *s, const PathData *path, model_path_vertices_data *pstart, NVGcolor color) {
-  // ui_draw_lane_line(s, pstart, nvgRGBA(0, 0, 200, 200));
-  ui_draw_lane_line(s, pstart, color);  
-  float var = fmin(path->std, 0.7);
-  color.a /= 4;
+  // ui_draw_lane_line(s, pstart, color);  
+  // float var = fmin(path->std, 0.7);
+  // color.a /= 4;
+  // ui_draw_lane_line(s, pstart + 1, color);
+  // ui_draw_lane_line(s, pstart + 2, color);  
+  float lane_pos = std::abs(path->poly[3]);  // get redder when line is closer to car
+  float hue = 332.5 * lane_pos - 332.5;  // equivalent to {1.4, 1.0}: {133, 0} (green to red)
+  hue = fmin(133, fmax(0, hue)) / 360.;  // clip and normalize
+  NVGcolor color = nvgHSLA(hue, 0.73, 0.64, prob * 255);
+  ui_draw_lane_line(s, pstart, color);
+  color.a /= 25;
   ui_draw_lane_line(s, pstart + 1, color);
-  ui_draw_lane_line(s, pstart + 2, color);  
-  // ui_draw_lane_line(s, pstart + 1, nvgRGBA(0, 128, 255, 200)); //(0, 0, 200, 100)); //
-  // ui_draw_lane_line(s, pstart + 2, nvgRGBA(0, 128, 255, 200)); //(0, 0, 200, 100)); //
+  ui_draw_lane_line(s, pstart + 2, color);
 }
 
 static void ui_draw_vision_lanes(UIState *s) {
@@ -486,8 +490,20 @@ static void ui_draw_vision_lanes(UIState *s) {
   float  left_lane =  fmax( 0.9, scene->model.left_lane.prob ); // 최소한 90%정도 진하게 
   float  right_lane =  fmax( 0.9, scene->model.right_lane.prob );
   
-  NVGcolor colorLeft = nvgRGBAf(0.1, 0.7, 0.1, 1.0 );   // 기본차선인식선 색상 그린
-  NVGcolor colorRight = nvgRGBAf(0.1, 0.7, 0.1, 1.0 ); // 기본차선인식선 색상 그린
+  // NVGcolor colorLeft = nvgRGBAf(0.1, 0.7, 0.1, 1.0 );   // 기본차선인식선 색상 그린
+  // NVGcolor colorRight = nvgRGBAf(0.1, 0.7, 0.1, 1.0 ); // 기본차선인식선 색상 그린
+
+  int left_red_lvl = int(255 - scene->model.left_lane.prob*255);
+  int left_green_lvl = int(scene->model.left_lane.prob*255 - 255);
+  int right_red_lvl = int(255 - scene->model.right_lane.prob*255);
+  int right_green_lvl = int(scene->model.right_lane.prob*255 - 255);
+  NVGcolor colorLeft = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
+        nvgRGBA(    left_red_lvl,     left_green_lvl, 0, 255),
+        nvgRGBA(0.5*left_red_lvl, 0.5*left_green_lvl, 0, 50));
+  NVGcolor colorRight = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.4,
+        nvgRGBA(    right_red_lvl,     right_green_lvl, 0, 255),
+        nvgRGBA(0.5*right_red_lvl, 0.5*right_green_lvl, 0, 50));
+
 
   if( scene->leftBlinker )
   {
@@ -513,20 +529,20 @@ static void ui_draw_vision_lanes(UIState *s) {
     }
   }
 
-  if( scene->model.right_lane.prob < 0.5 )
-  {
-      if ( scene->model.right_lane.prob < 0.2 )
-          colorRight = nvgRGBAf(0.7, 0.1, 0.1, 1.0 ); // 오른쪽 차선 인식률이 20% 미만이면 레드
-      else 
-          colorRight = nvgRGBAf(1.0, 0.7, 0.1, 1.0 ); // 오른쪽 차선 인식률이 20~50% 미만이면 주황
-  }
-  if( scene->model.left_lane.prob < 0.5 )
-  {
-      if ( scene->model.left_lane.prob < 0.2 )
-          colorLeft = nvgRGBAf(0.7, 0.1, 0.1, 1.0 ); // 왼쪽 차선 인식률이 20% 미만이면 레드
-      else 
-          colorLeft = nvgRGBAf(1.0, 0.7, 0.1, 1.0 ); // 왼쪽 차선 인식률이 20~50% 미만이면 주황  
-  }
+  // if( scene->model.right_lane.prob < 0.5 )
+  // {
+  //     if ( scene->model.right_lane.prob < 0.2 )
+  //         colorRight = nvgRGBAf(0.7, 0.1, 0.1, 1.0 ); // 오른쪽 차선 인식률이 20% 미만이면 레드
+  //     else 
+  //         colorRight = nvgRGBAf(1.0, 0.7, 0.1, 1.0 ); // 오른쪽 차선 인식률이 20~50% 미만이면 주황
+  // }
+  // if( scene->model.left_lane.prob < 0.5 )
+  // {
+  //     if ( scene->model.left_lane.prob < 0.2 )
+  //         colorLeft = nvgRGBAf(0.7, 0.1, 0.1, 1.0 ); // 왼쪽 차선 인식률이 20% 미만이면 레드
+  //     else 
+  //         colorLeft = nvgRGBAf(1.0, 0.7, 0.1, 1.0 ); // 왼쪽 차선 인식률이 20~50% 미만이면 주황  
+  // }
 
   // Draw left lane edge
   ui_draw_lane(
@@ -745,7 +761,7 @@ static void ui_draw_debug(UIState *s)
   y_pos = 100; 
   //ui_print( s, x_pos, y_pos+0, "B:%d,%.5f", scene.steerOverride, scene.output_scale );
   //#ui_print( s, x_pos, y_pos+150, "blindspot L:%d, R:%d", scene.leftBlindspot, scene.rightBlindspot  );
-  //ui_print( s, x_pos, y_pos+150, "L1:%d, %.1f,%.1f,%.1f", (int)scene.lead_status, scene.lead_d_rel, scene.lead_y_rel , scene.lead_v_rel  );
+  //ui_print( s, x_pos, y_pos+150, "L1:%d, %.1f,%.1f,%.1f", (int)scene.lead_status, scene.lead_d_rel, scene.lead_y_rel , scene.lead_v_rSTATUS_ENGAGEDel  );
   //ui_print( s, x_pos, y_pos+200, "L2:%d, %.1f,%.1f,%.1f", (int)scene.lead_status2, scene.lead_d_rel2, scene.lead_y_rel2 , scene.lead_v_rel2  );
   //ui_print( s, x_pos, y_pos+250, "Wheel:%.1f,%.1f,%.1f,%.1f", scene.wheel.fl, scene.wheel.fr, scene.wheel.rl, scene.wheel.rr );
   //ui_print( s, x_pos, y_pos+0, "%d, %d, %d, %d, %d", scene.params.nOpkrUIBrightness, scene.params.nLightSensor, scene.params.nSmoothBrightness, scene.params.nOpkrUIVolumeBoost, scene.params.nOpkrAutoLanechangedelay );
