@@ -281,7 +281,7 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
   if (is_mpc) {
     if (s->scene.kegman.steerOverride) {
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
-        COLOR_BLACK_ALPHA(200), COLOR_BLACK_ALPHA(20)); //COLOR_WHITE, COLOR_WHITE_ALPHA(0));
+        COLOR_BLACK_ALPHA(200), COLOR_BLACK_ALPHA(20));
     } else {
       int torque_scale = (int)fabs(200*(float)s->scene.kegman.output_scale);
       red_lvl = fmin(255, torque_scale);
@@ -293,7 +293,7 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
     }
   } else {
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
-        COLOR_WHITE, COLOR_WHITE_ALPHA(20)); //      nvgRGBA(0, 100, 255, 255), nvgRGBA(0, 100, 255, 0));
+        COLOR_WHITE, COLOR_WHITE_ALPHA(20));
   }
   nvgFillPaint(s->vg, track_bg);
   nvgFill(s->vg);
@@ -309,7 +309,7 @@ static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pv
   float offset = 0;
   nvgMoveTo(s->vg, pvd->v[0].x + offset, pvd->v[0].y);
   for (int i=1; i<nCnt; i++) {
-    if (pvd->v[i].y < pvd->v[i-1].y) offset = 150; // 좀 더 우측으로 이동
+    if (pvd->v[i].y < pvd->v[i-1].y) offset = 150;
     nvgLineTo(s->vg, pvd->v[i].x + offset, pvd->v[i].y);
   }
   nvgClosePath(s->vg);
@@ -317,7 +317,11 @@ static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pv
   NVGpaint track_bg;
   if (is_mpc) {
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
-        nvgRGBA(200, 0, 0, 255), nvgRGBA(200, 0, 0, 20));
+                                  nvgRGBA(200, 0, 0, 255), nvgRGBA(200, 0, 0, 20));
+    if( scene->nTimer & 0x01 ) {
+        track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
+                   COLOR_WHITE, COLOR_WHITE_ALPHA(0));
+    }
   } else {
     // Draw white vision track => blue
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
@@ -336,7 +340,7 @@ static void ui_draw_track_left(UIState *s, bool is_mpc, track_vertices_data *pvd
   float offset = 0;
   nvgMoveTo(s->vg, pvd->v[0].x + offset, pvd->v[0].y);
   for (int i=1; i<nCnt; i++) {
-    if (pvd->v[i].y < pvd->v[i-1].y) offset = -150; // 좀 더 좌측으로 이동
+    if (pvd->v[i].y < pvd->v[i-1].y) offset = -150; 
     nvgLineTo(s->vg, pvd->v[i].x + offset, pvd->v[i].y);
   }
   nvgClosePath(s->vg);
@@ -344,7 +348,11 @@ static void ui_draw_track_left(UIState *s, bool is_mpc, track_vertices_data *pvd
   NVGpaint track_bg;
   if (is_mpc) {
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
-        nvgRGBA(200, 0, 0, 255), nvgRGBA(200, 0, 0, 20));
+                                  nvgRGBA(200, 0, 0, 255), nvgRGBA(200, 0, 0, 20));
+    if( scene->nTimer & 0x01 ) {
+        track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
+                   COLOR_WHITE, COLOR_WHITE_ALPHA(0));
+    }
   } else {
     // Draw white vision track
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
@@ -454,42 +462,49 @@ static void ui_draw_vision_lanes(UIState *s) {
     s->model_changed = false;
   }
 
-  float  left_lane =  fmax( 0.9, scene->model.left_lane.prob ); // 최소한 90%정도 진하게 
-  float  right_lane =  fmax( 0.9, scene->model.right_lane.prob );
-  
-  int left_red_lvl = int(255 - scene->model.left_lane.prob*255);
-  int left_green_lvl = int(255 - (1 - scene->model.left_lane.prob)*255);
-  int right_red_lvl = int(255 - scene->model.right_lane.prob*255);
-  int right_green_lvl = int(255 - (1 - scene->model.right_lane.prob)*255);
-  NVGcolor colorLeft = nvgRGBA(left_red_lvl,left_green_lvl, 0, 255);
-  NVGcolor colorRight = nvgRGBA(right_red_lvl,right_green_lvl, 0, 255);
- 
-  if ( scene->model.left_lane.prob > 0.9)
-     colorLeft = nvgRGBA(60, 100, 225, 255); // Royal blue
-  if ( scene->model.right_lane.prob > 0.9)
-     colorRight = nvgRGBA(60, 100, 225, 255); // Royal blue
+  int left_red_lvl = 0;
+  int right_red_lvl = 0;
+  int left_green_lvl = 0;
+  int right_green_lvl = 0;
+  int left_blue_lvl = 0;
+  int right_blue_lvl = 0;
 
+  if ( scene->model.left_lane.prob > 0.8 ){
+    left_green_lvl = int(255 - (scene->model.left_lane.prob - 0.8 ) * 5 * 255);
+    right_green_lvl = int(255 - (scene->model.right_lane.prob - 0.8 ) * 5 * 255);
+    left_blue_lvl = int(255 - (1 - scene->model.left_lane.prob) * 5 * 255);
+    right_blue_lvl = int(255 - (1 - scene->model.right_lane.prob) * 5 * 255);
+  }
+  else {
+    left_red_lvl = int(255 - (scene->model.left_lane.prob + 0.2) * 255);
+    right_red_lvl = int(255 - (scene->model.right_lane.prob + 0.2) * 255);
+    left_green_lvl = int(255 - (0.8 - scene->model.left_lane.prob) * 255);
+    right_green_lvl = int(255 - (0.8 - scene->model.right_lane.prob) * 255);
+  }
+  NVGcolor colorLeft = nvgRGBA(left_red_lvl,left_green_lvl, left_blue_lvl, 255);
+  NVGcolor colorRight = nvgRGBA(right_red_lvl,right_green_lvl, right_blue_lvl, 255);
+ 
   if( scene->leftBlinker )
   {
     if( scene->leftBlindspot )
-      colorLeft  = nvgRGBAf(0.8, 0.1, 0.1, 1.0 ); // 왼쪽 차선변경 시도시 차량 감지되면 레드
+      colorLeft  = nvgRGBAf(0. 9, 0.1, 0.1, 1.0 ); // 왼쪽 차선변경 시도시 차량 감지되면 레드
     else
-      colorLeft  = nvgRGBAf(0.1, 0.8, 0.1, 1.0 ); // 왼쪽 차선변경 시도시 차량 없으면 그린
+      colorLeft  = nvgRGBAf(0.1, 0.9, 0.1, 1.0 ); // 왼쪽 차선변경 시도시 차량 없으면 그린
     if( scene->nTimer & 0x01 )
     {
-       colorLeft = nvgRGBAf(0.8, 0.8, 0.8, left_lane ); // 점멸시 그레이색
+       colorLeft = nvgRGBAf(0.9, 0.9, 0.9, 1.0 ); // 점멸시 그레이색
     }      
   }
 
   if( scene->rightBlinker )
   {
     if( scene->rightBlindspot )
-        colorRight  = nvgRGBAf(0.8, 0.1, 0.1, 1.0 ); // 오른쪽 차선변경 시도시 차량 감지되면 레드
+        colorRight  = nvgRGBAf(0.9, 0.1, 0.1, 1.0 ); // 오른쪽 차선변경 시도시 차량 감지되면 레드
     else
-        colorRight  = nvgRGBAf(0.1, 0.8, 0.1, 1.0 ); // 오른쪽 차선변경 시도시 차량 없으면 그린
+        colorRight  = nvgRGBAf(0.1, 0.9, 0.1, 1.0 ); // 오른쪽 차선변경 시도시 차량 없으면 그린
     if( scene->nTimer & 0x01 )
     {
-       colorRight = nvgRGBAf(0.8, 0.8, 0.8, right_lane ); // 점멸시 그레이색
+       colorRight = nvgRGBAf(0.9, 0.9, 0.9, 1.0 ); // 점멸시 그레이색
     }
   }
 
