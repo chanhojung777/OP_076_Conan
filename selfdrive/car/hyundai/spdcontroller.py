@@ -121,7 +121,7 @@ class SpdController():
             v_curvature = np.sqrt(a_y_max / np.clip(np.abs(curv), 1e-4, None))
             model_speed = np.min(v_curvature)
             # Don't slow down below 20mph
-            model_speed = max(20.0 * CV.KPH_TO_MS, model_speed)
+            model_speed = max(25.0 * CV.KPH_TO_MS, model_speed)
 
             model_sum = curv[2] * 1000.  #np.sum( curv, 0 )
 
@@ -132,7 +132,7 @@ class SpdController():
             model_speed = MAX_SPEED
             model_sum = 0
 
-        model_speed = self.movAvg.get_min(model_speed, 50)
+        model_speed = self.movAvg.get_min(model_speed, 35)
 
         return model_speed, model_sum
 
