@@ -300,9 +300,9 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
 }
 
 
-static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pvd) 
-{
-  int  nCnt = pvd->cnt; 
+static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pvd) {
+ const UIScene *scene = &s->scene;  
+ int  nCnt = pvd->cnt; 
  if (nCnt == 0) return;
 
   nvgBeginPath(s->vg);
@@ -331,9 +331,9 @@ static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pv
   nvgFill(s->vg);
 }
 
-static void ui_draw_track_left(UIState *s, bool is_mpc, track_vertices_data *pvd) 
-{
-   int  nCnt = pvd->cnt;  
+static void ui_draw_track_left(UIState *s, bool is_mpc, track_vertices_data *pvd) {
+ const UIScene *scene = &s->scene;
+ int  nCnt = pvd->cnt;  
  if ( nCnt == 0) return;
 
   nvgBeginPath(s->vg);
@@ -481,30 +481,30 @@ static void ui_draw_vision_lanes(UIState *s) {
     left_green_lvl = int(255 - (0.8 - scene->model.left_lane.prob) * 255);
     right_green_lvl = int(255 - (0.8 - scene->model.right_lane.prob) * 255);
   }
-  NVGcolor colorLeft = nvgRGBA(left_red_lvl,left_green_lvl, left_blue_lvl, 255);
-  NVGcolor colorRight = nvgRGBA(right_red_lvl,right_green_lvl, right_blue_lvl, 255);
+  NVGcolor colorLeft = nvgRGBA (left_red_lvl, left_green_lvl, left_blue_lvl, 255);
+  NVGcolor colorRight = nvgRGBA (right_red_lvl, right_green_lvl, right_blue_lvl, 255);
  
   if( scene->leftBlinker )
   {
     if( scene->leftBlindspot )
-      colorLeft  = nvgRGBAf(0. 9, 0.1, 0.1, 1.0 ); // 왼쪽 차선변경 시도시 차량 감지되면 레드
+      colorLeft  = nvgRGBAf( 0.9, 0.1, 0.1, 1.0 ); // 왼쪽 차선변경 시도시 차량 감지되면 레드
     else
-      colorLeft  = nvgRGBAf(0.1, 0.9, 0.1, 1.0 ); // 왼쪽 차선변경 시도시 차량 없으면 그린
+      colorLeft  = nvgRGBAf( 0.1, 0.9, 0.1, 1.0 ); // 왼쪽 차선변경 시도시 차량 없으면 그린
     if( scene->nTimer & 0x01 )
     {
-       colorLeft = nvgRGBAf(0.9, 0.9, 0.9, 1.0 ); // 점멸시 그레이색
+       colorLeft = nvgRGBAf( 0.9, 0.9, 0.9, 1.0 ); // 점멸시 그레이색
     }      
   }
 
   if( scene->rightBlinker )
   {
     if( scene->rightBlindspot )
-        colorRight  = nvgRGBAf(0.9, 0.1, 0.1, 1.0 ); // 오른쪽 차선변경 시도시 차량 감지되면 레드
+        colorRight  = nvgRGBAf( 0.9, 0.1, 0.1, 1.0 ); // 오른쪽 차선변경 시도시 차량 감지되면 레드
     else
-        colorRight  = nvgRGBAf(0.1, 0.9, 0.1, 1.0 ); // 오른쪽 차선변경 시도시 차량 없으면 그린
+        colorRight  = nvgRGBAf( 0.1, 0.9, 0.1, 1.0 ); // 오른쪽 차선변경 시도시 차량 없으면 그린
     if( scene->nTimer & 0x01 )
     {
-       colorRight = nvgRGBAf(0.9, 0.9, 0.9, 1.0 ); // 점멸시 그레이색
+       colorRight = nvgRGBAf( 0.9, 0.9, 0.9, 1.0 ); // 점멸시 그레이색
     }
   }
 
