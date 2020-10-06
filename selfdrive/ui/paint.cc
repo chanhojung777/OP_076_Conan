@@ -487,7 +487,7 @@ static void ui_draw_vision_lanes(UIState *s) {
     left_green_lvl = int(255 - (0.4 - scene->model.left_lane.prob) * 2.5 * 255);
     right_green_lvl = int(255 - (0.4 - scene->model.right_lane.prob) * 2.5 * 255);
   }
-  }
+  
   NVGcolor colorLeft = nvgRGBA (left_red_lvl, left_green_lvl, left_blue_lvl, 255);
   NVGcolor colorRight = nvgRGBA (right_red_lvl, right_green_lvl, right_blue_lvl, 255);
  
