@@ -281,7 +281,7 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
   if (is_mpc) {
     if (s->scene.kegman.steerOverride) {
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
-        COLOR_BLACK(200), COLOR_BLACK_ALPHA(20)); //COLOR_WHITE, COLOR_WHITE_ALPHA(0));
+        COLOR_BLACK_ALPHA(200), COLOR_BLACK_ALPHA(20)); //COLOR_WHITE, COLOR_WHITE_ALPHA(0));
     } else {
       int torque_scale = (int)fabs(200*(float)s->scene.kegman.output_scale);
       red_lvl = fmin(255, torque_scale);
@@ -461,15 +461,13 @@ static void ui_draw_vision_lanes(UIState *s) {
   int left_green_lvl = int(255 - (1 - scene->model.left_lane.prob)*255);
   int right_red_lvl = int(255 - scene->model.right_lane.prob*255);
   int right_green_lvl = int(255 - (1 - scene->model.right_lane.prob)*255);
-  
-  if ( scene->model.left_lane.prob < 0.9)
-    NVGcolor colorLeft = nvgRGBA(left_red_lvl,left_green_lvl, 0, 255);
-  else
-    NVGcolor colorLeft = nvgRGBA(60, 100, 225, 255); // Royal blue
-  if ( scene->model.right_lane.prob < 0.9)
-    NVGcolor colorRight = nvgRGBA(right_red_lvl,right_green_lvl, 0, 255);
-  else
-    NVGcolor colorRight = nvgRGBA(60, 100, 225, 255); // Royal blue
+  NVGcolor colorLeft = nvgRGBA(left_red_lvl,left_green_lvl, 0, 255);
+  NVGcolor colorRight = nvgRGBA(right_red_lvl,right_green_lvl, 0, 255);
+ 
+  if ( scene->model.left_lane.prob > 0.9)
+     colorLeft = nvgRGBA(60, 100, 225, 255); // Royal blue
+  if ( scene->model.right_lane.prob > 0.9)
+     colorRight = nvgRGBA(60, 100, 225, 255); // Royal blue
 
   if( scene->leftBlinker )
   {
