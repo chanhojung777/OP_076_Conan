@@ -284,11 +284,11 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
         COLOR_WHITE, COLOR_WHITE_ALPHA(0));
     } else {
-      int torque_scale = (int)fabs(500*(float)s->scene.kegman.output_scale);
-      red_lvl = fmin(255, torque_scale*0.9);
-      blue_lvl = fmin(255, 500-torque_scale);
+      int torque_scale = (int)fabs(255*(float)s->scene.kegman.output_scale);
+      red_lvl = fmin(255, torque_scale);
+      blue_lvl = fmin(255, 255-torque_scale);
       NVGcolor color1 = nvgRGBA(int(red_lvl),  0, int(blue_lvl), 255); 
-      NVGcolor color2 = nvgRGBA(int(0.5*red_lvl), 0, int(0.5*blue_lvl), 0);
+      NVGcolor color2 = nvgRGBA(int(0.6*red_lvl), 0, int(0.6*blue_lvl), 0);
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
         color1, color2 );        
     }
@@ -465,9 +465,9 @@ static void ui_draw_vision_lanes(UIState *s) {
   float  right_lane =  fmax( 0.9, scene->model.right_lane.prob );
   
   int left_red_lvl = int(255 - scene->model.left_lane.prob*255);
-  int left_green_lvl = int(scene->model.left_lane.prob*255 - 255);
+  int left_green_lvl = int(255 - (1 - scene->model.left_lane.prob)*255);
   int right_red_lvl = int(255 - scene->model.right_lane.prob*255);
-  int right_green_lvl = int(scene->model.right_lane.prob*255 - 255);
+  int right_green_lvl = int(255 - (1 - scene->model.right_lane.prob)*255);
   NVGcolor colorLeft = nvgRGBA(left_red_lvl,left_green_lvl, 0, 255);
   NVGcolor colorRight = nvgRGBA(right_red_lvl,right_green_lvl, 0, 255);
 
@@ -721,7 +721,7 @@ static void ui_draw_debug(UIState *s)
   ui_print( s, x_pos, y_pos+200, "aDelay:%.2f", scene.pathPlan.steerActuatorDelay );
   ui_print( s, x_pos, y_pos+250, "stF:%.2f", scene.liveParams.stiffnessFactor );
   ui_print( s, x_pos, y_pos+800, "LeftLane(%%) LeftPoly(%%)  LaneWidth  RightPoly(%%) RightLane(%%)");
-  ui_print( s, x_pos, y_pos+850, "      %5.1f               %4.1f                  %4.2f                  %4.1f               %5.1f", 
+  ui_print( s, x_pos, y_pos+850, "       %5.1f               %4.1f                  %4.2f                  %4.1f               %5.1f", 
   scene.pathPlan.lProb*100, (scene.pathPlan.lPoly/(scene.pathPlan.lPoly+abs(scene.pathPlan.rPoly)))*100, scene.pathPlan.laneWidth, (abs(scene.pathPlan.rPoly)/(scene.pathPlan.lPoly+abs(scene.pathPlan.rPoly)))*100, scene.pathPlan.rProb*100 ); 
 
   ui_print( s, 0, 1020, "%s", scene.alert.text1 );
