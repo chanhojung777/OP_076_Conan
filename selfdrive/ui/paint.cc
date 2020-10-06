@@ -470,16 +470,23 @@ static void ui_draw_vision_lanes(UIState *s) {
   int right_blue_lvl = 0;
 
   if ( scene->model.left_lane.prob > 0.8 ){
-    left_green_lvl = int(255 - (scene->model.left_lane.prob - 0.8 ) * 5 * 255);
-    right_green_lvl = int(255 - (scene->model.right_lane.prob - 0.8 ) * 5 * 255);
     left_blue_lvl = int(255 - (1 - scene->model.left_lane.prob) * 5 * 255);
     right_blue_lvl = int(255 - (1 - scene->model.right_lane.prob) * 5 * 255);
+    left_green_lvl = int(255 - (scene->model.left_lane.prob - 0.8 ) * 5 * 255);
+    right_green_lvl = int(255 - (scene->model.right_lane.prob - 0.8 ) * 5 * 255);
+  }
+  else if ( scene->model.left_lane.prob > 0.4 {
+    left_red_lvl = int(255 - (scene->model.left_lane.prob - 0.4) * 2.5 * 255);
+    right_red_lvl = int(255 - (scene->model.right_lane.prob - 0.4) * 2.5 * 255);
+    left_green_lvl = 255 ;
+    right_green_lvl = 255 ;
   }
   else {
-    left_red_lvl = int(255 - (scene->model.left_lane.prob + 0.2) * 255);
-    right_red_lvl = int(255 - (scene->model.right_lane.prob + 0.2) * 255);
-    left_green_lvl = int(255 - (0.8 - scene->model.left_lane.prob) * 255);
-    right_green_lvl = int(255 - (0.8 - scene->model.right_lane.prob) * 255);
+    left_red_lvl = 255 ;
+    right_red_lvl = 255 ;
+    left_green_lvl = int(255 - (0.4 - scene->model.left_lane.prob) * 2.5 * 255);
+    right_green_lvl = int(255 - (0.4 - scene->model.right_lane.prob) * 2.5 * 255);
+  }
   }
   NVGcolor colorLeft = nvgRGBA (left_red_lvl, left_green_lvl, left_blue_lvl, 255);
   NVGcolor colorRight = nvgRGBA (right_red_lvl, right_green_lvl, right_blue_lvl, 255);
