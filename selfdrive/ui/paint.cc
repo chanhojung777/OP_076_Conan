@@ -472,10 +472,10 @@ static void ui_draw_vision_lanes(UIState *s) {
   if ( scene->model.left_lane.prob > 0.8 ){
     left_blue_lvl = int(255 - (1 - scene->model.left_lane.prob) * 5 * 255);
     right_blue_lvl = int(255 - (1 - scene->model.right_lane.prob) * 5 * 255);
-    left_green_lvl = int(255 - (scene->model.left_lane.prob - 0.8 ) * 5 * 255);
-    right_green_lvl = int(255 - (scene->model.right_lane.prob - 0.8 ) * 5 * 255);
+    left_green_lvl = int(255 - (scene->model.left_lane.prob - 0.8) * 5 * 255);
+    right_green_lvl = int(255 - (scene->model.right_lane.prob - 0.8) * 5 * 255);
   }
-  else if ( scene->model.left_lane.prob > 0.4 {
+  else if ( scene->model.left_lane.prob > 0.4 ){
     left_red_lvl = int(255 - (scene->model.left_lane.prob - 0.4) * 2.5 * 255);
     right_red_lvl = int(255 - (scene->model.right_lane.prob - 0.4) * 2.5 * 255);
     left_green_lvl = 255 ;
