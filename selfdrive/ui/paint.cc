@@ -281,19 +281,19 @@ static void ui_draw_track(UIState *s, bool is_mpc, track_vertices_data *pvd)
   if (is_mpc) {
     if (s->scene.kegman.steerOverride) {
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
-        COLOR_BLACK, COLOR_BLACK_ALPHA(0)); //COLOR_WHITE, COLOR_WHITE_ALPHA(0));
+        COLOR_BLACK(200), COLOR_BLACK_ALPHA(20)); //COLOR_WHITE, COLOR_WHITE_ALPHA(0));
     } else {
-      int torque_scale = (int)fabs(255*(float)s->scene.kegman.output_scale);
+      int torque_scale = (int)fabs(200*(float)s->scene.kegman.output_scale);
       red_lvl = fmin(255, torque_scale);
       blue_lvl = fmin(255, 255-torque_scale);
       NVGcolor color1 = nvgRGBA(int(red_lvl),  0, int(blue_lvl), 255); 
-      NVGcolor color2 = nvgRGBA(int(0.8*red_lvl), 0, int(0.8*blue_lvl), 10);
+      NVGcolor color2 = nvgRGBA(int(0.8*red_lvl), 0, int(0.8*blue_lvl), 20);
       track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
         color1, color2 );        
     }
   } else {
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
-        COLOR_WHITE, COLOR_WHITE_ALPHA(0)); //      nvgRGBA(0, 100, 255, 255), nvgRGBA(0, 100, 255, 0));
+        COLOR_WHITE, COLOR_WHITE_ALPHA(20)); //      nvgRGBA(0, 100, 255, 255), nvgRGBA(0, 100, 255, 0));
   }
   nvgFillPaint(s->vg, track_bg);
   nvgFill(s->vg);
@@ -317,7 +317,7 @@ static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pv
   NVGpaint track_bg;
   if (is_mpc) {
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
-        nvgRGBA(220, 0, 0, 255), nvgRGBA(220, 0, 0, 10));
+        nvgRGBA(200, 0, 0, 255), nvgRGBA(200, 0, 0, 20));
   } else {
     // Draw white vision track => blue
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
@@ -344,7 +344,7 @@ static void ui_draw_track_left(UIState *s, bool is_mpc, track_vertices_data *pvd
   NVGpaint track_bg;
   if (is_mpc) {
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
-        nvgRGBA(220, 0, 0, 255), nvgRGBA(220, 0, 0, 10));
+        nvgRGBA(200, 0, 0, 255), nvgRGBA(200, 0, 0, 20));
   } else {
     // Draw white vision track
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
