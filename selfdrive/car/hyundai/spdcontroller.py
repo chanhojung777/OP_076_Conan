@@ -132,7 +132,7 @@ class SpdController():
             model_speed = MAX_SPEED
             model_sum = 0
 
-        model_speed = self.movAvg.get_min(model_speed, 30)
+        model_speed = self.movAvg.get_min(model_speed, 50)
 
         return model_speed, model_sum
 
