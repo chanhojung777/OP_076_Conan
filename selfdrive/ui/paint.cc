@@ -461,8 +461,15 @@ static void ui_draw_vision_lanes(UIState *s) {
   int left_green_lvl = int(255 - (1 - scene->model.left_lane.prob)*255);
   int right_red_lvl = int(255 - scene->model.right_lane.prob*255);
   int right_green_lvl = int(255 - (1 - scene->model.right_lane.prob)*255);
-  NVGcolor colorLeft = nvgRGBA(left_red_lvl,left_green_lvl, 0, 255);
-  NVGcolor colorRight = nvgRGBA(right_red_lvl,right_green_lvl, 0, 255);
+  
+  if ( scene->model.left_lane.prob < 0.9)
+    NVGcolor colorLeft = nvgRGBA(left_red_lvl,left_green_lvl, 0, 255);
+  else
+    NVGcolor colorLeft = nvgRGBA(60, 100, 225, 255); // Royal blue
+  if ( scene->model.right_lane.prob < 0.9)
+    NVGcolor colorRight = nvgRGBA(right_red_lvl,right_green_lvl, 0, 255);
+  else
+    NVGcolor colorRight = nvgRGBA(60, 100, 225, 255); // Royal blue
 
   if( scene->leftBlinker )
   {
