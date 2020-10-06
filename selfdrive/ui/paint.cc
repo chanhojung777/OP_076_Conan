@@ -722,8 +722,8 @@ static void ui_draw_debug(UIState *s)
   ui_print( s, x_pos, y_pos+150, "sR:%.2f, %.2f", scene.liveParams.steerRatio, scene.pathPlan.steerRatio );
   ui_print( s, x_pos, y_pos+200, "aDelay:%.2f", scene.pathPlan.steerActuatorDelay );
   ui_print( s, x_pos, y_pos+250, "stF:%.2f", scene.liveParams.stiffnessFactor );
-  ui_print( s, x_pos+50, y_pos+800, "LeftLane(%%) LeftPoly(%%)  LaneWidth  RightPoly(%%) RightLane(%%)");
-  ui_print( s, x_pos+50, y_pos+850, "     %5.1f              %4.1f                %4.2f                %4.1f              %5.1f", 
+  ui_print( s, x_pos, y_pos+800, "LeftLane(%%) LeftPoly(%%)  LaneWidth  RightPoly(%%) RightLane(%%)");
+  ui_print( s, x_pos, y_pos+850, "      %5.1f              %4.1f                %4.2f                %4.1f              %5.1f", 
   scene.pathPlan.lProb*100, (scene.pathPlan.lPoly+abs(scene.pathPlan.rPoly))/scene.pathPlan.lPoly, scene.pathPlan.laneWidth, (scene.pathPlan.lPoly+abs(scene.pathPlan.rPoly))/abs(scene.pathPlan.rPoly), scene.pathPlan.rProb*100 ); 
 
   ui_print( s, 0, 1020, "%s", scene.alert.text1 );
