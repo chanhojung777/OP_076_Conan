@@ -320,7 +320,7 @@ static void ui_draw_track_right(UIState *s, bool is_mpc, track_vertices_data *pv
                                   nvgRGBA(200, 0, 0, 255), nvgRGBA(200, 0, 0, 20));
     if( scene->nTimer & 0x01 ) {
         track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
-                                     nvgRGBA(200, 0, 0, 100), nvgRGBA(200, 0, 0, 20));
+                                     nvgRGBA(200, 0, 0, 50), nvgRGBA(200, 0, 0, 10));
     }
   } else {
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
@@ -350,7 +350,7 @@ static void ui_draw_track_left(UIState *s, bool is_mpc, track_vertices_data *pvd
                                   nvgRGBA(200, 0, 0, 255), nvgRGBA(200, 0, 0, 20));
     if( scene->nTimer & 0x01 ) {
         track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
-                                     nvgRGBA(200, 0, 0, 100), nvgRGBA(200, 0, 0, 20));
+                                     nvgRGBA(200, 0, 0, 50), nvgRGBA(200, 0, 0, 10));
     }
   } else {
     track_bg = nvgLinearGradient(s->vg, vwp_w, vwp_h, vwp_w, vwp_h*.40,
@@ -467,9 +467,9 @@ static void ui_draw_vision_lanes(UIState *s) {
   int left_blue_lvl = 0;
   int right_blue_lvl = 0;
 
-  if ( scene->model.left_lane.prob > 0.8 ){
-    left_blue_lvl = int(255 - (1 - scene->model.left_lane.prob) * 5 * 255);
-    left_green_lvl = int(255 - (scene->model.left_lane.prob - 0.8) * 5 * 255);
+  if ( scene->model.left_lane.prob > 0.65 ){
+    left_blue_lvl = int(255 - (1 - scene->model.left_lane.prob) * 2.857 * 255);
+    left_green_lvl = int(255 - (scene->model.left_lane.prob - 0.65) * 2.857 * 255);
   }
   else if ( scene->model.left_lane.prob > 0.4 ){
     left_red_lvl = int(255 - (scene->model.left_lane.prob - 0.4) * 2.5 * 255);
@@ -480,9 +480,9 @@ static void ui_draw_vision_lanes(UIState *s) {
     left_green_lvl = int(255 - (0.4 - scene->model.left_lane.prob) * 2.5 * 255);
   }
 
-  if ( scene->model.right_lane.prob > 0.8 ){
-    right_blue_lvl = int(255 - (1 - scene->model.right_lane.prob) * 5 * 255);
-    right_green_lvl = int(255 - (scene->model.right_lane.prob - 0.8) * 5 * 255);
+  if ( scene->model.right_lane.prob > 0.65 ){
+    right_blue_lvl = int(255 - (1 - scene->model.right_lane.prob) * 2.857 * 255);
+    right_green_lvl = int(255 - (scene->model.right_lane.prob - 0.65) * 2.857 * 255);
   }
   else if ( scene->model.right_lane.prob > 0.4 ){
     right_red_lvl = int(255 - (scene->model.right_lane.prob - 0.4) * 2.5 * 255);
