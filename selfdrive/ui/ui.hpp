@@ -176,6 +176,7 @@ typedef struct UIScene {
   uint8_t athenaStatus;
   int    nTimer;
 
+  std::string ipAddr;
   // pathcoloring
   struct _KEGMEN_
   {

@@ -18,6 +18,8 @@ import cereal.messaging as messaging
 from selfdrive.loggerd.config import get_available_percent
 from selfdrive.pandad import get_expected_signature
 from selfdrive.thermald.power_monitoring import PowerMonitoring, get_battery_capacity, get_battery_status, get_battery_current, get_battery_voltage, get_usb_present
+import re
+import subprocess
 
 FW_SIGNATURE = get_expected_signature()
 
@@ -152,7 +154,7 @@ def handle_fan_uno(max_cpu_temp, bat_temp, fan_speed, ignition):
 
 def thermald_thread():
   # prevent LEECO from undervoltage
-  BATT_PERC_OFF = 100 #10 if LEON else 3
+  BATT_PERC_OFF = 95 #10 if LEON else 3
 
   health_timeout = int(1000 * 2.5 * DT_TRML)  # 2.5x the expected health frequency
 
@@ -199,6 +201,10 @@ def thermald_thread():
   accepted_terms = 0
   completed_training = 0
   panda_signature = 0
+
+  ts_last_ip = 0
+  ip_addr = '255.255.255.255'
+  
   while 1:
     OpkrLoadStep += 1
     if OpkrLoadStep == 1:
@@ -283,6 +289,17 @@ def thermald_thread():
     if is_uno:
       msg.thermal.batteryPercent = 100
       msg.thermal.batteryStatus = "Charging"
+  
+    # update ip every 10 seconds
+    ts = sec_since_boot()
+    if ts - ts_last_ip >= 10.:
+      try:
+        result = subprocess.check_output(["ifconfig", "wlan0"], encoding='utf8')  # pylint: disable=unexpected-keyword-arg
+        ip_addr = re.findall(r"inet addr:((\d+\.){3}\d+)", result)[0][0]
+      except:
+        ip_addr = 'N/A'
+      ts_last_ip = ts
+    msg.thermal.ipAddr = ip_addr
 
     current_filter.update(msg.thermal.batteryCurrent / 1e6)
 
@@ -304,10 +321,10 @@ def thermald_thread():
     if max_cpu_temp > 107. or bat_temp >= 63.:
       # onroad not allowed
       thermal_status = ThermalStatus.danger
-    elif max_comp_temp > 96.0 or bat_temp > 60.:  # CPU throttling starts around ~90C
+    elif max_comp_temp > 95.0 or bat_temp > 60.:  # CPU throttling starts around ~90C
       # hysteresis between onroad not allowed and engage not allowed
       thermal_status = clip(thermal_status, ThermalStatus.red, ThermalStatus.danger)
-    elif max_cpu_temp > 94.0:
+    elif max_cpu_temp > 90.0:
       # hysteresis between engage not allowed and uploader not allowed
       thermal_status = clip(thermal_status, ThermalStatus.yellow, ThermalStatus.red)
     elif max_cpu_temp > 80.0:
@@ -406,14 +423,14 @@ def thermald_thread():
       if thermal_status_prev >= ThermalStatus.danger:
         params.delete("Offroad_TemperatureTooHigh")
 
-    #current_ts = sec_since_boot()
+    current_ts = sec_since_boot()
     if should_start:
       if not should_start_prev:
         params.delete("IsOffroad")
 
       off_ts = None
       if started_ts is None:
-        started_ts = sec_since_boot()
+        started_ts = current_ts
         started_seen = True
         os.system('echo performance > /sys/class/devfreq/soc:qcom,cpubw/governor')
     else:
@@ -422,32 +439,27 @@ def thermald_thread():
 
       started_ts = None
       if off_ts is None:
-        off_ts = sec_since_boot()
+        off_ts = current_ts
         os.system('echo powersave > /sys/class/devfreq/soc:qcom,cpubw/governor')
 
       # shutdown if the battery gets lower than 3%, it's discharging, we aren't running for
       # more than a minute but we were running
-
-      if msg.thermal.batteryPercent <= BATT_PERC_OFF and msg.thermal.batteryStatus == "Discharging" and \
-         started_seen and OpkrAutoShutdown and (sec_since_boot() - off_ts) > OpkrAutoShutdown:
-        os.system('LD_LIBRARY_PATH="" svc power shutdown')
-      # power_shutdown = False
-      # if msg.thermal.batteryStatus == "Discharging":
-      #   delta_ts = sec_since_boot() - off_ts
+      power_shutdown = False
+      if msg.thermal.batteryStatus == "Discharging":
+        delta_ts = current_ts - off_ts
         
-      #   if started_seen:
-      #     if msg.thermal.batteryPercent <= BATT_PERC_OFF and (OpkrAutoShutdown and  delta_ts > OpkrAutoShutdown):
-      #       power_shutdown = True
-      #   elif  delta_ts > 240 and msg.thermal.batteryPercent < 10:
-      #     power_shutdown = True
+        if started_seen:
+          if msg.thermal.batteryPercent <= BATT_PERC_OFF and (OpkrAutoShutdown and  delta_ts > OpkrAutoShutdown):
+            power_shutdown = True
+        elif  delta_ts > 240 and msg.thermal.batteryPercent < 10:
+          power_shutdown = True
 
+        if power_shutdown:
+          os.system('LD_LIBRARY_PATH="" svc power shutdown')
+          print( 'power_shutdown batterypercent={} should_start={}'.format(msg.thermal.batteryPercent, should_start) )
 
-      #   if power_shutdown:
-      #     os.system('LD_LIBRARY_PATH="" svc power shutdown')
-      #     print( 'power_shutdown batterypercent={} should_start={}'.format(msg.thermal.batteryPercent, should_start) )
-
-      # else:
-      #   off_ts = sec_since_boot()
+      else:
+        off_ts = current_ts
 
       #print( 'OpkrAutoShutdown = {}'.format( OpkrAutoShutdown ) )
       #if msg.thermal.batteryPercent < BATT_PERC_OFF and msg.thermal.batteryStatus == "Discharging" and \

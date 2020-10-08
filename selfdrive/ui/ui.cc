@@ -497,6 +497,7 @@ void handle_message(UIState *s, SubMaster &sm)
     scene.freeSpace = data.getFreeSpace();
     scene.thermalStatus = data.getThermalStatus();
     scene.paTemp = data.getPa0();
+    scene.ipAddr = data.getIpAddr();
 
     scene.maxBatTemp = data.getBat();
     scene.maxCpuTemp = data.getCpu0(); 
