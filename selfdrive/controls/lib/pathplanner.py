@@ -16,6 +16,8 @@ from selfdrive.car.hyundai.values import Buttons
 import common.log as trace1
 import common.MoveAvg as ma
 
+from selfdrive.ntune import nTune  # neokii 추가 
+
 LaneChangeState = log.PathPlan.LaneChangeState
 LaneChangeDirection = log.PathPlan.LaneChangeDirection
 
@@ -97,6 +99,9 @@ class PathPlanner():
 
     self.carParams_valid = False
     self.m_avg = ma.MoveAvg()    
+
+    # neokii
+    self.tune = nTune(CP) # 추가
 
   def limit_ctrl(self, value, limit, offset ):
       p_limit = offset + limit
@@ -249,8 +254,6 @@ class PathPlanner():
     VM.update_params(stiffnessFactor, self.steerRatio )  
     curvature_factor = VM.curvature_factor(v_ego)
 
-
-
     self.LP.parse_model(sm['model'])
 
     # Lane change logic
@@ -346,6 +349,10 @@ class PathPlanner():
 
     # account for actuation delay
     self.cur_state = calc_states_after_delay(self.cur_state, v_ego, angle_steers - angle_offset, curvature_factor, VM.sR, steerActuatorDelay )
+
+    # neokii sR & steerActuatorDelay
+    #VM.sR = self.tune.get('steerRatio') # 추가    
+    #self.cur_state = calc_states_after_delay(self.cur_state, v_ego, angle_steers - angle_offset, curvature_factor, VM.sR, self.tune.get('steerActuatorDelay') )
 
     v_ego_mpc = max(v_ego, 5.0)  # avoid mpc roughness due to low speed
     self.libmpc.run_mpc(self.cur_state, self.mpc_solution,

@@ -8,6 +8,7 @@ from cereal import log
 from common.numpy_fast import interp
 from selfdrive.config import Conversions as CV
 import common.log as trace1
+from selfdrive.ntune import nTune  # neokii 추가 
 
 class LatControlLQR():
   def __init__(self, CP):
@@ -30,6 +31,7 @@ class LatControlLQR():
     self.sat_limit = CP.steerLimitTimer
 
     self.reset()
+    self.tune = nTune(CP, self) # neokii 추가    
 
   def reset(self):
     self.i_lqr = 0.0
@@ -84,6 +86,8 @@ class LatControlLQR():
 
     v_ego_kph = CS.vEgo * CV.MS_TO_KPH
     self.ki, self.scale = self.atom_tune( v_ego_kph, CS.steeringAngle, CP )
+
+    self.tune.check() # neokii 추가
 
     # ###  설정값 최적화 분석을 위한 랜덤화 임시 코드
     #now = datetime.datetime.now() # current date and time
