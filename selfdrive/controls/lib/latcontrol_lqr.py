@@ -8,7 +8,7 @@ from cereal import log
 from common.numpy_fast import interp
 from selfdrive.config import Conversions as CV
 import common.log as trace1
-from selfdrive.ntune import nTune  # neokii 추가 
+from self.ntune import nTune  # neokii 추가 
 
 class LatControlLQR():
   def __init__(self, CP):
