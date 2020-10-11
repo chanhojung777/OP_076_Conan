@@ -261,7 +261,7 @@ class CarController():
       apply_steer = self.limit_ctrl( apply_steer, apply_steer_limit, 0 )
 
     # disable if steer angle reach 90 deg, otherwise mdps fault in some models
-    lkas_active = enabled and CS.main_on and CS.out.cruiseState.enabled #and abs(CS.out.steeringAngle) < 180. #and self.lkas_button
+    lkas_active = enabled and CS.main_on and CS.out.cruiseState.enabled and abs(CS.out.steeringAngle) < 90. and self.lkas_button
 
     if not lkas_active:
       apply_steer = 0
