@@ -305,8 +305,8 @@ class PathPlanner():
       # starting
       elif self.lane_change_state == LaneChangeState.laneChangeStarting:
         # fade out over .5s
-        xp = [40,60,70,80,120]
-        fp2 = [0.1,0.6,1.2,1.5,1.8] 
+        xp = [40,60,80,120]
+        fp2 = [0.1,0.6,1.5,1.8] 
         # xp = [40,80]
         # fp2 = [1,2]
         lane_time = interp( v_ego_kph, xp, fp2 ) 
@@ -405,7 +405,7 @@ class PathPlanner():
       fp2 = [3,5,7]
       limit_steers = interp( v_ego_kph, xp, fp2 )
       self.angle_steers_des_mpc = self.limit_ctrl( org_angle_steers_des, limit_steers, angle_steers )
-    elif v_ego_kph > 90: 
+    elif v_ego_kph > 80: 
       debug_status = 4
       pass
     elif abs(angle_steers) > 10: 
