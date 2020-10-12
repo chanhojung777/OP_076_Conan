@@ -17,6 +17,7 @@ import common.log as trace1
 import common.MoveAvg as ma
 
 from selfdrive.ntune import nTune  # neokii 추가 
+from selfdrive.ntune import ntune_get
 
 LaneChangeState = log.PathPlan.LaneChangeState
 LaneChangeDirection = log.PathPlan.LaneChangeDirection
@@ -352,7 +353,7 @@ class PathPlanner():
 
     # neokii sR & steerActuatorDelay
     #VM.sR = self.tune.get('steerRatio') # 추가    
-    #self.cur_state = calc_states_after_delay(self.cur_state, v_ego, angle_steers - angle_offset, curvature_factor, VM.sR, self.tune.get('steerActuatorDelay') )
+    #self.cur_state = calc_states_after_delay(self.cur_state, v_ego, angle_steers - angle_offset, curvature_factor, VM.sR, ntune_get('steerActuatorDelay') )
 
     v_ego_mpc = max(v_ego, 5.0)  # avoid mpc roughness due to low speed
     self.libmpc.run_mpc(self.cur_state, self.mpc_solution,

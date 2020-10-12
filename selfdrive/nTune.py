@@ -10,8 +10,9 @@ CONF_COMMON_FILE = '/data/ntune/common.json'
 CONF_LQR_FILE = '/data/ntune/lat_lqr.json'
 CONF_INDI_FILE = '/data/ntune/lat_indi.json'
 
+
 class nTune():
-  def __init__(self, CP, controller=None):
+  def __init__(self, CP=None, controller=None):
 
     self.invalidated = False
 
@@ -26,8 +27,8 @@ class nTune():
       self.lqr.A = np.array([0., 1., -0.22619643, 1.21822268]).reshape((2, 2))
       self.lqr.B = np.array([-1.92006585e-04, 3.95603032e-05]).reshape((2, 1))
       self.lqr.C = np.array([1., 0.]).reshape((1, 2))
-      self.lqr.K = np.array([-100., 450.]).reshape((1, 2))
-      self.lqr.L = np.array([0.22, 0.318]).reshape((2, 1))
+      self.lqr.K = np.array([-103., 451.]).reshape((1, 2))
+      self.lqr.L = np.array([0.25, 0.318]).reshape((2, 1))
     elif "LatControlINDI" in str(type(controller)):
       self.indi = controller
       self.file = CONF_INDI_FILE
@@ -44,11 +45,11 @@ class nTune():
       fd = os.open(CONF_PATH, os.O_RDONLY)
       fcntl.fcntl(fd, fcntl.F_SETSIG, 0)
       fcntl.fcntl(fd, fcntl.F_NOTIFY, fcntl.DN_MODIFY | fcntl.DN_CREATE | fcntl.DN_MULTISHOT)
-    except:
+    except Exception as ex:
+      print("exception", ex)
       pass
 
   def handler(self, signum, frame):
-
     try:
       if os.path.isfile(self.file):
         with open(self.file, 'r') as f:
@@ -56,7 +57,8 @@ class nTune():
           if self.checkValid():
             self.write_config(self.config)
 
-    except:
+    except Exception as ex:
+      print("exception", ex)
       pass
 
     self.invalidated = True
@@ -121,21 +123,16 @@ class nTune():
     elif self.indi is not None:
       self.updateINDI()
 
-  def get(self, key):
-    v = self.config[key]
-    if v is None:
-      self.read()
-      v = self.config[key]
-
-    return v
-
   def checkValidCommon(self):
     updated = False
 
-    if self.checkValue("steerRatio", 5.0, 25.0, 12.5):
+    if self.checkValue("steerRatio", 5.0, 25.0, 13.5):
       updated = True
 
     if self.checkValue("steerActuatorDelay", 0.1, 0.8, 0.25):
+      updated = True
+
+    if self.checkValue("cameraOffset", -1.0, 1.0, 0.02):
       updated = True
 
     return updated
@@ -143,13 +140,13 @@ class nTune():
   def checkValidLQR(self):
     updated = False
 
-    if self.checkValue("scale", 500.0, 5000.0, 1700.0):
+    if self.checkValue("scale", 500.0, 5000.0, 1600.0):
       updated = True
 
-    if self.checkValue("ki", 0.0, 0.25, 0.020):
+    if self.checkValue("ki", 0.0, 0.2, 0.020):
       updated = True
 
-    if self.checkValue("dcGain", 0.0020, 0.0040, 0.0029):
+    if self.checkValue("dcGain", 0.0020, 0.0040, 0.00290):
       updated = True
 
     if self.checkValue("steerLimitTimer", 0.5, 3.0, 1.5):
@@ -175,7 +172,7 @@ class nTune():
     if self.checkValue("actuatorEffectiveness", 0.1, 5.0, 1.7):
       updated = True
 
-    if self.checkValue("steerLimitTimer", 0.5, 3.0, 0.8):
+    if self.checkValue("steerLimitTimer", 0.5, 3.0, 1.5):
       updated = True
 
     if self.checkValue("steerMax", 0.5, 3.0, 1.0):
@@ -267,3 +264,20 @@ class nTune():
           os.chmod(self.file, 0o764)
       except:
         pass
+
+ntune = None
+def ntune_get(key):
+  global ntune
+  if ntune == None:
+    ntune = nTune()
+
+  if ntune.config == None or key not in ntune.config:
+    ntune.read()
+
+  v = ntune.config[key]
+
+  if v is None:
+    ntune.read()
+    v = ntune.config[key]
+
+  return v
