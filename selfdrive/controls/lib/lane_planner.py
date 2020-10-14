@@ -35,9 +35,9 @@ def calc_d_poly(l_poly, r_poly, p_poly, l_prob, r_prob, lane_width, v_ego):
   r_prob = mod * r_prob
 
   path_from_left_lane = l_poly.copy()
-  path_from_left_lane[3] -= lane_width / 2.7
+  path_from_left_lane[3] -= lane_width / 2.0
   path_from_right_lane = r_poly.copy()
-  path_from_right_lane[3] += lane_width / 2.5
+  path_from_right_lane[3] += lane_width / 2.0
 
   lr_prob = l_prob + r_prob - l_prob * r_prob
 
